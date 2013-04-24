@@ -1,0 +1,8 @@
+Optionen für die SettingsLayout Klasse
+-Auflösung
+	-16:9
+		-1920:1080
+		-1280:720
+	
+-Lautsärke
+-Tastenbelegung

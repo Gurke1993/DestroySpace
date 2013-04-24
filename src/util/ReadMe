@@ -1,0 +1,17 @@
+#Grundgedanken:
+
+util für Grundfunktionen (Funktionen in BEIDE Util.java dateien)
+keine public Variablen
+- is Funktionen Boolean
+- to Funktionen transfereieren
+- get Funktionen greifen auf private Variablen zu
+- Kommentare über dem Code
+- Variablennamen kleinBuchstabe
+- KONSTANTEN_IMMER_GROSS
+- keine Umlaute
+- Fehlerüberprüfungen in unterster Ebene
+
+Format .map:
+
+xMax:yMax:description of the map;x1y0:x2y0:...:xNyN
+
