@@ -31,7 +31,7 @@ public class EditorState extends BasicGameState{
 	private Image outputImage;
 	
 	//localImgG.copyArea(img, 0, 0);
-	
+	///////////////////////////////////////////TESTCOMMENT
 	
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
