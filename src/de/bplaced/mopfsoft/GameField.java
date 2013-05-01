@@ -68,6 +68,10 @@ public class GameField {
 		gameArray[x][y] = block;
 		changePixel(x,y,block.getColor());
 	}
+	
+	public void changeBlock(int x, int y, int id) {
+		changeBlock(x,y,Block.getNewBlock(x, y, id));
+	}
 
 	public void addPlayer(String[] playerArray) {
 		System.out.println("Adding "+playerArray[0]);

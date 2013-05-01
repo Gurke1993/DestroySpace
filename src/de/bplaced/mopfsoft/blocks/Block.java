@@ -48,7 +48,7 @@ public abstract class Block {
 	public abstract int getId();
 	
 	@SuppressWarnings("unchecked")
-	public Block getNewBlock(int x, int y, int id) {
+	public static Block getNewBlock(int x, int y, int id) {
 		Block block = null;
 
 		Object [] args = {x,y};
