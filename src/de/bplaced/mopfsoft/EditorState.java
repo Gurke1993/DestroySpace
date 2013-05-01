@@ -42,11 +42,11 @@ public class EditorState extends BasicGameState{
 		//New Gamefield
 		Block [] testArray = new Block[700000];
 		for (int i = 0; i<testArray.length; i++) {
-			testArray[i] = new Stone();
+			//testArray[i] = new Stone();
 		}
 		column = 1024;
 		
-		gameField = new GameField(mapArray,column);
+		//gameField = new GameField(mapArray,column);
 		
 		imgPosX=0;
 		imgPosY=0;

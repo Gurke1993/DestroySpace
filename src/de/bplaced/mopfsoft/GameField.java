@@ -12,22 +12,20 @@ import de.bplaced.mopfsoft.blocks.Block;
 public class GameField {
 
 	
-	private Block[] gameArray;
+	private Block[][] gameArray;
 	
 	private Image arrayAsImage;
 	private Graphics arrayAsImageG;
 	
-	private int columnLength;
 
-	public GameField(Block [] gameArray, int columnLength) {
-		this.columnLength = columnLength;
+	public GameField(Block [][] gameArray) {
 		this.gameArray = Arrays.copyOf(gameArray, gameArray.length);
 		
 		//Setup image
 		try {
 			
 		//create image
-		arrayAsImage = Image.createOffscreenImage(columnLength,gameArray.length/columnLength);
+		arrayAsImage = Image.createOffscreenImage(gameArray.length,gameArray[0].length);
 		arrayAsImageG = arrayAsImage.getGraphics();
 		
 		
@@ -37,9 +35,11 @@ public class GameField {
 		
 
 		for (int i = 0; i < gameArray.length; i++) {
-			arrayAsImageG.setColor(gameArray[i].getColor());
+			for (int j = 0; j< gameArray[0].length; j++) {
+			arrayAsImageG.setColor(gameArray[i][j].getColor());
 			//arrayAsImageG.setColor(new Color(gameArray[i]));
-			arrayAsImageG.fillRect(i%columnLength ,i/columnLength,1,1);
+			arrayAsImageG.fillRect(i ,j,1,1);
+		}
 		}
 		arrayAsImageG.flush();
 			
@@ -54,7 +54,7 @@ public class GameField {
 		return arrayAsImage;
 	}
 	
-	protected Block[] getGameArray() {
+	protected Block[][] getGameArray() {
 		return this.gameArray;
 	}
 	
@@ -65,7 +65,7 @@ public class GameField {
 	}
 	
 	public void changeBlock(int x, int y, Block block) {
-		gameArray[x+(y*columnLength)] = block;
+		gameArray[x][y] = block;
 		changePixel(x,y,block.getColor());
 	}
 

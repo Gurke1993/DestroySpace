@@ -10,15 +10,15 @@ public class MultiplayerGameManager {
 
 	private GameField gameField;
 
-	public MultiplayerGameManager () {
-		
+	public MultiplayerGameManager() {
+
 	}
-	
-	public void setGameField(Block [] gameField, int columnLength) {
-		
-		this.gameField = new GameField(gameField,columnLength);
+
+	public void setGameField(Block[][] gameField) {
+
+		this.gameField = new GameField(gameField);
 	}
-	
+
 	public GameField getGameField() {
 		return this.gameField;
 	}
