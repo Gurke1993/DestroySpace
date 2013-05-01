@@ -7,16 +7,20 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import de.bplaced.mopfsoft.blocks.Block;
+
 public class GameField {
 
 	
-	private int[] gameArray;
-	
+	private Block[] gameArray;
 	
 	private Image arrayAsImage;
 	private Graphics arrayAsImageG;
+	
+	private int columnLength;
 
-	public GameField(int [] gameArray, int columnLength) {
+	public GameField(Block [] gameArray, int columnLength) {
+		this.columnLength = columnLength;
 		this.gameArray = Arrays.copyOf(gameArray, gameArray.length);
 		
 		//Setup image
@@ -33,16 +37,11 @@ public class GameField {
 		
 
 		for (int i = 0; i < gameArray.length; i++) {
-			arrayAsImageG.setColor(new Color(gameArray[i]%256, gameArray[i]/256, gameArray[i]/65536));
+			arrayAsImageG.setColor(gameArray[i].getColor());
 			//arrayAsImageG.setColor(new Color(gameArray[i]));
 			arrayAsImageG.fillRect(i%columnLength ,i/columnLength,1,1);
 		}
 		arrayAsImageG.flush();
-		
-		//TESTTESTETTSTSTST
-		for (int i= 200; i< 400; i++) {
-			changePixel(i, 60, Color.blue);
-		}
 			
 		} catch (SlickException e) {
 			System.out.println("Could not initialise Image!");
@@ -55,14 +54,19 @@ public class GameField {
 		return arrayAsImage;
 	}
 	
-	protected int[] getGameArray() {
+	protected Block[] getGameArray() {
 		return this.gameArray;
 	}
 	
-	public void changePixel(int x, int y, Color color) throws SlickException {
+	private void changePixel(int x, int y, Color color){
 		arrayAsImageG.setColor(color);
 		arrayAsImageG.fillRect(x ,y,1,1);
 		arrayAsImageG.flush();
+	}
+	
+	public void changeBlock(int x, int y, Block block) {
+		gameArray[x+(y*columnLength)] = block;
+		changePixel(x,y,block.getColor());
 	}
 
 	public void addPlayer(String[] playerArray) {

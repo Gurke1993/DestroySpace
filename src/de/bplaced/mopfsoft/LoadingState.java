@@ -8,6 +8,9 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import de.bplaced.mopfsoft.blocks.Block;
+import de.bplaced.mopfsoft.blocks.Stone;
+
 public class LoadingState extends BasicGameState{
 	public static final int id = 7;
 	private MainScreen mainScreen;
@@ -50,7 +53,7 @@ public class LoadingState extends BasicGameState{
 		this.loaded = d;
 	}
 	
-	public void setupGame(int [] gameFieldArray, int collumnLength, String [] [] playerArray) {
+	public void setupGame(Block [] gameFieldArray, int columnLength, String [] [] playerArray) {
 		//Setup game 
 		
 		try {
@@ -62,12 +65,13 @@ public class LoadingState extends BasicGameState{
 		
 		
 		//Initialise GameField
-		mainScreen.getDestroySpace().setGameField(new GameField(gameFieldArray, collumnLength));
+		mainScreen.getDestroySpace().setMultiplayerGameManager(new MultiplayerGameManager());
+		mainScreen.getDestroySpace().getMultiplayerGameManager().setGameField(gameFieldArray, columnLength);
 		loaded = 0.8;
 		
 		//Load Players
 		for (int i = 0; i< playerArray.length; i++) {
-		mainScreen.getDestroySpace().getGameField().addPlayer(playerArray[i]);
+		mainScreen.getDestroySpace().getMultiplayerGameManager().getGameField().addPlayer(playerArray[i]);
 		}
 		loaded = 0.9;
 		//
@@ -85,13 +89,10 @@ public class LoadingState extends BasicGameState{
 		/*
 		 * TEST
 		 */
-		int [] testArray = new int[700000];
+		Block [] testArray = new Block[700000];
 		for (int i = 0; i<testArray.length; i++) {
-			testArray[i] = i;
+			testArray[i] = new Stone();
 		}
-		
-		System.out.println(testArray[12]+" "+testArray[13]);
-		System.out.println(new Color(testArray[12])+" "+new Color(testArray[13]));
 		//Name Level Champion Handicap
 		String [][] testPlayerArray = new String [2][4];
 		String [] player1 = {"Gurke1993","Newbie","Heimerdinger","100"};

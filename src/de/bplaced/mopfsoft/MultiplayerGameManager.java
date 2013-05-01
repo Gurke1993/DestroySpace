@@ -1,7 +1,9 @@
 package de.bplaced.mopfsoft;
 
 
-import org.newdawn.slick.SlickException;
+
+import de.bplaced.mopfsoft.blocks.Block;
+
 
 
 public class MultiplayerGameManager {
@@ -12,21 +14,12 @@ public class MultiplayerGameManager {
 		
 	}
 	
-	public void setGameField(int [] gameField, int columnLength) {
+	public void setGameField(Block [] gameField, int columnLength) {
 		
 		this.gameField = new GameField(gameField,columnLength);
 	}
 	
 	public GameField getGameField() {
 		return this.gameField;
-	}
-	
-	@Deprecated
-	public void changeField(int position, int newType) {
-		//gameField.changePixel(position%, y, newType)
-	}
-	
-	public void changeField(int x, int y, int newType) throws SlickException {
-		gameField.changePixel(x, y, newType);
 	}
 }

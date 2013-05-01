@@ -19,7 +19,7 @@ public class DestroySpace {
 	private ClientFileTransferThread clientFileTransferThread;
 	private FileHandler fileHandler;
 	
-	private GameField gameField;
+	private MultiplayerGameManager multiplayerGameManager;
 
 	
 	public DestroySpace(String[] args) {
@@ -46,8 +46,6 @@ public class DestroySpace {
 			System.out.println("Could not set up screens!!");
 			e.printStackTrace();
 		}
-//		mainScreen = new MainScreen(this, new MenuLayout(1024, 768, this));
-//		mainScreen.start();
 		
 	}
 
@@ -110,11 +108,11 @@ public class DestroySpace {
 		return this.fileHandler;
 	}
 	
-	public GameField getGameField() {
-		return gameField;
+	public MultiplayerGameManager getMultiplayerGameManager() {
+		return multiplayerGameManager;
 	}
 	
-	public void setGameField(GameField gameField) {
-		this.gameField = gameField;
+	public void setMultiplayerGameManager(MultiplayerGameManager multiplayerGameManager) {
+		this.multiplayerGameManager = multiplayerGameManager;
 	}
 }
