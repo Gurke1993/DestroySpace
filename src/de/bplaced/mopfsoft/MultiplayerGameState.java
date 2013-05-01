@@ -2,23 +2,18 @@ package de.bplaced.mopfsoft;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 public class MultiplayerGameState extends BasicGameState{
 	public static final int id = 6;
-	private GameField gameField;
 	private MainScreen mainScreen;
-	private Image loadingScreen;
-	private double loaded;
 
 	@Override
 	public void init(GameContainer arg0, StateBasedGame stateBasedGame)
 			throws SlickException {
 		mainScreen = (MainScreen)stateBasedGame;
-		loadingScreen = new Image("resources/images/multiplayerGame/LoadingScreen.jpg");
 		
 	}
 
@@ -26,13 +21,7 @@ public class MultiplayerGameState extends BasicGameState{
 	public void render(GameContainer arg0, StateBasedGame arg1, Graphics graphics)
 			throws SlickException {
 		
-		//LoadingScreen
-		if (loaded < 1) {
-			graphics.drawImage(loadingScreen, 0, 0);
-			graphics.drawRect(274, 313, (int)(503*loaded), 59);
-		} else {
-			//TODO
-		}
+		graphics.drawImage(mainScreen.getDestroySpace().getGameField().getGameFieldAsImage(), 1, 1);
 	}
 
 	@Override
@@ -47,55 +36,10 @@ public class MultiplayerGameState extends BasicGameState{
 		return id;
 	}
 	
-	public void setupGame(int [] gameFieldArray, int collumnLength, String [] [] playerArray) {
-		//Setup game 
-		
-		
-		//Initialise GameField
-		this.gameField = new GameField(gameFieldArray, collumnLength);
-		loaded = 0.8;
-		
-		//Load Players
-		for (int i = 0; i< playerArray.length; i++) {
-		this.gameField.addPlayer(playerArray[i]);
-		}
-		loaded = 0.9;
-		//
-	}
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
-		//Enable Load mode
-		loaded = 0;
-		
-		//TODO , send method, serverside array sending
-		
-		/*
-		 * TEST
-		 */
-		int [] testArray = new int[20000];
-		for (int i = 0; i<testArray.length; i++) {
-			testArray[i] = i%2;
-		}
-		
-		//Name Level Champion Handicap
-		String [][] testPlayerArray = new String [2][4];
-		String [] player1 = {"Gurke1993","Newbie","Heimerdinger","100"};
-		String [] player2 = {"Darabasi","Pro","Evelynn","70"};
-		testPlayerArray[0] = player1;
-		testPlayerArray[1] = player2;
-		
-		//Setup game
-		setupGame(testArray, 200, testPlayerArray);
-		
-		
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//loaded = 1;
+		System.out.println("Going to Multiplayer screen...");
 	}
 
 

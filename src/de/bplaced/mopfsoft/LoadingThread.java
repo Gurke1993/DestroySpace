@@ -1,5 +1,6 @@
 package de.bplaced.mopfsoft;
 
+@Deprecated
 public class LoadingThread implements Runnable{
 
 	

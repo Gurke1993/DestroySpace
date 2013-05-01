@@ -18,6 +18,8 @@ public class DestroySpace {
 	private GameState [] gameStateArray = {new MenuState(), new EditorState(), new ServerSelectState(), new GameLobbyState(), new SettingsState(), new MultiplayerGameState(), new LoadingState()};
 	private ClientFileTransferThread clientFileTransferThread;
 	private FileHandler fileHandler;
+	
+	private GameField gameField;
 
 	
 	public DestroySpace(String[] args) {
@@ -106,5 +108,13 @@ public class DestroySpace {
 
 	public FileHandler getFileHandler() {
 		return this.fileHandler;
+	}
+	
+	public GameField getGameField() {
+		return gameField;
+	}
+	
+	public void setGameField(GameField gameField) {
+		this.gameField = gameField;
 	}
 }

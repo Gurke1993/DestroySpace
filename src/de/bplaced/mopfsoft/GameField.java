@@ -6,7 +6,6 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.opengl.EmptyImageData;
 
 public class GameField {
 
@@ -15,23 +14,35 @@ public class GameField {
 	
 	
 	private Image arrayAsImage;
+	private Graphics arrayAsImageG;
 
 	public GameField(int [] gameArray, int columnLength) {
 		this.gameArray = Arrays.copyOf(gameArray, gameArray.length);
 		
-		//Create new Image
-		arrayAsImage = new Image(new EmptyImageData(columnLength, gameArray.length/columnLength));
-		
-		//Initialise Image
-		Graphics g;
+		//Setup image
 		try {
-			g = arrayAsImage.getGraphics();
+			
+		//create image
+		arrayAsImage = Image.createOffscreenImage(columnLength,gameArray.length/columnLength);
+		arrayAsImageG = arrayAsImage.getGraphics();
+		
+		
+		//set backgroundcolor
+		arrayAsImageG.setBackground(Color.black);
+		arrayAsImageG.clear();
+		
 
-			for (int i = 0; i < gameArray.length; i++) {
-			g.setColor(new Color(gameArray[i]));
-			g.fillRect(i%columnLength ,i/columnLength,1,1);
-			}
-			g.flush();
+		for (int i = 0; i < gameArray.length; i++) {
+			arrayAsImageG.setColor(new Color(gameArray[i]%256, gameArray[i]/256, gameArray[i]/65536));
+			//arrayAsImageG.setColor(new Color(gameArray[i]));
+			arrayAsImageG.fillRect(i%columnLength ,i/columnLength,1,1);
+		}
+		arrayAsImageG.flush();
+		
+		//TESTTESTETTSTSTST
+		for (int i= 200; i< 400; i++) {
+			changePixel(i, 60, Color.blue);
+		}
 			
 		} catch (SlickException e) {
 			System.out.println("Could not initialise Image!");
@@ -48,16 +59,14 @@ public class GameField {
 		return this.gameArray;
 	}
 	
-	public void changePixel(int x, int y, int color) throws SlickException {
-		Graphics g;
-		g = arrayAsImage.getGraphics();
-		g.setColor(new Color(color));
-		g.fillRect(x ,y,1,1);
-		g.flush();
+	public void changePixel(int x, int y, Color color) throws SlickException {
+		arrayAsImageG.setColor(color);
+		arrayAsImageG.fillRect(x ,y,1,1);
+		arrayAsImageG.flush();
 	}
 
 	public void addPlayer(String[] playerArray) {
-		System.out.println("Adding "+playerArray);
+		System.out.println("Adding "+playerArray[0]);
 		//TODO
 	}
 }

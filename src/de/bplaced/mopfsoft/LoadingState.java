@@ -10,7 +10,6 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class LoadingState extends BasicGameState{
 	public static final int id = 7;
-	private GameField gameField;
 	private MainScreen mainScreen;
 	private Image loadingScreen;
 	private double loaded;
@@ -28,19 +27,17 @@ public class LoadingState extends BasicGameState{
 			throws SlickException {
 		
 		//LoadingScreen
-		if (loaded < 1) {
 			graphics.drawImage(loadingScreen, 0, 0);
 			graphics.setColor(Color.green);
 			graphics.drawRect(274, 313, (int)(503*loaded), 59);
-		} else {
-			//TODO
-		}
 	}
 
 	@Override
 	public void update(GameContainer arg0, StateBasedGame arg1, int arg2)
 			throws SlickException {
-		// TODO Auto-generated method stub
+		if (loaded >= 1) {
+			mainScreen.enterState(6);
+		}
 		
 	}
 
@@ -65,12 +62,12 @@ public class LoadingState extends BasicGameState{
 		
 		
 		//Initialise GameField
-		this.gameField = new GameField(gameFieldArray, collumnLength);
+		mainScreen.getDestroySpace().setGameField(new GameField(gameFieldArray, collumnLength));
 		loaded = 0.8;
 		
 		//Load Players
 		for (int i = 0; i< playerArray.length; i++) {
-		this.gameField.addPlayer(playerArray[i]);
+		mainScreen.getDestroySpace().getGameField().addPlayer(playerArray[i]);
 		}
 		loaded = 0.9;
 		//
@@ -88,11 +85,13 @@ public class LoadingState extends BasicGameState{
 		/*
 		 * TEST
 		 */
-		int [] testArray = new int[20000];
+		int [] testArray = new int[700000];
 		for (int i = 0; i<testArray.length; i++) {
-			testArray[i] = i%2;
+			testArray[i] = i;
 		}
 		
+		System.out.println(testArray[12]+" "+testArray[13]);
+		System.out.println(new Color(testArray[12])+" "+new Color(testArray[13]));
 		//Name Level Champion Handicap
 		String [][] testPlayerArray = new String [2][4];
 		String [] player1 = {"Gurke1993","Newbie","Heimerdinger","100"};
@@ -101,7 +100,7 @@ public class LoadingState extends BasicGameState{
 		testPlayerArray[1] = player2;
 		
 		//Setup game
-		new Thread(new LoadingThread(this, testArray, 200, testPlayerArray)).start();
+		setupGame(testArray, 1000, testPlayerArray);
 		loaded = 1;
 	}
 
