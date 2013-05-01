@@ -4,9 +4,9 @@ import org.newdawn.slick.Color;
 
 import de.bplaced.mopfsoft.items.Item;
 
-public class Stone extends Massive{
+public class Dirt extends Massive{
 
-	public Stone(int x, int y) {
+	public Dirt(int x, int y) {
 		super(x, y);
 	}
 
@@ -24,17 +24,12 @@ public class Stone extends Massive{
 
 	@Override
 	public Color getColor() {
-		// TODO Auto-generated method stub
-		return Color.gray;
+		return new Color(88,0,0);
 	}
 
 	@Override
 	public int getId() {
-		// TODO Auto-generated method stub
-		return 1;
+		return 2;
 	}
-
-
-
 
 }

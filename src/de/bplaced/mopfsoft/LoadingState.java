@@ -53,7 +53,7 @@ public class LoadingState extends BasicGameState{
 		this.loaded = d;
 	}
 	
-	public void setupGame(Block [] gameFieldArray, int columnLength, String [] [] playerArray) {
+	public void setupGame(Block [][] gameFieldArray, String [] [] playerArray) {
 		//Setup game 
 		
 		try {
@@ -66,7 +66,7 @@ public class LoadingState extends BasicGameState{
 		
 		//Initialise GameField
 		mainScreen.getDestroySpace().setMultiplayerGameManager(new MultiplayerGameManager());
-		mainScreen.getDestroySpace().getMultiplayerGameManager().setGameField(gameFieldArray, columnLength);
+		mainScreen.getDestroySpace().getMultiplayerGameManager().setGameField(gameFieldArray);
 		loaded = 0.8;
 		
 		//Load Players
@@ -89,10 +89,13 @@ public class LoadingState extends BasicGameState{
 		/*
 		 * TEST
 		 */
-		Block [] testArray = new Block[700000];
+		Block [][] testArray = new Block[1000][700];
 		for (int i = 0; i<testArray.length; i++) {
-			testArray[i] = new Stone();
+			for (int j = 0; j<testArray[0].length; j++) {
+			testArray[i][j] = new Stone(i,j);
+			}
 		}
+		
 		//Name Level Champion Handicap
 		String [][] testPlayerArray = new String [2][4];
 		String [] player1 = {"Gurke1993","Newbie","Heimerdinger","100"};
@@ -101,7 +104,7 @@ public class LoadingState extends BasicGameState{
 		testPlayerArray[1] = player2;
 		
 		//Setup game
-		setupGame(testArray, 1000, testPlayerArray);
+		setupGame(testArray, testPlayerArray);
 		loaded = 1;
 	}
 
