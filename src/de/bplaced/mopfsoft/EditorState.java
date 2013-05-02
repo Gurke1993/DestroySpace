@@ -11,6 +11,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import de.bplaced.mopfsoft.blocks.Block;
+import de.bplaced.mopfsoft.blocks.Dirt;
 import de.bplaced.mopfsoft.blocks.Stone;
 
 
@@ -31,8 +32,8 @@ public class EditorState extends BasicGameState{
 	//map position
 	int imgPosX,imgPosY;
 	
-	Block [] mapArray;
-	int column;
+	Block [][] mapArray;
+
 	
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
@@ -40,13 +41,16 @@ public class EditorState extends BasicGameState{
 		this.stateBasedGame = stateBasedGame;	
 		
 		//New Gamefield
-		Block [] testArray = new Block[700000];
-		for (int i = 0; i<testArray.length; i++) {
-			//testArray[i] = new Stone();
+		Block[][] mapArray = new Block[1024][1000];
+		for (int i = 0; i<mapArray.length; i++) {
+			for (int j = 0; j<mapArray[0].length; j++) {
+			mapArray[i][j] = new Stone(i,j);
+			
 		}
-		column = 1024;
+		}
+
 		
-		//gameField = new GameField(mapArray,column);
+		gameField = new GameField(mapArray);
 		
 		imgPosX=0;
 		imgPosY=0;
@@ -85,10 +89,13 @@ public class EditorState extends BasicGameState{
         if(input.isKeyDown(Input.KEY_S))
         {
         	imgPosY += 1;
-        } 
-       
+        }
+        if(input.isKeyDown(Input.KEY_Q))
+        {
+        	drawCircle(mapArray,80, 80, 50);
+	
+        }
 	}
-
 	@Override
 	public int getID() {
 		return ID;
@@ -143,7 +150,8 @@ public class EditorState extends BasicGameState{
 	private void drawLine(int[][] array, int x1, int y1, int x2, int y2, int radius, int type) {
 		//TODO
 	}
-	private Block[] drawCircle(Block[] array, int x, int y, int radius, int type) {
+	
+	private Block[][] drawCircle(Block[][] array, int x, int y, int radius) {
 		double alpha = 0;
 		int xRad=0;
 		int yRad=0;
@@ -153,8 +161,8 @@ public class EditorState extends BasicGameState{
 		  xRad= (int) Math.round(radius+(radius*Math.cos(alpha)));
 		  yRad=(int) Math.round(radius+(radius*Math.sin(alpha)));
 		  
-
-		 //array[xRad+x][yRad+y] = type;
+		 gameField.changeBlock(xRad+x, yRad+y, new Dirt(xRad+x, yRad+y));
+	
 		 alpha += 3.14159265/180; //
 		}
 		
