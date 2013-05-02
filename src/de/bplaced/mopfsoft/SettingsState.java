@@ -11,6 +11,7 @@ public class SettingsState extends BasicGameState{
 	public static final int ID = 5;
 	private StateBasedGame stateBasedGame;
 	private Image backGround;
+	@SuppressWarnings("unused")
 	private Image hud;
 	
 	@Override

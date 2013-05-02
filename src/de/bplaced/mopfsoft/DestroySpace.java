@@ -67,7 +67,7 @@ public class DestroySpace {
 	
 	/**
 	 * analyzes messages 
-	 * @param message : message to analyzing
+	 * @param message : message to analyze
 	 */
 	public void analyzeNewMessage(String message) {
 		if (message.split(":")[0].equals("1")) {

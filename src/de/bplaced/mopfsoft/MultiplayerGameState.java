@@ -9,6 +9,8 @@ import org.newdawn.slick.state.StateBasedGame;
 public class MultiplayerGameState extends BasicGameState{
 	public static final int id = 6;
 	private MainScreen mainScreen;
+	@SuppressWarnings("unused")
+	private int currentKey;
 
 	@Override
 	public void init(GameContainer arg0, StateBasedGame stateBasedGame)
@@ -25,15 +27,26 @@ public class MultiplayerGameState extends BasicGameState{
 	}
 
 	@Override
-	public void update(GameContainer arg0, StateBasedGame arg1, int arg2)
+	public void update(GameContainer container, StateBasedGame sbg, int timePassed)
 			throws SlickException {
-		// TODO Auto-generated method stub
 		
+		
+		//MultiplayerGameLoop
+		mainScreen.getDestroySpace().getMultiplayerGameManager().doGameLoop(container, sbg, timePassed);
 	}
 
 	@Override
 	public int getID() {
 		return id;
+	}
+	
+	@Override
+	public void keyPressed(int key, char c) {
+
+		
+		//TODO movement vs items...
+		this.currentKey = key;
+		
 	}
 	
 	

@@ -65,7 +65,7 @@ public class LoadingState extends BasicGameState{
 		
 		
 		//Initialise GameField
-		mainScreen.getDestroySpace().setMultiplayerGameManager(new MultiplayerGameManager());
+		mainScreen.getDestroySpace().setMultiplayerGameManager(new MultiplayerGameManager(mainScreen.getDestroySpace().getClientThread()));
 		mainScreen.getDestroySpace().getMultiplayerGameManager().setGameField(gameFieldArray);
 		loaded = 0.8;
 		

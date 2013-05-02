@@ -26,7 +26,8 @@ public class ConfigurationHandler {
 				FileOutputStream os = new FileOutputStream(new File("config.txt"));
 				for(int read = 0; (read = is.read()) != -1;)
 				    os.write(read);
-					os.flush();
+				os.flush();
+				os.close();
 			} catch (IOException e) {
 				System.out.println("[ERROR] Could not create config file!!");
 				e.printStackTrace();
