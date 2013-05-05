@@ -2,6 +2,7 @@ package de.bplaced.mopfsoft;
 
 
 
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
@@ -15,7 +16,7 @@ public class MultiplayerGameManager {
 
 	private static final int loopTime = 50;
 	private DrawableMap map;
-	private Queue<ServerUpdate> serverUpdateQueue;
+	private Queue<ServerUpdate> serverUpdateQueue = new LinkedList<ServerUpdate>();
 	@SuppressWarnings("unused")
 	private ClientThread sender;
 

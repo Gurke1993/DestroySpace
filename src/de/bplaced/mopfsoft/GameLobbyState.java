@@ -90,9 +90,14 @@ public class GameLobbyState extends BasicGameState{
 		this.maxPlayerAmount = maxPlayerAmount;
 		this.players = players;
 
-		System.out.println("Asking for fileinformation...");
-		send("action=getmappreviewinfo");
+		System.out.println("Ask for mappreviewinfo...");
+		send("action=getfiletransferinfo:filename="+mapName+".gif:path=maps"+System.getProperty("file.separator")+mapName+".gif");
 		
-		
+		System.out.println("Ask for mapfileinfo...");
+		send("action=getfiletransferinfo:filename="+mapName+".map:path=maps"+System.getProperty("file.separator")+mapName+".map");
+	}
+	
+	public void loadUpGame() {
+		mainScreen.enterState(7);
 	}
 }

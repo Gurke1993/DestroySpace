@@ -14,6 +14,7 @@ import de.bplaced.mopfsoft.map.Map;
 public class DrawableMap extends Map{
 	
 	private Image gamefieldAsImage;
+	private Image previewImage;
 	private Graphics gamefieldAsImageG;
 
 	
@@ -21,8 +22,23 @@ public class DrawableMap extends Map{
 		super();
 	}
 	
+	/** Returns the preview image of the map
+	 * @return
+	 */
+	public Image getPreviewImage() {
+		return this.previewImage;
+	}
+	
 	public DrawableMap(File file) {
 		super(file);
+		
+		// Set path to previewImage
+		Image previewImageTemp = null;
+		try {
+			previewImageTemp = new Image(file.getPath().split("\\.")[0] + ".gif");
+		} catch (SlickException e1) {
+		}
+		previewImage = previewImageTemp;
 		
 		try {
 			// setup image

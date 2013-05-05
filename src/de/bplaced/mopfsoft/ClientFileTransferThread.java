@@ -15,6 +15,7 @@ public class ClientFileTransferThread extends Thread{
 	private long transmittedFileSize;
 	private long completedTransmission = 0;
 	private int step = 15000;
+	private File currentFile;
 
 	  public ClientFileTransferThread(String ip, int port, DestroySpace destroySpace) throws IOException {
 	      System.out.println("Starting FileTransferClient!");
@@ -36,7 +37,7 @@ public class ClientFileTransferThread extends Thread{
 				completedTransmission += step;
 			
 				if (completedTransmission  >= transmittedFileSize) {
-					System.out.println("Finished FileTransfer");
+					System.out.println("Finished FileTransfer of"+currentFile.getName());
 		    		completedTransmission = 0;
 		    		File file = out.getFile();
 		    		out.flush();
@@ -64,8 +65,8 @@ public class ClientFileTransferThread extends Thread{
 	  }
 
 	public void prepareForNewFileTransfer(File file, long fileSize) {
-		
 		//Set values
+		currentFile = file;
 		transmittedFileSize = fileSize;
 		
 		
@@ -81,7 +82,7 @@ public class ClientFileTransferThread extends Thread{
 			out = new ExtendedFileOutputStream(file);
 			
 			//Send message to server
-			destroySpace.getClientThread().send("0:-1:3");
+			destroySpace.getClientThread().send("action=starttransfer:filename="+file.getName()+":path="+file.getPath());
 		} catch (FileNotFoundException e) {
 			System.out.println("[ERROR] Could not prepare for File Trasfer of file: "+file.getName());
 			e.printStackTrace();

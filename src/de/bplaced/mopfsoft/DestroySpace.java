@@ -18,7 +18,8 @@ public class DestroySpace {
 	
 	
 	// Add new States here (ONLY AS LAST ENTRY!!!):
-	private GameState [] gameStateArray = {new MenuState(), new EditorState(), new ServerSelectState(), new GameLobbyState(), new SettingsState(), new MultiplayerGameState(), new LoadingState()};
+	//TODO
+	private GameState [] gameStateArray = {new MenuState(), new MenuState(), new ServerSelectState(), new GameLobbyState(), new SettingsState(), new MultiplayerGameState(), new LoadingState()};
 	private ClientFileTransferThread clientFileTransferThread;
 	private FileHandler fileHandler;
 	
@@ -80,7 +81,10 @@ public class DestroySpace {
 		String[] argArray;
 		for (String split: message.split(":")) {
 			argArray = split.split("=");
-			args.put(argArray[0], argArray[1]);
+			if (argArray.length<2)
+				args.put(argArray[0], "");
+			else
+				args.put(argArray[0], argArray[1]);
 		}
 		
 		analyseServerMessage(args);
@@ -97,12 +101,16 @@ public class DestroySpace {
 			multiplayerGameManager.queueServerUpdate(args);
 		} else
 		
-		if (action.equals("givemappreviewinfo")) {
-			clientFileTransferThread.prepareForNewFileTransfer(new File("maps"+System.getProperty("file.separator")+args.get("filename")), Long.getLong(args.get("filesize")));
+		if (action.equals("givefiletransferinfo")) {
+			clientFileTransferThread.prepareForNewFileTransfer(new File(args.get("path")), Long.parseLong(args.get("filelength")));
 		} else
 			
 		if (action.equals("givelobbyinfo")) {
 			((GameLobbyState)gameStateArray[3]).setLobbyInformation(args.get("mapname"), args.get("mapdescription"), Integer.parseInt(args.get("amountofplayers")), Integer.parseInt(args.get("maxamountofplayers")), args.get("players").split(","));
+		} else 
+			
+		if (action.equals("loadupgame")) {
+			((GameLobbyState)gameStateArray[3]).loadUpGame();
 		}
 	}
 	
