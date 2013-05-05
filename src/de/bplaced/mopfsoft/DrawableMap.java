@@ -16,6 +16,11 @@ public class DrawableMap extends Map{
 	private Image gamefieldAsImage;
 	private Graphics gamefieldAsImageG;
 
+	
+	public DrawableMap() {
+		super();
+	}
+	
 	public DrawableMap(File file) {
 		super(file);
 		
@@ -46,6 +51,8 @@ public class DrawableMap extends Map{
 			e.printStackTrace();
 		}
 	}
+	
+	
 	
 	public DrawableMap(String file) {
 		super(file);
