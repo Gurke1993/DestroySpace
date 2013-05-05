@@ -18,7 +18,30 @@ givelobbyinfo: answers on getlobbyinfo
 	-amountofplayers: amountofplayers currently connected
 	-maxamountofplayers: amount of allowed players
 	-players: a list of the connected players' names (seperated by ",")
-
+gamechange: broadcast of changes to the gamefield or entities
+    -type: type of update
+        -gamefieldchange
+            -x
+            -y
+            -bid
+            -issuer
+                -x
+                -y
+                -id
+                -eid
+        -entitychange
+            -entity
+                -x
+                -y
+                -id
+                -eid
+            -issuer
+                -x
+                -y
+                -id
+                -eid
+                
+                
 Client to Server:
 
 closeserver: asks the server to shut down
@@ -30,9 +53,9 @@ clientupdate: gets send whenever a keystroke or similiar action by the client ha
 		-moveanduse
 			-x
 			-y
-			-toolid
+			-tid
 		-use
-			-toolid
+			-tid
 getlobbyinfo: asks for information about the servers gamelobby ->givelobbyinfo
 getmappreviewinfo: asks for information about a file ->givemappreviewinfo
 

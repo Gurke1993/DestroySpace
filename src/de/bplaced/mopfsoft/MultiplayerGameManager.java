@@ -2,17 +2,20 @@ package de.bplaced.mopfsoft;
 
 
 
+import java.util.Map;
+import java.util.Queue;
+
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.state.StateBasedGame;
 
-import de.bplaced.mopfsoft.map.Map;
 
 
 
 public class MultiplayerGameManager {
 
+	private static final int loopTime = 50;
 	private DrawableMap map;
+	private Queue<ServerUpdate> serverUpdateQueue;
 	@SuppressWarnings("unused")
 	private ClientThread sender;
 
@@ -34,7 +37,28 @@ public class MultiplayerGameManager {
 	public void doGameLoop(GameContainer container, StateBasedGame sbg, int timePassed) {
 		//GameLoop for Multiplayer
 		
-		//TODO
+		long startTime = System.currentTimeMillis();
+		
+		//Update map according to server messages
+		ServerUpdate serverUpdate;
+		Map <String,String> args;
+		while ((serverUpdate = serverUpdateQueue.poll()) != null) {
+			args = serverUpdate.getArgs();
+			if (args.get("type").equals("gamefieldupdate")) {
+				map.updateBlock(Integer.parseInt(args.get("x")), Integer.parseInt(args.get("y")), Integer.parseInt(args.get("bid")));
+			} else
+			if (args.get("type").equals("entityupdate")) {
+				String[] entitySplit = args.get("entity").split(",");
+				map.getEntitys().get(Integer.parseInt(entitySplit[0])).move(Integer.parseInt(entitySplit[2]), Integer.parseInt(entitySplit[3]));
+			}
+		}
+		
+		//Wait if to fast
+		try {
+			this.wait(loopTime-(System.currentTimeMillis()+timePassed-startTime));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setMap(String path) {
@@ -44,5 +68,11 @@ public class MultiplayerGameManager {
 
 	public DrawableMap getMap() {
 		return this.map;
+	}
+	
+	public void queueServerUpdate(Map<String, String> args) {
+		System.out.println("Got new server update... adding to stack...");
+		this.serverUpdateQueue.add(new ServerUpdate(args));
+		
 	}
 }

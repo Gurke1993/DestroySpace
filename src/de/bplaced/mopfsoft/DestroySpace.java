@@ -93,6 +93,10 @@ public class DestroySpace {
 		
 		String action = args.get("action");
 		
+		if (action.equals("gamechange")) {
+			multiplayerGameManager.queueServerUpdate(args);
+		} else
+		
 		if (action.equals("givemappreviewinfo")) {
 			clientFileTransferThread.prepareForNewFileTransfer(new File("maps"+System.getProperty("file.separator")+args.get("filename")), Long.getLong(args.get("filesize")));
 		} else
