@@ -3,15 +3,16 @@ package de.bplaced.mopfsoft;
 
 
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.state.StateBasedGame;
 
-import de.bplaced.mopfsoft.blocks.Block;
+import de.bplaced.mopfsoft.map.Map;
 
 
 
 public class MultiplayerGameManager {
 
-	private GameField gameField;
+	private DrawableMap map;
 	@SuppressWarnings("unused")
 	private ClientThread sender;
 
@@ -36,12 +37,12 @@ public class MultiplayerGameManager {
 		//TODO
 	}
 
-	public void setGameField(Block[][] gameField) {
-
-		this.gameField = new GameField(gameField);
+	public void setMap(String path) {
+		this.map = new DrawableMap(path);
 	}
 
-	public GameField getGameField() {
-		return this.gameField;
+
+	public DrawableMap getMap() {
+		return this.map;
 	}
 }

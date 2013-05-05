@@ -2,6 +2,8 @@ package de.bplaced.mopfsoft;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.lwjgl.LWJGLUtil;
 import org.newdawn.slick.AppGameContainer;
@@ -66,23 +68,37 @@ public class DestroySpace {
 
 	
 	/**
-	 * analyzes messages 
+	 * processes messages from the server
 	 * @param message : message to analyze
 	 */
-	public void analyzeNewMessage(String message) {
-		if (message.split(":")[0].equals("1")) {
-		message = message.split(":", 2)[1];
-		System.out.println("New: "+message);
-		int index = Integer.parseInt(message.split(":")[0]);
-		switch (index) {
+	public void analyseServerMessage(String message) {
+		System.out.println("ServerSays:"+message);
 		
-		case 0: {
-			//Lobby
-			((GameLobbyState)gameStateArray[3]).analyzeNewMessage(message.split(":", 2)[1]);
-			break;
+		//Structure message
+		Map<String,String> args= new HashMap<String,String>();
+		
+		String[] argArray;
+		for (String split: message.split(":")) {
+			argArray = split.split("=");
+			args.put(argArray[0], argArray[1]);
 		}
 		
-		}
+		analyseServerMessage(args);
+	}
+	
+	/** processes messages from the server
+	 * @param args
+	 */
+	private void analyseServerMessage(Map<String,String> args) {
+		
+		String action = args.get("action");
+		
+		if (action.equals("givemappreviewinfo")) {
+			clientFileTransferThread.prepareForNewFileTransfer(new File("maps"+System.getProperty("file.separator")+args.get("filename")), Long.getLong(args.get("filesize")));
+		} else
+			
+		if (action.equals("givelobbyinfo")) {
+			((GameLobbyState)gameStateArray[3]).setLobbyInformation(args.get("mapname"), args.get("mapdescription"), Integer.parseInt(args.get("amountofplayers")), Integer.parseInt(args.get("maxamountofplayers")), args.get("players").split(","));
 		}
 	}
 	

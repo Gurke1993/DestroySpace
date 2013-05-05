@@ -24,22 +24,17 @@ public class ClientThread extends Thread{
 	  }
 
 	  public void run() {
-	    String text;
-	    try {
-	    			//Normal Mode
-	    			while ((text = in.readUTF()) != null) {
-	    				if (text.split(":")[1].equals("-1")) {
-	  	    			  analyzeNewClientThreadMessage(text);
-	  	    		  } else {
-	  	    			this.destroySpace.analyzeNewMessage(text);
-	  	    		  }
-	    			}
-	    }
-	    catch(IOException e) {
-	      e.printStackTrace();
-	    }
-	    try {
-		    System.out.println("Closing Socket!");
+		String text;
+		try {
+			// Normal Mode
+			while ((text = in.readUTF()) != null) {
+				this.destroySpace.analyseServerMessage(text);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			System.out.println("Closing Socket!");
 		    mainS.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -47,12 +42,10 @@ public class ClientThread extends Thread{
 	    
 	  }
 
-	  private void analyzeNewClientThreadMessage(String text) {
+	public void setupFileClient(String filename, long filelength) {
 		  
-		  ClientFileTransferThread fileTransfer = destroySpace.getClientFileTransferThread();
-		  if (text.split(":")[2].equals("0")) {
-			  fileTransfer.prepareForNewFileTransfer(new File("maps/"+text.split(":")[3]), Long.parseLong(text.split(":")[4]));
-		  }
+	ClientFileTransferThread fileTransfer = destroySpace.getClientFileTransferThread();
+	fileTransfer.prepareForNewFileTransfer(new File("maps/"+filename), filelength);
 	}
 
 	public void send(String message) {
@@ -71,9 +64,8 @@ public class ClientThread extends Thread{
 			e.printStackTrace();
 		}
 	  }
-	  
-	  public void closeByClient() {
-		  send("0:-1:1");
-		  close();
-	  }
+
+	public void closeByClient() {
+		send("action=closeserver");
+	}
 }

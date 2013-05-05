@@ -11,7 +11,3 @@ keine public Variablen
 - keine Umlaute
 - Fehlerüberprüfungen in unterster Ebene
 
-Format .map:
-
-xMax:yMax:description of the map;x1y0:x2y0:...:xNyN
-

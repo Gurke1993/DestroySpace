@@ -1,6 +1,5 @@
 package de.bplaced.mopfsoft;
 
-import java.util.Arrays;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -14,8 +13,8 @@ public class GameLobbyState extends BasicGameState{
 	private Image backGround, hud;
 	private MainScreen mainScreen;
 	private String mapName = "";
-	private String playerAmount ="";
-	private String maxPlayerAmount ="";
+	private int playerAmount = -1;
+	private int maxPlayerAmount = -1;
 	private String[] players = new String[0];
 	private String mapDescription = "";
 	
@@ -67,7 +66,7 @@ public class GameLobbyState extends BasicGameState{
 	}
 	
 	private void close() {
-		mainScreen.getDestroySpace().getClientThread().closeByClient();
+		mainScreen.getDestroySpace().getClientThread().close();
   		mainScreen.enterState(4);
 	}
 	
@@ -75,39 +74,24 @@ public class GameLobbyState extends BasicGameState{
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		//Request Lobbyinformation
-		send("0:0:1");
+		send("action=getlobbyinfo");
 	}
 
 	
 	public void send(String message) {
 		mainScreen.getDestroySpace().getClientThread().send(message);
 	}
-	
-	public void analyzeNewMessage(String message) {
-		int index = Integer.parseInt(message.split(":")[0]);
-		switch (index) {
-		case 1: {
-			//Recieved Lobbyinformation
-			setLobbyInformation(message.split(":", 2)[1]);
-			break;
-		}
-		}
-	}
 
-	private void setLobbyInformation(String string) {
+	public void setLobbyInformation(String mapName, String mapDescription, int playerAmount, int maxPlayerAmount, String[] players) {
 		System.out.println("Setting Lobbyinformation...");
-		String[] array = string.split(":");
-		this.mapName = array[0];
-		this.mapDescription = array[1];
-		this.playerAmount = array[2];
-		this.maxPlayerAmount = array[3];
-		if (array.length > 4) {
-			this.players = Arrays.copyOfRange(array,4,array.length-1);
-		} else {
-			this.players = new String[0];
-		}
+		this.mapName = mapName;
+		this.mapDescription = mapDescription;
+		this.playerAmount = playerAmount;
+		this.maxPlayerAmount = maxPlayerAmount;
+		this.players = players;
+
 		System.out.println("Asking for fileinformation...");
-		send("0:-1:2:"+mapName+".gif");
+		send("action=getmappreviewinfo");
 		
 		
 	}

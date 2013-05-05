@@ -1,3 +1,47 @@
+Messages hold different types of arguments which do not have to be in a specific order. 
+The structure of any message should be: key1=string1:key2=string2:key3=string3 and so on.
+That also means that neither equals nor colon are allowed in the keys or mapped strings.
+
+All messages should contain the key "action", while all other keys can be named freely.
+All keys and mapped strings have to be lower case only! (Case sensitive checking!!)
+
+This is a list of all strings mapped to by "action" that are currently in use:
+
+Server to Client(s):
+
+givemappreviewinfo: answers on getfileinfo
+	-filename: the name of the file (containing .gif)
+	-filelength: the length of the file
+givelobbyinfo: answers on getlobbyinfo
+	-mapname: the maps name
+	-mapdescription: the maps description
+	-amountofplayers: amountofplayers currently connected
+	-maxamountofplayers: amount of allowed players
+	-players: a list of the connected players' names (seperated by ",")
+
+Client to Server:
+
+closeserver: asks the server to shut down
+clientupdate: gets send whenever a keystroke or similiar action by the client has been taken
+	-type: type of update 
+		-move
+			-x
+			-y
+		-moveanduse
+			-x
+			-y
+			-toolid
+		-use
+			-toolid
+getlobbyinfo: asks for information about the servers gamelobby ->givelobbyinfo
+getmappreviewinfo: asks for information about a file ->givemappreviewinfo
+
+
+
+
+
+
+@Deprecated!!!!
 Indize fuer Nachrichten:
 
 Client(0)/Server(1):Typ:Info1:Info2:...:InfoN

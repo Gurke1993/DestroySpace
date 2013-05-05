@@ -1,5 +1,6 @@
 package de.bplaced.mopfsoft;
 
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -7,9 +8,6 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
-
-import de.bplaced.mopfsoft.blocks.Block;
-import de.bplaced.mopfsoft.blocks.Stone;
 
 public class LoadingState extends BasicGameState{
 	public static final int id = 7;
@@ -53,7 +51,7 @@ public class LoadingState extends BasicGameState{
 		this.loaded = d;
 	}
 	
-	public void setupGame(Block [][] gameFieldArray, String [] [] playerArray) {
+	public void setupGame(String path) {
 		//Setup game 
 		
 		try {
@@ -64,17 +62,13 @@ public class LoadingState extends BasicGameState{
 		}
 		
 		
-		//Initialise GameField
+		//Initialise GameManager
 		mainScreen.getDestroySpace().setMultiplayerGameManager(new MultiplayerGameManager(mainScreen.getDestroySpace().getClientThread()));
-		mainScreen.getDestroySpace().getMultiplayerGameManager().setGameField(gameFieldArray);
-		loaded = 0.8;
+		loaded = 0.3;
 		
-		//Load Players
-		for (int i = 0; i< playerArray.length; i++) {
-		mainScreen.getDestroySpace().getMultiplayerGameManager().getGameField().addPlayer(playerArray[i]);
-		}
+		//Initialise Map
+		mainScreen.getDestroySpace().getMultiplayerGameManager().setMap(path);
 		loaded = 0.9;
-		//
 	}
 	
 	@Override
@@ -86,25 +80,10 @@ public class LoadingState extends BasicGameState{
 		
 		//TODO update method für preload progressbar siehe inet defferedloading
 		
-		/*
-		 * TEST
-		 */
-		Block [][] testArray = new Block[1000][700];
-		for (int i = 0; i<testArray.length; i++) {
-			for (int j = 0; j<testArray[0].length; j++) {
-			testArray[i][j] = new Stone(i,j);
-			}
-		}
-		
-		//Name Level Champion Handicap
-		String [][] testPlayerArray = new String [2][4];
-		String [] player1 = {"Gurke1993","Newbie","Heimerdinger","100"};
-		String [] player2 = {"Darabasi","Pro","Evelynn","70"};
-		testPlayerArray[0] = player1;
-		testPlayerArray[1] = player2;
+		String mapPath = "";
 		
 		//Setup game
-		setupGame(testArray, testPlayerArray);
+		setupGame(mapPath);
 		loaded = 1;
 	}
 

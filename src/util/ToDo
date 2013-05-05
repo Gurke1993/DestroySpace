@@ -1,9 +1,0 @@
-File für Aufträge an andere Teammitglieder
-Nach Abarbeiten hier löschen und im changelog vermerken!
-
-@Daniel
-- mit TODO gemarkte Funktionen in EditorState
-- Umstellung von SettingsLayout auf settingsState
-- PaintTest entfernen
-
-@Moritz
