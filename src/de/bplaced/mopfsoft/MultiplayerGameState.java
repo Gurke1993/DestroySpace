@@ -24,7 +24,7 @@ public class MultiplayerGameState extends BasicGameState{
 			throws SlickException {
 		
 		//Draw gamefield, entities
-		mainScreen.getDestroySpace().getMultiplayerGameManager().getMap().drawAll(graphics);
+		mainScreen.getDestroySpace().getMultiplayerGameManager().getMap().drawAll(graphics,1,1);
 
 	}
 

@@ -81,14 +81,14 @@ public class DrawableMap extends Map{
 		gamefieldAsImageG.flush();
 	}
 
-	public void drawAll(Graphics graphics) {
+	public void drawAll(Graphics graphics, int x, int y) {
 		
 		//Draw gamefield
-		graphics.drawImage(getGamefieldAsImage(), 1, 1);
+		graphics.drawImage(getGamefieldAsImage(), x, y);
 		
 		//Draw Entities
 		for (Entity entity: entitys) {
-			graphics.drawImage(entity.getImage(), entity.getX(), entity.getY());
+			graphics.drawImage(entity.getImage(), x+entity.getX(), y+entity.getY());
 		}
 	}
 
