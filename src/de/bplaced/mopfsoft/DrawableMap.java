@@ -2,6 +2,9 @@ package de.bplaced.mopfsoft;
 
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -26,6 +29,48 @@ public class DrawableMap extends Map{
 		return this.previewImage;
 	}
 	
+	public DrawableMap(File mapFile, String previewImageFile) throws FileNotFoundException {
+		super(mapFile);
+		setupImages(previewImageFile);
+	}
+	
+	private void setupImages(String previewImageFile) {
+		// Set path to previewImage
+				Image previewImageTemp = null;
+				try {
+					previewImageTemp = new Image(previewImageFile);
+				} catch (SlickException e1) {
+				}
+				previewImage = previewImageTemp;
+				
+				try {
+					System.out.println("Creating gamefieldimage with "+gamefield.length+" "+gamefield[0].length);
+					// setup image
+					gamefieldAsImage = Image.createOffscreenImage(gamefield.length,
+							gamefield[0].length);
+					gamefieldAsImageG = gamefieldAsImage.getGraphics();
+
+					// set backgroundcolor
+					gamefieldAsImageG.setBackground(Color.black);
+					gamefieldAsImageG.clear();
+
+					
+					//Draw gamefield
+					for (int i = 0; i < gamefield.length; i++) {
+						for (int j = 0; j < gamefield[0].length; j++) {
+							gamefieldAsImageG.setColor(gamefield[i][j].getColor());
+							gamefieldAsImageG.fillRect(i, j, 1, 1);
+						}
+					}
+					
+					//Clear Graphics
+					gamefieldAsImageG.flush();
+
+				} catch (SlickException e) {
+					System.out.println("Could not initialise Image!");
+					e.printStackTrace();
+				}
+	}
 	
 	/** Supports empty String for previewImageFile but can cause NullPointers
 	 * @param mapString
@@ -33,42 +78,8 @@ public class DrawableMap extends Map{
 	 */
 	public DrawableMap(String mapString, String previewImageFile){
 		super(mapString);
+		setupImages(previewImageFile);
 		
-		// Set path to previewImage
-		Image previewImageTemp = null;
-		try {
-			previewImageTemp = new Image(previewImageFile);
-		} catch (SlickException e1) {
-		}
-		previewImage = previewImageTemp;
-		
-		try {
-			System.out.println("Creating gamefieldimage with "+gamefield.length+" "+gamefield[0].length);
-			// setup image
-			gamefieldAsImage = Image.createOffscreenImage(gamefield.length,
-					gamefield[0].length);
-			gamefieldAsImageG = gamefieldAsImage.getGraphics();
-
-			// set backgroundcolor
-			gamefieldAsImageG.setBackground(Color.black);
-			gamefieldAsImageG.clear();
-
-			
-			//Draw gamefield
-			for (int i = 0; i < gamefield.length; i++) {
-				for (int j = 0; j < gamefield[0].length; j++) {
-					gamefieldAsImageG.setColor(gamefield[i][j].getColor());
-					gamefieldAsImageG.fillRect(i, j, 1, 1);
-				}
-			}
-			
-			//Clear Graphics
-			gamefieldAsImageG.flush();
-
-		} catch (SlickException e) {
-			System.out.println("Could not initialise Image!");
-			e.printStackTrace();
-		}
 	}
 	
 	public Image getGamefieldAsImage() {
