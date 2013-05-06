@@ -115,6 +115,13 @@ public class DestroySpace {
 			
 		if (action.equals("loadupgame")) {
 			((GameLobbyState)gameStateArray[3]).loadUpGame();
+		} else  
+		
+		if (action.equals("givemapstring")) {
+			if (args.get("finished").equals("false"))
+			((GameLobbyState)gameStateArray[3]).addToMapString(args.get("partofstring"));
+			else
+			((GameLobbyState)gameStateArray[3]).setMapStringIsFinished(true);
 		}
 	}
 	

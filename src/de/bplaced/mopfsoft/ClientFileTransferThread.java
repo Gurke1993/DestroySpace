@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.Arrays;
 
 public class ClientFileTransferThread extends Thread{
 	Socket fileS;
@@ -16,7 +15,7 @@ public class ClientFileTransferThread extends Thread{
 	private long completedTransmission = 0;
 	private int step = 15000;
 	private File currentFile;
-	private boolean wait = true;
+	private boolean wait = false;
 
 	  public ClientFileTransferThread(String ip, int port, DestroySpace destroySpace) throws IOException {
 	      System.out.println("Starting FileTransferClient!");
@@ -32,11 +31,10 @@ public class ClientFileTransferThread extends Thread{
 		  int readBytes;
 	    	while ((readBytes = in.read(buffer)) != -1) {
 	    		if (out != null) {
-	    		if (readBytes >= 0) {
-	    			
-				out.write(Arrays.copyOfRange(buffer, 0, readBytes-1));
+	    		out.write(buffer, 0, readBytes-1);
+				//out.write(Arrays.copyOfRange(buffer, 0, readBytes-1));
 				completedTransmission += step;
-				System.out.println("Downloaded "+(((double)completedTransmission/transmittedFileSize)*100)+"%");
+				System.out.println("Downloaded "+(int)(((double)completedTransmission/transmittedFileSize)*100)+"%");
 			
 				if (completedTransmission  >= transmittedFileSize) {
 					System.out.println("Finished FileTransfer of "+currentFile.getName());
@@ -50,7 +48,6 @@ public class ClientFileTransferThread extends Thread{
 					//Load the file inside of the FileHandler for further use in this session
 					destroySpace.getFileHandler().setFileIsReady(file, true);
 					
-				}
 	    		}
 		}
 	    	}
@@ -69,6 +66,16 @@ public class ClientFileTransferThread extends Thread{
 	  }
 
 	public void prepareForNewFileTransfer(File file, long fileSize) {
+		while(this.wait) {
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		System.out.println("notified");
+		
 		//Set values
 		currentFile = file;
 		transmittedFileSize = fileSize;
@@ -81,13 +88,12 @@ public class ClientFileTransferThread extends Thread{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		//Setup Output
 		try {
 			out = new ExtendedFileOutputStream(file);
 			
 			//Send message to server
-			System.out.println("letting server know...");
 			destroySpace.getClientThread().send("action=starttransfer:filename="+file.getName()+":path="+file.getPath());
 		} catch (FileNotFoundException e) {
 			System.out.println("[ERROR] Could not prepare for File Transfer of file: "+file.getName());
@@ -95,15 +101,6 @@ public class ClientFileTransferThread extends Thread{
 		}
 		
 		wait = true;
-		while(this.wait) {
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		System.out.println("notified");
 
 	}
 	  

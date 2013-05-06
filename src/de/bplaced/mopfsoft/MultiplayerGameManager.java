@@ -62,8 +62,8 @@ public class MultiplayerGameManager {
 		}
 	}
 
-	public void setMap(String path) {
-		this.map = new DrawableMap(path);
+	public void setMap(String mapString, String previewImagePath) {
+		this.map = new DrawableMap(mapString,previewImagePath);
 	}
 
 

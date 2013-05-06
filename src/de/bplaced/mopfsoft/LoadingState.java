@@ -67,7 +67,7 @@ public class LoadingState extends BasicGameState{
 		loaded = 0.3;
 		
 		//Initialise Map
-		mainScreen.getDestroySpace().getMultiplayerGameManager().setMap(((GameLobbyState)mainScreen.getDestroySpace().getGameState(3)).getPath());
+		mainScreen.getDestroySpace().getMultiplayerGameManager().setMap(((GameLobbyState)mainScreen.getDestroySpace().getGameState(3)).getMapString(),((GameLobbyState)mainScreen.getDestroySpace().getGameState(3)).getPreviewImagePath());
 		loaded = 0.9;
 	}
 	
@@ -75,8 +75,6 @@ public class LoadingState extends BasicGameState{
 	public void enter(GameContainer container, StateBasedGame game) {
 		//Enable Load mode
 		loaded = 0;
-		
-		//TODO , send method, serverside array sending
 		
 		//TODO update method für preload progressbar siehe inet defferedloading
 		

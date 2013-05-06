@@ -1,6 +1,5 @@
 package de.bplaced.mopfsoft;
 
-import java.io.File;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
@@ -18,9 +17,6 @@ public class DrawableMap extends Map{
 	private Graphics gamefieldAsImageG;
 
 	
-	public DrawableMap() {
-		super();
-	}
 	
 	/** Returns the preview image of the map
 	 * @return
@@ -29,18 +25,19 @@ public class DrawableMap extends Map{
 		return this.previewImage;
 	}
 	
-	public DrawableMap(File file) {
-		super(file);
+	public DrawableMap(String mapString, String previewImageFile){
+		super(mapString);
 		
 		// Set path to previewImage
 		Image previewImageTemp = null;
 		try {
-			previewImageTemp = new Image(file.getPath().split("\\.")[0] + ".gif");
+			previewImageTemp = new Image(previewImageFile);
 		} catch (SlickException e1) {
 		}
 		previewImage = previewImageTemp;
 		
 		try {
+			System.out.println("Creating gamefieldimage with "+gamefield.length+" "+gamefield[0].length);
 			// setup image
 			gamefieldAsImage = Image.createOffscreenImage(gamefield.length,
 					gamefield[0].length);
@@ -66,12 +63,6 @@ public class DrawableMap extends Map{
 			System.out.println("Could not initialise Image!");
 			e.printStackTrace();
 		}
-	}
-	
-	
-	
-	public DrawableMap(String file) {
-		super(file);
 	}
 	
 	public Image getGamefieldAsImage() {

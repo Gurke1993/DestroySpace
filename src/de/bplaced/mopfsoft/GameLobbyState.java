@@ -1,7 +1,6 @@
 package de.bplaced.mopfsoft;
 
 
-import java.io.File;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -19,6 +18,9 @@ public class GameLobbyState extends BasicGameState{
 	private int maxPlayerAmount = -1;
 	private String[] players = new String[0];
 	private String mapDescription = "";
+	private String mapString = "";
+	@SuppressWarnings("unused")
+	private boolean mapStringIsReady = false;
 	
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
@@ -92,19 +94,35 @@ public class GameLobbyState extends BasicGameState{
 		this.maxPlayerAmount = maxPlayerAmount;
 		this.players = players;
 
+		
+		System.out.println("Ask for mapstring...");
+		send("action=getMapString:filename="+mapName+".map:path=maps"+System.getProperty("file.separator")+mapName+".map");
+		
 		System.out.println("Ask for mappreviewinfo...");
 		send("action=getfiletransferinfo:filename="+mapName+".gif:path=maps"+System.getProperty("file.separator")+mapName+".gif");
-		
-		
-		System.out.println("Ask for mapfileinfo...");
-		send("action=getfiletransferinfo:filename="+mapName+".map:path=maps"+System.getProperty("file.separator")+mapName+".map");
 	}
 	
 	public void loadUpGame() {
 		mainScreen.enterState(7);
 	}
 
-	public String getPath() {
-		return "maps"+System.getProperty("file.separator")+this.mapName+".map";
+	public String getMapString() {
+		return this.mapString;
+	}
+	
+	public void setMapString(String mapString) {
+		this.mapString = mapString;
+	}
+
+	public void addToMapString(String string) {
+		this.mapString += string;
+	}
+
+	public void setMapStringIsFinished(boolean b) {
+		this.mapStringIsReady  = b;
+	}
+
+	public String getPreviewImagePath() {
+		return "maps"+System.getProperty("file.separator")+mapName+".gif";
 	}
 }
