@@ -56,6 +56,10 @@ public class DestroySpace {
 		}
 		
 	}
+	
+	public GameState getGameState(int id) {
+		return gameStateArray[id];
+	}
 
 	//MAIN//
 	public static void main(String[] args) {

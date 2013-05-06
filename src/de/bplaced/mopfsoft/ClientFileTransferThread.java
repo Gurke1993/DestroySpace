@@ -16,6 +16,7 @@ public class ClientFileTransferThread extends Thread{
 	private long completedTransmission = 0;
 	private int step = 15000;
 	private File currentFile;
+	private boolean wait = true;
 
 	  public ClientFileTransferThread(String ip, int port, DestroySpace destroySpace) throws IOException {
 	      System.out.println("Starting FileTransferClient!");
@@ -35,17 +36,20 @@ public class ClientFileTransferThread extends Thread{
 	    			
 				out.write(Arrays.copyOfRange(buffer, 0, readBytes-1));
 				completedTransmission += step;
+				System.out.println("Downloaded "+(((double)completedTransmission/transmittedFileSize)*100)+"%");
 			
 				if (completedTransmission  >= transmittedFileSize) {
-					System.out.println("Finished FileTransfer of"+currentFile.getName());
+					System.out.println("Finished FileTransfer of "+currentFile.getName());
 		    		completedTransmission = 0;
 		    		File file = out.getFile();
 		    		out.flush();
 					out.close();
 					out = null;
+					wait = false;
 					
 					//Load the file inside of the FileHandler for further use in this session
 					destroySpace.getFileHandler().setFileIsReady(file, true);
+					
 				}
 	    		}
 		}
@@ -70,6 +74,7 @@ public class ClientFileTransferThread extends Thread{
 		transmittedFileSize = fileSize;
 		
 		
+		System.out.println("Preparing file download of"+currentFile.getName()+" of size "+transmittedFileSize);
 		//Create the file
 		try {
 			file.createNewFile();
@@ -82,11 +87,24 @@ public class ClientFileTransferThread extends Thread{
 			out = new ExtendedFileOutputStream(file);
 			
 			//Send message to server
+			System.out.println("letting server know...");
 			destroySpace.getClientThread().send("action=starttransfer:filename="+file.getName()+":path="+file.getPath());
 		} catch (FileNotFoundException e) {
-			System.out.println("[ERROR] Could not prepare for File Trasfer of file: "+file.getName());
+			System.out.println("[ERROR] Could not prepare for File Transfer of file: "+file.getName());
 			e.printStackTrace();
 		}
+		
+		wait = true;
+		while(this.wait) {
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		System.out.println("notified");
+
 	}
 	  
 }

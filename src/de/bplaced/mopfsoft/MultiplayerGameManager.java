@@ -56,7 +56,7 @@ public class MultiplayerGameManager {
 		
 		//Wait if to fast
 		try {
-			this.wait(loopTime-(System.currentTimeMillis()+timePassed-startTime));
+			Thread.sleep(Math.max(loopTime-(System.currentTimeMillis()+timePassed-startTime), 0));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

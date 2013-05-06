@@ -51,7 +51,7 @@ public class LoadingState extends BasicGameState{
 		this.loaded = d;
 	}
 	
-	public void setupGame(String path) {
+	public void setupGame() {
 		//Setup game 
 		
 		try {
@@ -67,7 +67,7 @@ public class LoadingState extends BasicGameState{
 		loaded = 0.3;
 		
 		//Initialise Map
-		mainScreen.getDestroySpace().getMultiplayerGameManager().setMap(path);
+		mainScreen.getDestroySpace().getMultiplayerGameManager().setMap(((GameLobbyState)mainScreen.getDestroySpace().getGameState(3)).getPath());
 		loaded = 0.9;
 	}
 	
@@ -80,10 +80,9 @@ public class LoadingState extends BasicGameState{
 		
 		//TODO update method für preload progressbar siehe inet defferedloading
 		
-		String mapPath = "";
 		
 		//Setup game
-		setupGame(mapPath);
+		setupGame();
 		loaded = 1;
 	}
 

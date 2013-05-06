@@ -1,6 +1,8 @@
 package de.bplaced.mopfsoft;
 
 
+import java.io.File;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -93,11 +95,16 @@ public class GameLobbyState extends BasicGameState{
 		System.out.println("Ask for mappreviewinfo...");
 		send("action=getfiletransferinfo:filename="+mapName+".gif:path=maps"+System.getProperty("file.separator")+mapName+".gif");
 		
+		
 		System.out.println("Ask for mapfileinfo...");
 		send("action=getfiletransferinfo:filename="+mapName+".map:path=maps"+System.getProperty("file.separator")+mapName+".map");
 	}
 	
 	public void loadUpGame() {
 		mainScreen.enterState(7);
+	}
+
+	public String getPath() {
+		return "maps"+System.getProperty("file.separator")+this.mapName+".map";
 	}
 }

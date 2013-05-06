@@ -96,6 +96,15 @@ public class FileHandler {
 
 	public void setFileIsReady(File file, Boolean ready) {
 		this.readyMap.put(file.getName(), ready);
+		synchronized (this) {
+			this.notifyAll();
+		}
+	}
+
+
+	private boolean isReady(File file) {
+		if (!readyMap.containsKey(file.getName())) return false;
+		return readyMap.get(file.getName());
 	}
 
 }
