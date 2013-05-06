@@ -2,6 +2,9 @@ package de.bplaced.mopfsoft;
 
 
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -12,6 +15,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import de.bplaced.mopfsoft.blocks.Block;
 import de.bplaced.mopfsoft.blocks.Dirt;
 import de.bplaced.mopfsoft.blocks.Stone;
+import de.bplaced.mopfsoft.map.Map;
 
 
 public class EditorState extends BasicGameState{
@@ -29,10 +33,9 @@ public class EditorState extends BasicGameState{
 	//gamefield for editing
 	private DrawableMap drawableMap;
 	Block [][] mapArray;
-	
 	//map position
 	int imgPosX,imgPosY;
-	
+	Map editMap;
 	
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
@@ -50,7 +53,13 @@ public class EditorState extends BasicGameState{
 		}
 
 		blockId=2;
-		drawableMap = new DrawableMap();
+		Map.copyDefaultMap();
+		try {
+		drawableMap = new DrawableMap(new File("maps"+System.getProperty("file.separator")+"DefaultMap.map"),"");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
 		imgPosX=0;
 		imgPosY=0;
 	}
@@ -200,9 +209,7 @@ public class EditorState extends BasicGameState{
 			{
 				mapArray = drawCircle(mapArray, x, y, radius,blockId);
 			}
-			
-	//		mapArray = paint (mapArray, x, y, 50, null);
-	//	mapArray =	fill(mapArray, x, y, 2);
+
 		}
 	}	
 	
