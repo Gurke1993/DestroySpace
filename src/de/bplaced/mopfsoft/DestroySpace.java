@@ -19,7 +19,7 @@ public class DestroySpace {
 	
 	// Add new States here (ONLY AS LAST ENTRY!!!):
 	//TODO
-	private GameState [] gameStateArray = {new MenuState(), new MenuState(), new ServerSelectState(), new GameLobbyState(), new SettingsState(), new MultiplayerGameState(), new LoadingState()};
+	private GameState [] gameStateArray = {new MenuState(), new EditorState(), new ServerSelectState(), new GameLobbyState(), new SettingsState(), new MultiplayerGameState(), new LoadingState()};
 	private ClientFileTransferThread clientFileTransferThread;
 	private FileHandler fileHandler;
 	

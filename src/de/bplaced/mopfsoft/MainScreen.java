@@ -26,12 +26,8 @@ public class MainScreen extends StateBasedGame {
 	@Override
 	public void initStatesList(GameContainer arg0) throws SlickException {
 		//Adding all GameStates
-		int i = 0;
 		for (GameState gameState: gameStateArray) {
-			//TODO
-			if (i!= 1)
 			addState(gameState);
-			i++;
 		}
 	}
 	

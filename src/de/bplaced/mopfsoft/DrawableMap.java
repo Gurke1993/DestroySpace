@@ -1,6 +1,7 @@
 package de.bplaced.mopfsoft;
 
 
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -25,6 +26,11 @@ public class DrawableMap extends Map{
 		return this.previewImage;
 	}
 	
+	
+	/** Supports empty String for previewImageFile but can cause NullPointers
+	 * @param mapString
+	 * @param previewImageFile
+	 */
 	public DrawableMap(String mapString, String previewImageFile){
 		super(mapString);
 		
