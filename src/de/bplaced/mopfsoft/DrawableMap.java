@@ -40,6 +40,8 @@ public class DrawableMap extends Map{
 				try {
 					previewImageTemp = new Image(previewImageFile);
 				} catch (SlickException e1) {
+				} catch (NullPointerException e2) {
+					System.out.println("Leaving previewImage empty....");
 				}
 				previewImage = previewImageTemp;
 				
