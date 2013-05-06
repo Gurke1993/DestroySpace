@@ -102,9 +102,9 @@ public class FileHandler {
 	}
 
 
-	private boolean isReady(File file) {
-		if (!readyMap.containsKey(file.getName())) return false;
-		return readyMap.get(file.getName());
-	}
+//	private boolean isReady(File file) {
+//		if (!readyMap.containsKey(file.getName())) return false;
+//		return readyMap.get(file.getName());
+//	}
 
 }
