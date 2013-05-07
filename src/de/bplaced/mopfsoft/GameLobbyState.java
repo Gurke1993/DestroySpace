@@ -21,6 +21,8 @@ public class GameLobbyState extends BasicGameState{
 	private String mapString = "";
 	@SuppressWarnings("unused")
 	private boolean mapStringIsReady = false;
+	private boolean host;
+	private Image startButton;
 	
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
@@ -28,6 +30,7 @@ public class GameLobbyState extends BasicGameState{
 		mainScreen = (MainScreen)stateBasedGame;
 		backGround = new Image("resources/images/general/Background.jpg");
 		hud = new Image("resources/images/gameLobby/Hud.png");
+		startButton = new Image("resources/images/gameLobby/StartButton.png");
 	}
 
 	@Override
@@ -35,6 +38,7 @@ public class GameLobbyState extends BasicGameState{
 			throws SlickException {
 		graphics.drawImage(backGround, 0, 0);
 		graphics.drawImage(hud, 0, 0);
+		graphics.drawImage(startButton, 120,120);
 		graphics.drawString(mapName, 812, 144);
 		graphics.drawString(playerAmount+" "+maxPlayerAmount+" "+mapDescription, 100, 100);
 		int i = 0;
@@ -86,13 +90,14 @@ public class GameLobbyState extends BasicGameState{
 		mainScreen.getDestroySpace().getClientThread().send(message);
 	}
 
-	public void setLobbyInformation(String mapName, String mapDescription, int playerAmount, int maxPlayerAmount, String[] players) {
+	public void setLobbyInformation(String mapName, String mapDescription, int playerAmount, int maxPlayerAmount, String[] players, boolean host) {
 		System.out.println("Setting Lobbyinformation...");
 		this.mapName = mapName;
 		this.mapDescription = mapDescription;
 		this.playerAmount = playerAmount;
 		this.maxPlayerAmount = maxPlayerAmount;
 		this.players = players;
+		this.host = host;
 
 		
 		System.out.println("Ask for mapstring...");
@@ -124,5 +129,9 @@ public class GameLobbyState extends BasicGameState{
 
 	public String getPreviewImagePath() {
 		return "maps"+System.getProperty("file.separator")+mapName+".gif";
+	}
+
+	public void reloadLobby() {
+		send("action=getlobbyinfo");
 	}
 }

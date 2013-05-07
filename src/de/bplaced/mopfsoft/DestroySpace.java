@@ -110,7 +110,7 @@ public class DestroySpace {
 		} else
 			
 		if (action.equals("givelobbyinfo")) {
-			((GameLobbyState)gameStateArray[3]).setLobbyInformation(args.get("mapname"), args.get("mapdescription"), Integer.parseInt(args.get("amountofplayers")), Integer.parseInt(args.get("maxamountofplayers")), args.get("players").split(","));
+			((GameLobbyState)gameStateArray[3]).setLobbyInformation(args.get("mapname"), args.get("mapdescription"), Integer.parseInt(args.get("amountofplayers")), Integer.parseInt(args.get("maxamountofplayers")), args.get("players").split(","), args.get("ishost").equals("true"));
 		} else 
 			
 		if (action.equals("loadupgame")) {
@@ -122,6 +122,10 @@ public class DestroySpace {
 			((GameLobbyState)gameStateArray[3]).addToMapString(args.get("partofstring"));
 			else
 			((GameLobbyState)gameStateArray[3]).setMapStringIsFinished(true);
+		} else 
+			
+		if (action.equals("mapchange")) {
+			((GameLobbyState)gameStateArray[3]).reloadLobby();
 		}
 	}
 	

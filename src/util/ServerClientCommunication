@@ -9,6 +9,7 @@ This is a list of all strings mapped to by "action" that are currently in use:
 
 Server to Client(s):
 
+changemap: tells the clients that the map has been changed and they have to update their info
 loadupgame: tells the clients to load the game up
 givefiletransferinfo: answers on getfileinfo
 	-filename: the name of the file (containing .gif or .map...)
@@ -20,6 +21,7 @@ givelobbyinfo: answers on getlobbyinfo
 	-amountofplayers: amountofplayers currently connected
 	-maxamountofplayers: amount of allowed players
 	-players: a list of the connected players' names (seperated by ",")
+	-ishost: true/false if the player is the host of the game
 gamechange: broadcast of changes to the gamefield or entities
     -type: type of update
         -gamefieldchange
