@@ -9,7 +9,7 @@ This is a list of all strings mapped to by "action" that are currently in use:
 
 Server to Client(s):
 
-changemap: tells the clients that the map has been changed and they have to update their info
+mapchange: tells the clients that the map has been changed and they have to update their info
 loadupgame: tells the clients to load the game up
 givefiletransferinfo: answers on getfileinfo
 	-filename: the name of the file (containing .gif or .map...)
@@ -48,6 +48,7 @@ gamechange: broadcast of changes to the gamefield or entities
                 
 Client to Server:
 
+clientdisconnect: tells the server that the client tries to leave the lobby
 startgame: tells the server to start the game
 closeserver: asks the server to shut down
 clientupdate: gets send whenever a keystroke or similiar action by the client has been taken

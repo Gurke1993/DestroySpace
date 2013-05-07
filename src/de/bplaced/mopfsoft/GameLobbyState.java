@@ -22,7 +22,7 @@ public class GameLobbyState extends BasicGameState{
 	@SuppressWarnings("unused")
 	private boolean mapStringIsReady = false;
 	private Image startButton;
-	private boolean isHost;
+	private boolean isHost = false;
 	
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
@@ -38,7 +38,6 @@ public class GameLobbyState extends BasicGameState{
 			throws SlickException {
 		graphics.drawImage(backGround, 0, 0);
 		graphics.drawImage(hud, 0, 0);
-		graphics.drawImage(startButton, 801,463);
 		graphics.drawString(mapName, 812, 144);
 		graphics.drawString(playerAmount+" "+maxPlayerAmount+" "+mapDescription, 100, 100);
 		int i = 0;
@@ -77,6 +76,7 @@ public class GameLobbyState extends BasicGameState{
 	}
 	
 	private void close() {
+		send("action=clientdisconnect");
 		mainScreen.getDestroySpace().getClientThread().close();
   		mainScreen.enterState(4);
 	}
@@ -142,10 +142,12 @@ public class GameLobbyState extends BasicGameState{
 	public void mousePressed(int button, int x, int y) {
 		System.out.println("Button pressed: "+button+" at "+x+" "+y);
 		if (button == 0) {
+			System.out.println("basdaub");
 		if( x >= 800 && x <= 1000) {
-      	
+			System.out.println("bub"+isHost);
       	if (y >= 463 && y <= 525 && isHost) {
       		//Start game
+      		System.out.println("Telling the server to start the game...");
       		send("action=startgame");
       		
       	} else

@@ -31,10 +31,9 @@ public class ClientThread extends Thread{
 				this.destroySpace.analyseServerMessage(text);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Lost connection to server... terminating");
 		}
 		try {
-			System.out.println("Closing Socket!");
 		    mainS.close();
 		} catch (IOException e) {
 			e.printStackTrace();
