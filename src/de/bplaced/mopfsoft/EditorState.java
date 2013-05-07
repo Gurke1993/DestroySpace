@@ -1,20 +1,17 @@
 package de.bplaced.mopfsoft;
 
-
+//TODO in enter constructor von drawablemap
 
 import java.io.File;
 import java.io.FileNotFoundException;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import de.bplaced.mopfsoft.blocks.Block;
-import de.bplaced.mopfsoft.blocks.Dirt;
-import de.bplaced.mopfsoft.blocks.Stone;
 import de.bplaced.mopfsoft.map.Map;
 
 
@@ -35,22 +32,15 @@ public class EditorState extends BasicGameState{
 	Block [][] mapArray;
 	//map position
 	int imgPosX,imgPosY;
-	Map editMap;
-	
+
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
 			throws SlickException {
 		this.stateBasedGame = stateBasedGame;	
 		
-		//New Gamefield
-		mapArray = new Block[1000][1000];
-		for (int i = 0; i<mapArray.length; i++) {
-			for (int j = 0; j<mapArray[0].length; j++) {
-			mapArray[i][j] = new Stone(i,j);
-			
-			}
-			
-		}
+	
+	
+		
 
 		blockId=2;
 		Map.copyDefaultMap();
@@ -242,31 +232,42 @@ public class EditorState extends BasicGameState{
 	 * @param id2 blocks wich to get replaced with
 	 * @return
 	 */
-	private Block[][] fill(Block[][] array, int x, int y,  int id2) {
-		if(x >= 0 && x < array.length-1 && y >= 1 && y  < array[1].length-1)
-		{
-		int id1 = array[x][y].getBid();
-		drawableMap.updateBlock(x, y, 2);
+	private Block[][] fill(Block[][] array, int x, int y, int id2) {
+		if (x >= 0 && x < array.length - 1 && y >= 1 && y < array[1].length - 1) {
+			int id1 = array[x][y].getBid();
+			drawableMap.updateBlock(x, y, 2);
 
-		if(x-1 >= 0 && x+1 <= array.length-1 && y-1 >= 1 && y +1 <= array[1].length-1)
-		{
-			if (array [x-1][y].getBid() == id1 && array [x-1][y].getBid() != id2) {fill( array ,x-1,y,2);}
-		}
-		if(x-1 >= 0 && x+1 <= array.length-1 && y-1 >= 1 && y +1 <= array[1].length-1)
-		{
-			if (array [x+1][y].getBid() == id1&& array [x-1][y].getBid() != id2) {fill( array ,x+1,y, 2);}
-		}
-		if(x-1 >= 0 && x+1 <= array.length-1 && y-1 >= 1 && y +1 <= array[1].length-1)
-		{
-			if (array [x][y-1].getBid() == id1&& array [x-1][y].getBid() != id2) {fill( array ,x,y-1, 2);}
-		}
-		if(x-1 >= 0 && x+1 <= array.length-1 && y-1 >= 1 && y +1 <= array[1].length-1)
-		{
-			if (array [x][y+1].getBid() == id1&& array [x-1][y].getBid() != id2) {fill( array ,x,y+1, 2);}	
-		}
+			if (x - 1 >= 0 && x + 1 <= array.length - 1 && y - 1 >= 1
+					&& y + 1 <= array[1].length - 1) {
+				if (array[x - 1][y].getBid() == id1
+						&& array[x - 1][y].getBid() != id2) {
+					fill(array, x - 1, y, 2);
+				}
+			}
+			if (x - 1 >= 0 && x + 1 <= array.length - 1 && y - 1 >= 1
+					&& y + 1 <= array[1].length - 1) {
+				if (array[x + 1][y].getBid() == id1
+						&& array[x - 1][y].getBid() != id2) {
+					fill(array, x + 1, y, 2);
+				}
+			}
+			if (x - 1 >= 0 && x + 1 <= array.length - 1 && y - 1 >= 1
+					&& y + 1 <= array[1].length - 1) {
+				if (array[x][y - 1].getBid() == id1
+						&& array[x - 1][y].getBid() != id2) {
+					fill(array, x, y - 1, 2);
+				}
+			}
+			if (x - 1 >= 0 && x + 1 <= array.length - 1 && y - 1 >= 1
+					&& y + 1 <= array[1].length - 1) {
+				if (array[x][y + 1].getBid() == id1
+						&& array[x - 1][y].getBid() != id2) {
+					fill(array, x, y + 1, 2);
+				}
+			}
 		}
 		return array;
-			}
+	}
 	
 	private int[][] drawRect(int[][] array, int x1, int y1, int x2, int y2, int radius, int type, boolean filled) {	
 		return array;
@@ -330,20 +331,48 @@ public class EditorState extends BasicGameState{
 		    }
 	}
 	//TODO crashsave machn!
-	private Block[][] drawCircle(Block[][] array, int x, int y, int radius,int id) {
-		double alpha = 0;
-		int xRad=0;
-		int yRad=0;
+	private Block[][] drawCircle(Block[][] array, int xPos, int yPos, int radius,int id) {
+			int x = 0;
+			int y = radius;
+			int dE =1;
+			int dSE = 2 - radius - radius;
+			
+			 drawableMap.updateBlock(0+xPos , radius+yPos , id);
+			 drawableMap.updateBlock(radius+xPos , 0+yPos , id);
+			 drawableMap.updateBlock(0+xPos , -radius+yPos , id);
+			 drawableMap.updateBlock(-radius+xPos ,0+yPos, id);
+			 
+			 int F=1-radius;
+			 while (x < y)
+			 {
+				 if (F < 0)
+				 {
+					F = F + dE;
+				 }
+				 else
+				 {
+					 F = F+dSE;
+					 y = y-1;
+					 dSE = dSE+4;
+				 }
+				 x=x+1;
+				 dE=dE+2;
+				 drawableMap.updateBlock(x+xPos ,y+yPos, id);
+				 drawableMap.updateBlock(-x+xPos ,y+yPos, id);
+				 drawableMap.updateBlock(-y+xPos ,x+yPos, id);
+				 drawableMap.updateBlock(-y+xPos ,-x+yPos, id);
+				 drawableMap.updateBlock(y+xPos ,x+yPos, id);
+				 drawableMap.updateBlock(y+xPos ,-x+yPos, id);
+				 drawableMap.updateBlock(x+xPos ,-y+yPos, id);
+				 drawableMap.updateBlock(-x+xPos ,-y+yPos, id);
+			 }
+			
+			
 		
-		//calculate around
-		for(int i=1;i<=360;i++){
-		  xRad= (int) Math.round(radius+(radius*Math.cos(alpha)));
-		  yRad=(int) Math.round(radius+(radius*Math.sin(alpha)));
-		 
-  		drawableMap.updateBlock(xRad+x-radius, yRad+y-radius, id);
+  		//  drawableMap.updateBlock(xRad+x-radius, yRad+y-radius, id);
+	      
 	
-		 alpha += 3.14159265/180; //
-		}
+		
 		
 		return array;
 	}
