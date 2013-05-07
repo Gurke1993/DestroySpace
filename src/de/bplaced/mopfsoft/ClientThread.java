@@ -2,7 +2,6 @@ package de.bplaced.mopfsoft;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 
@@ -41,11 +40,6 @@ public class ClientThread extends Thread{
 	    
 	  }
 
-	public void setupFileClient(String filename, long filelength) {
-		  
-	ClientFileTransferThread fileTransfer = destroySpace.getClientFileTransferThread();
-	fileTransfer.prepareForNewFileTransfer(new File("maps/"+filename), filelength);
-	}
 
 	public void send(String message) {
 	    try {

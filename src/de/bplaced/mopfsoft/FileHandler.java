@@ -1,8 +1,15 @@
 package de.bplaced.mopfsoft;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -14,9 +21,11 @@ public class FileHandler {
 	private HashMap<String, Image> imageMap = new HashMap<String, Image>();
 	private HashMap<String, String> stringMap = new HashMap<String, String>();
 	private HashMap<String, Boolean> readyMap = new HashMap<String, Boolean>();
+	private Map<String, String> settings;
 
 	public FileHandler(DestroySpace destroySpace) {
 		this.destroySpace = destroySpace;
+		this.loadSettings();
 	}
 
 	/**
@@ -101,10 +110,76 @@ public class FileHandler {
 		}
 	}
 
+	public Map<String,String> getSettings() {
+		return this.settings;
+	}
 
-//	private boolean isReady(File file) {
-//		if (!readyMap.containsKey(file.getName())) return false;
-//		return readyMap.get(file.getName());
-//	}
+	public void saveSettings() {
+		try {
+		FileWriter writer = new FileWriter(new File("settings.txt"));
+		
+		for (Entry<String,String> entry: this.settings.entrySet()) {
+			writer.write(entry.getKey()+"="+entry.getValue()+System.getProperty("line.separator"));
+		}
+		
+		writer.close();
+		
+		} catch (Exception e) {
+			System.out.println("[ERROR] Could not save settings!");
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadSettings() {
+		
+		File settingFile = new File("settings.txt");
+
+		if (!settingFile.exists()) {
+			try {
+			settingFile.createNewFile();
+			
+			InputStream is = Map.class.getClass().getResourceAsStream(
+					"/resources/other/settings.txt");
+			FileOutputStream os = new FileOutputStream(settingFile);
+			
+			for (int read = 0; (read = is.read()) != -1;) {
+				os.write(read);
+			}
+			
+			os.flush();
+			os.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		this.settings = new HashMap<String,String>();
+		
+		try {
+		FileReader fr = new FileReader(settingFile);
+		BufferedReader reader = new BufferedReader(fr);
+		
+		String line;
+		String[] args;
+		while ((line = reader.readLine()) != null) {
+			args = line.split("=");
+			settings.put(args[0], args[1]);
+		}
+		
+		reader.close();
+		fr.close();
+		
+		} catch (Exception e) {
+			System.out.println("[ERROR] Could not load settings!");
+			e.printStackTrace();
+		}
+		
+		if (settings.containsKey("build") && Integer.parseInt(settings.get("build")) != DestroySpace.BUILD) {
+			System.out.println("Settings are to old... Removing...");
+			settingFile.delete();
+			loadSettings();
+		}
+		settings.remove("build");
+	}
 
 }

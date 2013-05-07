@@ -12,6 +12,7 @@ import org.newdawn.slick.state.GameState;
 //Main Gameclass
 public class DestroySpace {
 	
+	public static final int BUILD = 1;
 	private ClientThread clientThread = null;
 	private ConfigurationHandler configurationHandler;
 	private AppGameContainer app;
@@ -126,6 +127,10 @@ public class DestroySpace {
 			
 		if (action.equals("mapchange")) {
 			((GameLobbyState)gameStateArray[3]).reloadLobby();
+		} else
+
+		if (action.equals("playerchange")) {
+			((GameLobbyState) gameStateArray[3]).updateLobby(args);
 		}
 	}
 	

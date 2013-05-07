@@ -9,6 +9,11 @@ This is a list of all strings mapped to by "action" that are currently in use:
 
 Server to Client(s):
 
+playerchange: tells the client that a player joined or quit the game
+	-amountofplayers: amountofplayers currently connected
+	-maxamountofplayers: amount of allowed players
+	-players: a list of the connected players' names (seperated by ",")
+	-ishost: true/false if the player is the host of the game
 mapchange: tells the clients that the map has been changed and they have to update their info
 loadupgame: tells the clients to load the game up
 givefiletransferinfo: answers on getfileinfo
@@ -63,6 +68,7 @@ clientupdate: gets send whenever a keystroke or similiar action by the client ha
 		-use
 			-tid
 getlobbyinfo: asks for information about the servers gamelobby ->givelobbyinfo
+	-playername the name of the player represented by the client
 getfiletransferinfo: asks for information about a file ->givemappreviewinfo
 startTransfer: asks the server to start a filetransfer
     -filename: name of the file to be transfered
