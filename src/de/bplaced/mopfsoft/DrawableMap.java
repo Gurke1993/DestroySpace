@@ -53,7 +53,7 @@ public class DrawableMap extends Map{
 					gamefieldAsImageG = gamefieldAsImage.getGraphics();
 
 					// set backgroundcolor
-					gamefieldAsImageG.setBackground(Color.black);
+					gamefieldAsImageG.setBackground(Color.transparent);
 					gamefieldAsImageG.clear();
 
 					

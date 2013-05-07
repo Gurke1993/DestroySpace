@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
@@ -32,7 +33,9 @@ public class EditorState extends BasicGameState{
 	Block [][] mapArray;
 	//map position
 	int imgPosX,imgPosY;
-
+    //BackgroundImages
+	Image bgImage;
+	
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
 			throws SlickException {
@@ -49,7 +52,7 @@ public class EditorState extends BasicGameState{
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
+		bgImage = new Image("resources/images/editor/bg.png");
 		imgPosX=0;
 		imgPosY=0;
 	}
@@ -57,8 +60,11 @@ public class EditorState extends BasicGameState{
 	@Override
 	public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics)
 			throws SlickException {
+		//drawing game background
+		graphics.drawImage(bgImage, 0, 0);
 		//drawing the gamefield
         graphics.drawImage(drawableMap.getGamefieldAsImage(), imgPosX, imgPosY);
+        
         //drawing infomation
         if (info)
         {
@@ -101,7 +107,7 @@ public class EditorState extends BasicGameState{
         if(input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON))
         {
         	if (tool ==0){mapArray = paint(mapArray, input.getMouseX(), input.getMouseY(), radius, blockId);}        	
-        	if (tool == 1){mapArray = delete(mapArray, input.getMouseX(), input.getMouseY(), blockId);}   	
+        	else if (tool == 1){mapArray = delete(mapArray, input.getMouseX(), input.getMouseY(), radius);}   	
         }
        
         
@@ -211,16 +217,16 @@ public class EditorState extends BasicGameState{
 			paintArray = drawCircle(paintArray, x, y, i , blockId);
 		}
 		
-		// gameField.changeBlock(x, y, blockId);
 		return paintArray;
 	}
 	
 	
 	private Block[][] delete(Block[][] paintArray, int x, int y, int radius) {	
-		for (int i=radius; i >= 0 ; i--)
-		{
-			paintArray = drawCircle(paintArray, x, y, i , 0);
-		}
+
+			for (int i=radius; i >= 0 ; i--)
+			{
+				paintArray = drawCircle(paintArray, x, y, i , 0);
+			}
 		return paintArray;
 	}
 	
