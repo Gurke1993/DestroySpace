@@ -48,6 +48,7 @@ gamechange: broadcast of changes to the gamefield or entities
                 
 Client to Server:
 
+startgame: tells the server to start the game
 closeserver: asks the server to shut down
 clientupdate: gets send whenever a keystroke or similiar action by the client has been taken
 	-type: type of update 

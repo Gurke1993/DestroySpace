@@ -21,8 +21,8 @@ public class GameLobbyState extends BasicGameState{
 	private String mapString = "";
 	@SuppressWarnings("unused")
 	private boolean mapStringIsReady = false;
-	private boolean host;
 	private Image startButton;
+	private boolean isHost;
 	
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
@@ -38,13 +38,16 @@ public class GameLobbyState extends BasicGameState{
 			throws SlickException {
 		graphics.drawImage(backGround, 0, 0);
 		graphics.drawImage(hud, 0, 0);
-		graphics.drawImage(startButton, 120,120);
+		graphics.drawImage(startButton, 801,463);
 		graphics.drawString(mapName, 812, 144);
 		graphics.drawString(playerAmount+" "+maxPlayerAmount+" "+mapDescription, 100, 100);
 		int i = 0;
 		for (String player: players) {
 			graphics.drawString(player, 100, 130+i);
 			i = i+10;
+		}
+		if (isHost && mainScreen.getDestroySpace().getFileHandler().isFileLoaded(mapName+".gif")) {
+			graphics.drawImage(startButton, 801,463);
 		}
 		mainScreen.getDestroySpace().getFileHandler().drawImageIfLoaded(801, 197, graphics, mapName+".gif");
 	}
@@ -97,7 +100,7 @@ public class GameLobbyState extends BasicGameState{
 		this.playerAmount = playerAmount;
 		this.maxPlayerAmount = maxPlayerAmount;
 		this.players = players;
-		this.host = host;
+		this.isHost = host;
 
 		
 		System.out.println("Ask for mapstring...");
@@ -133,5 +136,29 @@ public class GameLobbyState extends BasicGameState{
 
 	public void reloadLobby() {
 		send("action=getlobbyinfo");
+	}
+	
+	@Override
+	public void mousePressed(int button, int x, int y) {
+		System.out.println("Button pressed: "+button+" at "+x+" "+y);
+		if (button == 0) {
+		if( x >= 800 && x <= 1000) {
+      	
+      	if (y >= 463 && y <= 525 && isHost) {
+      		//Start game
+      		send("action=startgame");
+      		
+      	} else
+      	if (y >= 526 && y <= 588) {
+      		//close
+      		close();
+      		
+      	}
+      				        	
+      }
+	} else {
+		if (button == 1) 
+		close();
+	}
 	}
 }
