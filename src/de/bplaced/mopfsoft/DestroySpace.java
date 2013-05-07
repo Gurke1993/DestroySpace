@@ -78,6 +78,7 @@ public class DestroySpace {
 	 * @param message : message to analyze
 	 */
 	public void analyseServerMessage(String message) {
+		if (!message.contains("givemapstring:partofstring"))
 		System.out.println("ServerSays:"+message);
 		
 		//Structure message
@@ -106,6 +107,10 @@ public class DestroySpace {
 			multiplayerGameManager.queueServerUpdate(args);
 		} else
 		
+		if (action.equals("playerchat")) {
+			((GameLobbyState)gameStateArray[3]).processChatMessage(args.get("message"),args.get("player"));
+		} else
+				
 		if (action.equals("givefiletransferinfo")) {
 			clientFileTransferThread.prepareForNewFileTransfer(new File(args.get("path")), Long.parseLong(args.get("filelength")));
 		} else

@@ -4,10 +4,12 @@ package de.bplaced.mopfsoft;
 
 import java.util.Map;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -26,6 +28,7 @@ public class GameLobbyState extends BasicGameState{
 	private Image startButton;
 	private boolean isHost = false;
 	private Image startButtonOff;
+	private ChatBox chatBox = null;
 	
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
@@ -62,6 +65,11 @@ public class GameLobbyState extends BasicGameState{
 				graphics.drawImage(startButtonOff, 801,463);
 			}
 		}
+		
+		if (chatBox != null) {
+			chatBox.draw(gameContainer, graphics);
+		}
+		
 		mainScreen.getDestroySpace().getFileHandler().drawImageIfLoaded(801, 197, graphics, mapName+".gif");
 	}
 
@@ -100,6 +108,10 @@ public class GameLobbyState extends BasicGameState{
 	public void enter(GameContainer container, StateBasedGame game) {
 		//Request Lobbyinformation
 		send("action=getlobbyinfo:playername="+mainScreen.getDestroySpace().getFileHandler().getSettings().get("playername"));
+		
+		TrueTypeFont font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF,java.awt.Font.BOLD , 26), false);
+		
+		this.chatBox = new ChatBox(mainScreen.getDestroySpace().getClientThread(), container, font, Color.green, 102, 400, 150, 400);
 	}
 
 	
@@ -180,5 +192,11 @@ public class GameLobbyState extends BasicGameState{
 		this.playerAmount = Integer.parseInt(args.get("amountofplayers"));
 		this.maxPlayerAmount = Integer.parseInt(args.get("maxamountofplayers"));
 		this.players = args.get("players").split(":");
+	}
+
+	public void processChatMessage(String message, String player) {
+		if (chatBox != null) {
+			chatBox.addNewMessage(message, player);
+		}
 	}
 }
