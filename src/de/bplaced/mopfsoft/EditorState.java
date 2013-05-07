@@ -12,7 +12,6 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
-import de.bplaced.mopfsoft.blocks.Block;
 import de.bplaced.mopfsoft.map.Map;
 
 
@@ -30,7 +29,6 @@ public class EditorState extends BasicGameState{
 	private int x1,y1;
 	//gamefield for editing
 	private DrawableMap drawableMap;
-	Block [][] mapArray;
 	//map position
 	int imgPosX,imgPosY;
     //BackgroundImages
@@ -39,11 +37,7 @@ public class EditorState extends BasicGameState{
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
 			throws SlickException {
-		this.stateBasedGame = stateBasedGame;	
-		
-	
-	
-		
+		this.stateBasedGame = stateBasedGame;			
 
 		blockId=2;
 		Map.copyDefaultMap();
@@ -104,10 +98,17 @@ public class EditorState extends BasicGameState{
         {
         	imgPosY += 1;
         }
+       
         if(input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON))
         {
-        	if (tool ==0){mapArray = paint(mapArray, input.getMouseX(), input.getMouseY(), radius, blockId);}        	
-        	else if (tool == 1){mapArray = delete(mapArray, input.getMouseX(), input.getMouseY(), radius);}   	
+        	if (tool ==0)
+        	{
+        	paint(input.getAbsoluteMouseX(), input.getAbsoluteMouseY(), radius, blockId);
+        	}
+        	if (tool ==1)
+        	{
+        	delete(input.getAbsoluteMouseX(), input.getAbsoluteMouseY(), radius);
+        	}
         }
        
         
@@ -118,7 +119,7 @@ public class EditorState extends BasicGameState{
 		return ID;
 	}
 	
-	@Override
+	@Override //when a key is clicked
 	public void keyPressed(int key, char c) {
 		System.out.println(key);
 		
@@ -132,7 +133,8 @@ public class EditorState extends BasicGameState{
 				break;
 			}
 			case 74 :{
-				radius--;
+				if(radius >=0){radius--;}
+				
 				break;
 			}
 			//O Pencil //1 Rubber //2 Fill //3 Line //4 Rectangle //5 Circle
@@ -167,7 +169,7 @@ public class EditorState extends BasicGameState{
 		}
 	}
 	
-	@Override
+	@Override //when mouse is clicked
 	public void mousePressed(int button, int x, int y) {
 		if (button == 0) { //O Pencil //1 Rubber //2 Fill //3 Line //4 Rectangle //5 Circle
 			if (tool==0)
@@ -180,7 +182,7 @@ public class EditorState extends BasicGameState{
 			}
 			else if (tool ==2)
 			{
-				mapArray =	fill(mapArray, x, y, blockId);
+				fill( x, y, blockId);
 			}
 			else if (tool ==3)//Line
 			{
@@ -192,7 +194,7 @@ public class EditorState extends BasicGameState{
 				}
 				else
 				{
-					drawLine(mapArray, x, y, x1, y1, radius, blockId);
+					drawLine( x, y, x1, y1, radius, blockId);
 					x1=0;
 					y1=0;
 				}
@@ -203,83 +205,43 @@ public class EditorState extends BasicGameState{
 			}
 			else if (tool ==5)
 			{
-				mapArray = drawCircle(mapArray, x, y, radius,blockId);
+			drawCircle( x, y, radius,blockId);
 			}
-
 		}
 	}	
 	
-	//TODO
-	private Block[][] paint(Block[][] paintArray, int x, int y, int radius, int blockId) {
-		
+	
+	private void paint(  int x, int y, int radius, int blockId) {	
 		for (int i=radius; i >= 0 ; i--)
 		{
-			paintArray = drawCircle(paintArray, x, y, i , blockId);
+			drawCircle( x, y, i , blockId);
 		}
-		
-		return paintArray;
 	}
 	
 	
-	private Block[][] delete(Block[][] paintArray, int x, int y, int radius) {	
+	private void delete( int x, int y, int radius) {	
 
 			for (int i=radius; i >= 0 ; i--)
 			{
-				paintArray = drawCircle(paintArray, x, y, i , 0);
+				 drawCircle(x, y, i , 0);
 			}
-		return paintArray;
+
 	}
 	
-	/**
-	 * @param array
-	 * @param x
-	 * @param y
-	 * @param id1 blocks to replace
-	 * @param id2 blocks wich to get replaced with
-	 * @return
-	 */
-	private Block[][] fill(Block[][] array, int x, int y, int id2) {
-		if (x >= 0 && x < array.length - 1 && y >= 1 && y < array[1].length - 1) {
-			int id1 = array[x][y].getBid();
+	//TODO
+	private void fill( int x, int y, int id2) {
+	
 			drawableMap.updateBlock(x, y, 2);
 
-			if (x - 1 >= 0 && x + 1 <= array.length - 1 && y - 1 >= 1
-					&& y + 1 <= array[1].length - 1) {
-				if (array[x - 1][y].getBid() == id1
-						&& array[x - 1][y].getBid() != id2) {
-					fill(array, x - 1, y, 2);
-				}
-			}
-			if (x - 1 >= 0 && x + 1 <= array.length - 1 && y - 1 >= 1
-					&& y + 1 <= array[1].length - 1) {
-				if (array[x + 1][y].getBid() == id1
-						&& array[x - 1][y].getBid() != id2) {
-					fill(array, x + 1, y, 2);
-				}
-			}
-			if (x - 1 >= 0 && x + 1 <= array.length - 1 && y - 1 >= 1
-					&& y + 1 <= array[1].length - 1) {
-				if (array[x][y - 1].getBid() == id1
-						&& array[x - 1][y].getBid() != id2) {
-					fill(array, x, y - 1, 2);
-				}
-			}
-			if (x - 1 >= 0 && x + 1 <= array.length - 1 && y - 1 >= 1
-					&& y + 1 <= array[1].length - 1) {
-				if (array[x][y + 1].getBid() == id1
-						&& array[x - 1][y].getBid() != id2) {
-					fill(array, x, y + 1, 2);
-				}
-			}
-		}
-		return array;
+
+						
 	}
 	
-	private int[][] drawRect(int[][] array, int x1, int y1, int x2, int y2, int radius, int type, boolean filled) {	
-		return array;
+	private void drawRect( int x1, int y1, int x2, int y2, int radius, int type, boolean filled) {	
+		
 	}
 	
-	private void drawLine(Block[][] array, int x0, int x1, int y0, int y1, int radius, int blockId) {
+	private void drawLine( int x0, int x1, int y0, int y1, int radius, int blockId) {
 		 boolean steep = Math.abs(y1 - y0) > Math.abs(x1 - x0);
 		    if(steep)
 		    {//swap variable
@@ -336,18 +298,21 @@ public class EditorState extends BasicGameState{
 		        }
 		    }
 	}
-	//TODO crashsave machn!
-	private Block[][] drawCircle(Block[][] array, int xPos, int yPos, int radius,int id) {
+
+	private void drawCircle(int xPos, int yPos, int radius,int id) {
 			int x = 0;
 			int y = radius;
 			int dE =1;
 			int dSE = 2 - radius - radius;
+			if (xPos+radius >0 && xPos+radius < drawableMap.getWidth() &&yPos+radius >0 && yPos+radius < drawableMap.getHeight())
+			{
+
+		
+				 drawableMap.updateBlock(0+xPos , radius+yPos , id);
+				 drawableMap.updateBlock(radius+xPos , 0+yPos , id);
+				 drawableMap.updateBlock(0+xPos , -radius+yPos , id);
+				 drawableMap.updateBlock(-radius+xPos ,0+yPos, id);
 			
-			 drawableMap.updateBlock(0+xPos , radius+yPos , id);
-			 drawableMap.updateBlock(radius+xPos , 0+yPos , id);
-			 drawableMap.updateBlock(0+xPos , -radius+yPos , id);
-			 drawableMap.updateBlock(-radius+xPos ,0+yPos, id);
-			 
 			 int F=1-radius;
 			 while (x < y)
 			 {
@@ -363,23 +328,19 @@ public class EditorState extends BasicGameState{
 				 }
 				 x=x+1;
 				 dE=dE+2;
-				 drawableMap.updateBlock(x+xPos ,y+yPos, id);
-				 drawableMap.updateBlock(-x+xPos ,y+yPos, id);
-				 drawableMap.updateBlock(-y+xPos ,x+yPos, id);
-				 drawableMap.updateBlock(-y+xPos ,-x+yPos, id);
-				 drawableMap.updateBlock(y+xPos ,x+yPos, id);
-				 drawableMap.updateBlock(y+xPos ,-x+yPos, id);
-				 drawableMap.updateBlock(x+xPos ,-y+yPos, id);
-				 drawableMap.updateBlock(-x+xPos ,-y+yPos, id);
+				 
+				 
+			drawableMap.updateBlock(x + xPos, y + yPos, id);
+			drawableMap.updateBlock(-x + xPos, y + yPos, id); //
+			drawableMap.updateBlock(-y + xPos, x + yPos, id);//
+			drawableMap.updateBlock(-y + xPos, -x + yPos, id);//
+			drawableMap.updateBlock(y + xPos, x + yPos, id);
+			drawableMap.updateBlock(y + xPos, -x + yPos, id);
+			drawableMap.updateBlock(x + xPos, -y + yPos, id);
+			drawableMap.updateBlock(-x + xPos, -y + yPos, id);
 			 }
-			
-			
+			}
 		
-  		//  drawableMap.updateBlock(xRad+x-radius, yRad+y-radius, id);
-	      
-	
-		
-		
-		return array;
 	}
+	
 }
