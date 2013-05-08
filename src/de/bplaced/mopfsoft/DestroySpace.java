@@ -77,7 +77,7 @@ public class DestroySpace {
 	 * processes messages from the server
 	 * @param message : message to analyze
 	 */
-	public void analyseServerMessage(String message) {
+	public synchronized void analyseServerMessage(String message) {
 		if (!message.contains("givemapstring:partofstring"))
 		System.out.println("ServerSays:"+message);
 		
@@ -104,6 +104,12 @@ public class DestroySpace {
 		String action = args.get("action");
 		
 		if (action.equals("gamechange")) {
+			while(multiplayerGameManager == null) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+			}
+			}
 			multiplayerGameManager.queueServerUpdate(args);
 		} else
 		

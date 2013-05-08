@@ -132,6 +132,7 @@ public class DrawableMap extends Map{
 		//Draw Entities
 		for (Entity entity: entitys) {
 			graphics.drawImage(entity.getImage(), x+entity.getX(), y+entity.getY());
+			//graphics.drawImage(entity.getImage(), x+entity.getX(), y+entity.getY(), x+entity.getX()+entity.getWidth(), y+entity.getY()+entity.getHeight(), 0, 0, entity.getWidth(), entity.getHeight());
 		}
 	}
 

@@ -166,6 +166,8 @@ public class GameLobbyState extends BasicGameState{
 	}
 
 	public void reloadLobby() {
+		this.setMapStringIsFinished(false);
+		this.setMapString("");
 		send("action=getlobbyinfo:playername="+mainScreen.getDestroySpace().getFileHandler().getSettings().get("playername"));
 	}
 	

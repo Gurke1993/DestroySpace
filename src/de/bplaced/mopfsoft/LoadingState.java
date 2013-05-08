@@ -52,13 +52,7 @@ public class LoadingState extends BasicGameState{
 	}
 	
 	public void setupGame() {
-		//Setup game 
-		
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		//Setup game
 		
 		
 		//Initialise GameManager

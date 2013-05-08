@@ -65,6 +65,7 @@ clientupdate: gets send whenever a keystroke or similiar action by the client ha
 			-tid
 		-use
 			-tid
+		-jump
 getlobbyinfo: asks for information about the servers gamelobby ->givelobbyinfo
 	-playername the name of the player represented by the client
 getfiletransferinfo: asks for information about a file ->givemappreviewinfo

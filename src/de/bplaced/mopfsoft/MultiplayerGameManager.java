@@ -2,9 +2,7 @@ package de.bplaced.mopfsoft;
 
 
 
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.newdawn.slick.GameContainer;
@@ -17,7 +15,7 @@ public class MultiplayerGameManager {
 
 	private static final int loopTime = 50;
 	private DrawableMap map;
-	private Queue<ServerUpdate> serverUpdateQueue = new LinkedList<ServerUpdate>();
+	private ConcurrentLinkedQueue<ServerUpdate> serverUpdateQueue = new ConcurrentLinkedQueue<ServerUpdate>();
 	private ClientThread sender;
 
 	public MultiplayerGameManager(ClientThread sender) {
@@ -55,7 +53,7 @@ public class MultiplayerGameManager {
 			}
 		}
 		
-		String move=null, use = null;
+		String move=null, use = null, jump = null;
 		//Process player input
 		for (String key: usedKeys) {
 			if (key.contains("type=move")) {
@@ -64,8 +62,15 @@ public class MultiplayerGameManager {
 			if (key.contains("type=use")) {
 				use= key;
 			}
+			if (key.contains("type=jump")) {
+				jump = key;
+			}
 		}
-		
+
+		if (jump != null) {
+			sender.send("action=clientupdate:"+jump);
+		} else
+			
 		if (move != null || use != null) {
 			if (move != null && use == null) {
 				sender.send("action=clientupdate:"+move);
@@ -76,6 +81,7 @@ public class MultiplayerGameManager {
 				sender.send("action=clientupdate:type=moveanduse:"+move.split(":",2)[1]+":"+use.split(":",2)[1]);
 			}
 		}
+		
 		
 		//Wait if to fast
 		try {
