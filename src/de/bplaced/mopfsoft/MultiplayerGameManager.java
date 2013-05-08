@@ -77,8 +77,6 @@ public class MultiplayerGameManager {
 			}
 		}
 		
-		usedKeys.clear();
-		
 		//Wait if to fast
 		try {
 			Thread.sleep(Math.max(loopTime-(System.currentTimeMillis()+timePassed-startTime), 0));

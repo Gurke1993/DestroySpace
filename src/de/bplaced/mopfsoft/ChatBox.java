@@ -60,4 +60,10 @@ public class ChatBox {
 		
 		textField.render(c, g);
 	}
+
+
+
+	public void setFocus(boolean b) {
+		textField.setFocus(b);
+	}
 }

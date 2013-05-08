@@ -56,11 +56,18 @@ public class MultiplayerGameState extends BasicGameState{
 		
 	}
 	
+	@Override
+	public void keyReleased(int key, char c) {
+		while (this.usedKeys.remove(keyMap.get(key))) {
+			
+		}
+	}
+	
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
+		
 		System.out.println("Going to Multiplayer screen...");
-		container.getInput().enableKeyRepeat();
 		
 		System.out.println("Updating key settings...");
 		keyMap.put(203, "type=move:direction=left");

@@ -113,6 +113,11 @@ public class GameLobbyState extends BasicGameState{
 		
 		this.chatBox = new ChatBox(mainScreen.getDestroySpace().getClientThread().getChatManager(), container, font, Color.green, 102, 400, 150, 400);
 	}
+	
+	@Override
+	public void leave(GameContainer container, StateBasedGame game) {
+		this.chatBox.setFocus(false);
+	}
 
 	
 	public void send(String message) {

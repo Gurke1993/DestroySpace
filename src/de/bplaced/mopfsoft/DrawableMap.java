@@ -10,6 +10,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 
+import de.bplaced.mopfsoft.blocks.Air;
 import de.bplaced.mopfsoft.blocks.Block;
 import de.bplaced.mopfsoft.entitys.Entity;
 import de.bplaced.mopfsoft.map.Map;
@@ -31,10 +32,19 @@ public class DrawableMap extends Map{
 	
 	public DrawableMap(File mapFile, String previewImageFile) throws FileNotFoundException {
 		super(mapFile);
-		setupImages(previewImageFile);
+		setupImages(previewImageFile, Color.black);
 	}
 	
-	private void setupImages(String previewImageFile) {
+	public DrawableMap(File mapFile, String previewImageFile, Color backgroundColor) throws FileNotFoundException {
+		super(mapFile);
+		setupImages(previewImageFile, backgroundColor);
+	}
+	
+	private void setupImages(String previewImageFile, Color backgroundColor) {
+		//Update Airblock to match background
+		Air.setColor(backgroundColor);
+		
+		
 		// Set path to previewImage
 				Image previewImageTemp = null;
 				try {
@@ -53,7 +63,7 @@ public class DrawableMap extends Map{
 					gamefieldAsImageG = gamefieldAsImage.getGraphics();
 
 					// set backgroundcolor
-					gamefieldAsImageG.setBackground(Color.transparent);
+					gamefieldAsImageG.setBackground(backgroundColor);
 					gamefieldAsImageG.clear();
 
 					
@@ -80,7 +90,7 @@ public class DrawableMap extends Map{
 	 */
 	public DrawableMap(String mapString, String previewImageFile){
 		super(mapString);
-		setupImages(previewImageFile);
+		setupImages(previewImageFile, Color.black);
 		
 	}
 	
