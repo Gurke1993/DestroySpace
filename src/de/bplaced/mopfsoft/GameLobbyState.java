@@ -111,7 +111,7 @@ public class GameLobbyState extends BasicGameState{
 		
 		TrueTypeFont font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF,java.awt.Font.BOLD , 26), false);
 		
-		this.chatBox = new ChatBox(mainScreen.getDestroySpace().getClientThread(), container, font, Color.green, 102, 400, 150, 400);
+		this.chatBox = new ChatBox(mainScreen.getDestroySpace().getClientThread().getChatManager(), container, font, Color.green, 102, 400, 150, 400);
 	}
 
 	
@@ -192,11 +192,5 @@ public class GameLobbyState extends BasicGameState{
 		this.playerAmount = Integer.parseInt(args.get("amountofplayers"));
 		this.maxPlayerAmount = Integer.parseInt(args.get("maxamountofplayers"));
 		this.players = args.get("players").split(":");
-	}
-
-	public void processChatMessage(String message, String player) {
-		if (chatBox != null) {
-			chatBox.addNewMessage(message, player);
-		}
 	}
 }

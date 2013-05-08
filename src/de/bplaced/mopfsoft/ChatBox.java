@@ -14,12 +14,11 @@ public class ChatBox {
 	private int y;
 	private Color color;
 	private TextField textField;
-	private ConcurrentLinkedQueue <String> chatHistory = new ConcurrentLinkedQueue<String>();
 	private int height;
-	private final ClientThread client;
+	private final ChatManager cm;
 
-	public ChatBox(ClientThread client, GUIContext c, Font font, Color color, int x, int y, int height, int width) {
-		this.client = client;
+	public ChatBox(ChatManager cm, GUIContext c, Font font, Color color, int x, int y, int height, int width) {
+		this.cm = cm;
 		this.x = x;
 		this.y = y;
 		this.height = height;
@@ -32,7 +31,7 @@ public class ChatBox {
 					//Enter
 					String message = textField.getText().replaceAll(":", "").replaceAll("=", "");
 					if (!message.equals(""))
-					ChatBox.this.client.send("action=playerchat:message="+message);
+						ChatBox.this.cm.send(message);
 					textField.setText("");
 				} else 
 				if (key == 1) {
@@ -44,16 +43,15 @@ public class ChatBox {
 		this.textField.setTextColor(color);
 	}
 	
-	public void addNewMessage(String message, String sender) {
-		chatHistory.add(""+sender+": "+message);
-	}
+
 	
 	public void draw(GUIContext c, Graphics g) {
 		g.setColor(color);
-		int amount = chatHistory.size();
+		ConcurrentLinkedQueue<String> ch = cm.getChatHistory();
+		int amount = ch.size();
 		int maxAmount = (height-40)/15;
 		int i = 0;
-		for (String chatMessage: chatHistory) {
+		for (String chatMessage: ch) {
 			if (y+(i*15)+(15*(maxAmount-amount))>=y) {
 			g.drawString(chatMessage, x, y+(i*15)+(15*(maxAmount-amount)));
 			}

@@ -12,6 +12,7 @@ public class ClientThread extends Thread{
 	  DataOutputStream out;
 	  DataInputStream in;
       DestroySpace destroySpace;
+	private final ChatManager chatManager;
 
 	  public ClientThread(String ip, int mainPort, DestroySpace destroySpace) throws IOException {
 	      System.out.println("Starting client!");
@@ -20,6 +21,8 @@ public class ClientThread extends Thread{
 	      in = new DataInputStream(mainS.getInputStream()) ;
 	      out = new DataOutputStream(mainS.getOutputStream()) ;
 	    this.start();
+	    
+	    this.chatManager = new ChatManager(this);
 	  }
 
 	  public void run() {
@@ -60,5 +63,9 @@ public class ClientThread extends Thread{
 
 	public void closeByClient() {
 		send("action=closeserver");
+	}
+
+	public ChatManager getChatManager() {
+		return this.chatManager;
 	}
 }

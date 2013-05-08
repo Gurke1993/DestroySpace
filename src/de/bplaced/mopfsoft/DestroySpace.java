@@ -108,7 +108,7 @@ public class DestroySpace {
 		} else
 		
 		if (action.equals("playerchat")) {
-			((GameLobbyState)gameStateArray[3]).processChatMessage(args.get("message"),args.get("player"));
+			this.getClientThread().getChatManager().addNewMessage(args.get("message"),args.get("player"));
 		} else
 				
 		if (action.equals("givefiletransferinfo")) {
