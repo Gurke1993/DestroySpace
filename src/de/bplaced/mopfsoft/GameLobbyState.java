@@ -107,7 +107,7 @@ public class GameLobbyState extends BasicGameState{
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		//Request Lobbyinformation
-		send("action=getlobbyinfo:playername="+mainScreen.getDestroySpace().getFileHandler().getSettings().get("playername"));
+		reloadLobby();
 		
 		TrueTypeFont font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF,java.awt.Font.BOLD , 26), false);
 		
@@ -161,7 +161,7 @@ public class GameLobbyState extends BasicGameState{
 	}
 
 	public void reloadLobby() {
-		send("action=getlobbyinfo");
+		send("action=getlobbyinfo:playername="+mainScreen.getDestroySpace().getFileHandler().getSettings().get("playername"));
 	}
 	
 	@Override

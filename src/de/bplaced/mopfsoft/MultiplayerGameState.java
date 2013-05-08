@@ -1,5 +1,9 @@
 package de.bplaced.mopfsoft;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -11,6 +15,8 @@ public class MultiplayerGameState extends BasicGameState{
 	private MainScreen mainScreen;
 	@SuppressWarnings("unused")
 	private int currentKey;
+	private ConcurrentLinkedQueue<String> usedKeys = new ConcurrentLinkedQueue<String>();
+	private Map <Integer,String> keyMap = new HashMap <Integer,String>();
 
 	@Override
 	public void init(GameContainer arg0, StateBasedGame stateBasedGame)
@@ -34,7 +40,7 @@ public class MultiplayerGameState extends BasicGameState{
 		
 		
 		//MultiplayerGameLoop
-		mainScreen.getDestroySpace().getMultiplayerGameManager().doGameLoop(container, sbg, timePassed);
+		mainScreen.getDestroySpace().getMultiplayerGameManager().doGameLoop(container, sbg, timePassed, usedKeys);
 	}
 
 	@Override
@@ -45,9 +51,8 @@ public class MultiplayerGameState extends BasicGameState{
 	@Override
 	public void keyPressed(int key, char c) {
 
-		
-		//TODO movement vs items...
-		this.currentKey = key;
+		if (keyMap.containsKey(key))
+		this.usedKeys.add(keyMap.get(key));
 		
 	}
 	
@@ -55,6 +60,14 @@ public class MultiplayerGameState extends BasicGameState{
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		System.out.println("Going to Multiplayer screen...");
+		container.getInput().enableKeyRepeat();
+		
+		System.out.println("Updating key settings...");
+		keyMap.put(203, "type=move:direction=left");
+		keyMap.put(200, "type=move:direction=up");
+		keyMap.put(205, "type=move:direction=right");
+		keyMap.put(208, "type=move:direction=down");
+		keyMap.put(57, "type=use:tid=space");
 	}
 
 

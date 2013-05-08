@@ -5,6 +5,7 @@ package de.bplaced.mopfsoft;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.state.StateBasedGame;
@@ -17,7 +18,6 @@ public class MultiplayerGameManager {
 	private static final int loopTime = 50;
 	private DrawableMap map;
 	private Queue<ServerUpdate> serverUpdateQueue = new LinkedList<ServerUpdate>();
-	@SuppressWarnings("unused")
 	private ClientThread sender;
 
 	public MultiplayerGameManager(ClientThread sender) {
@@ -33,9 +33,10 @@ public class MultiplayerGameManager {
 	 * @param timePassed 
 	 * @param sbg the state based game
 	 * @param container the game container
+	 * @param usedKeys 
 	 * 
 	 */
-	public void doGameLoop(GameContainer container, StateBasedGame sbg, int timePassed) {
+	public void doGameLoop(GameContainer container, StateBasedGame sbg, int timePassed, ConcurrentLinkedQueue<String> usedKeys) {
 		//GameLoop for Multiplayer
 		
 		long startTime = System.currentTimeMillis();
@@ -45,14 +46,38 @@ public class MultiplayerGameManager {
 		Map <String,String> args;
 		while ((serverUpdate = serverUpdateQueue.poll()) != null) {
 			args = serverUpdate.getArgs();
-			if (args.get("type").equals("gamefieldupdate")) {
+			if (args.get("type").equals("gamefieldchange")) {
 				map.updateBlock(Integer.parseInt(args.get("x")), Integer.parseInt(args.get("y")), Integer.parseInt(args.get("bid")));
 			} else
-			if (args.get("type").equals("entityupdate")) {
+			if (args.get("type").equals("entitychange")) {
 				String[] entitySplit = args.get("entity").split(",");
-				map.getEntitys().get(Integer.parseInt(entitySplit[0])).move(Integer.parseInt(entitySplit[2]), Integer.parseInt(entitySplit[3]));
+				map.getEntitys().get(Integer.parseInt(entitySplit[0])).set(Integer.parseInt(entitySplit[2]), Integer.parseInt(entitySplit[3]));
 			}
 		}
+		
+		String move=null, use = null;
+		//Process player input
+		for (String key: usedKeys) {
+			if (key.contains("type=move")) {
+				move= key;
+			}
+			if (key.contains("type=use")) {
+				use= key;
+			}
+		}
+		
+		if (move != null || use != null) {
+			if (move != null && use == null) {
+				sender.send("action=clientupdate:"+move);
+			} else
+			if (use != null && move == null) {
+				sender.send("action=clientupdate:"+use);
+			} else {
+				sender.send("action=clientupdate:type=moveanduse:"+move.split(":",2)[1]+":"+use.split(":",2)[1]);
+			}
+		}
+		
+		usedKeys.clear();
 		
 		//Wait if to fast
 		try {
@@ -72,7 +97,6 @@ public class MultiplayerGameManager {
 	}
 	
 	public void queueServerUpdate(Map<String, String> args) {
-		System.out.println("Got new server update... adding to stack...");
 		this.serverUpdateQueue.add(new ServerUpdate(args));
 		
 	}

@@ -59,11 +59,9 @@ closeserver: asks the server to shut down
 clientupdate: gets send whenever a keystroke or similiar action by the client has been taken
 	-type: type of update 
 		-move
-			-x
-			-y
+			-direction
 		-moveanduse
-			-x
-			-y
+			-direction
 			-tid
 		-use
 			-tid
