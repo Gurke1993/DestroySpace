@@ -8,6 +8,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.state.StateBasedGame;
 
+import de.bplaced.mopfsoft.entitys.Entity;
+import de.bplaced.mopfsoft.entitys.ItemUser;
 
 
 
@@ -48,8 +50,18 @@ public class MultiplayerGameManager {
 				map.updateBlock(Integer.parseInt(args.get("x")), Integer.parseInt(args.get("y")), Integer.parseInt(args.get("bid")));
 			} else
 			if (args.get("type").equals("entitychange")) {
-				String[] entitySplit = args.get("entity").split(",");
-				map.getEntitys().get(Integer.parseInt(entitySplit[0])).set(Integer.parseInt(entitySplit[2]), Integer.parseInt(entitySplit[3]));
+				
+				String[] entitySplit = args.get("entity").split(";")[0].split(",");
+				Entity entity = map.getEntitys().get(Integer.parseInt(entitySplit[0]));
+				
+				//General Entitys
+				entity.set(Integer.parseInt(entitySplit[2]), Integer.parseInt(entitySplit[3]), entitySplit[4]);
+				
+				//ItemUsers
+				if (entity instanceof ItemUser) {
+					((ItemUser)entity).setItems(args.get("entity").split(";")[1].split(","));
+				}
+				
 			}
 		}
 		

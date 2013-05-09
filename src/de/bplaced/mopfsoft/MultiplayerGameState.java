@@ -91,7 +91,7 @@ public class MultiplayerGameState extends BasicGameState{
 		keyMap.put(200, "type=jump");
 		keyMap.put(205, "type=move:direction=right");
 		keyMap.put(208, "type=move:direction=down");
-		keyMap.put(57, "type=use:tid=space");
+		keyMap.put(57, "type=use:iid=0");
 	}
 
 
