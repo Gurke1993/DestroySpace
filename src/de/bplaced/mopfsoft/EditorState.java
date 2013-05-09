@@ -21,12 +21,12 @@ public class EditorState extends BasicGameState{
 	
 	
 	//Toolvalues
-	private boolean filled;
+	private boolean quickLine;
 	private int radius;
-	private int tool;//O Pencil //1 Rubber //2 Fill //3 Line //4 Rectangle //5 Circle
+	private int tool;//O Pencil //1 Rubber //2 Fill //3 Line //4 Circle
 	private int blockId;
 	private boolean info;
-	private int x1,y1;
+	private int x1,y1,x2,y2;
 	//gamefield for editing
 	private DrawableMap drawableMap;
 	//map position
@@ -34,18 +34,23 @@ public class EditorState extends BasicGameState{
     //BackgroundImages
 	Image bgImage;
 	
+	
 	@Override
-	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
-			throws SlickException {
-		this.stateBasedGame = stateBasedGame;			
-
-		blockId=2;
+	public void enter(GameContainer container, StateBasedGame game) 
+	{
 		Map.copyDefaultMap();
 		try {
 		drawableMap = new DrawableMap(new File("maps"+System.getProperty("file.separator")+"DefaultMap.map"),"");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+	@Override
+	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
+			throws SlickException {
+		this.stateBasedGame = stateBasedGame;			
+
+		blockId=2;
 		bgImage = new Image("resources/images/editor/bg.png");
 		imgPosX=0;
 		imgPosY=0;
@@ -66,12 +71,12 @@ public class EditorState extends BasicGameState{
         	graphics.drawString("(E)rase", 10, 60);
         	graphics.drawString("(F)ill", 10, 90);
         	graphics.drawString("(L)ine", 10, 120);
-        	graphics.drawString("(R)ectangle", 10, 150);
-        	graphics.drawString("(C)ircle", 10, 180);
+        	graphics.drawString("(C)ircle", 10, 150);
         }
         graphics.drawString("current Tool: "+tool, 100, 10);
         graphics.drawString("radius: "+ radius,250,10);
         graphics.drawString("x1: "+x1+" y1: "+y1,400,10);
+        if (tool==3 ){graphics.drawString("QuickLine: "+ quickLine,550,10);}
 	}
 
 	@Override
@@ -154,16 +159,17 @@ public class EditorState extends BasicGameState{
 				tool=3;
 				break;
 			}
-			case  19:{
-				tool=4;
-				break;
-			}
+
 			case 46 :{
-				tool=5;
+				tool=4;
 				break;
 			}
 			case  23:{
 				info = !info;
+				break;
+			}
+			case 16:{
+				quickLine= !quickLine;
 				break;
 			}
 		}
@@ -182,28 +188,33 @@ public class EditorState extends BasicGameState{
 			}
 			else if (tool ==2)
 			{
-				fill( x, y, blockId);
+				int idOverwrite=drawableMap.getBlock(x, y).getBid();
+				fill( x, y, blockId,idOverwrite);
 			}
 			else if (tool ==3)//Line
 			{
-
-				if (x1 ==0 && y1 == 0)
-				{
-					x1 = x;
-					y1 =y;
-				}
-				else
-				{
-					drawLine( x, y, x1, y1, radius, blockId);
-					x1=0;
-					y1=0;
+				if (quickLine) {
+					if (x1 == 0 && y1 == 0) {
+						x1=x;y1=y;
+					}
+					else {
+						drawLine(x, y, x1, y1, blockId);
+						x1 = x;
+						y1 = y;
+					}
+				} 
+				else {
+					if (x1 == 0 && y1 == 0) {
+						x1 = x;
+						y1 = y;
+					} else {
+						drawLine(x, y, x1, y1, blockId);
+						x1 = 0;
+						y1 = 0;
+					}
 				}
 			}
 			else if (tool ==4)
-			{
-				
-			}
-			else if (tool ==5)
 			{
 			drawCircle( x, y, radius,blockId);
 			}
@@ -225,78 +236,88 @@ public class EditorState extends BasicGameState{
 			{
 				 drawCircle(x, y, i , 0);
 			}
-
 	}
 	
 	//TODO
-	private void fill( int x, int y, int id2) {
-	
-			drawableMap.updateBlock(x, y, 2);
+	private void fill( int x, int y, int blockId,int idToOverwrite) {
+		if(idToOverwrite != blockId)
+		{
+		if (x < drawableMap.getWidth() - 10 && y < drawableMap.getHeight() - 10&& y > 10 && x > 10) {
+			if (drawableMap.getBlock(x, y).getBid() == idToOverwrite) {
 
+				drawableMap.updateBlock(x, y, blockId);
 
-						
+				fill(x, y + 1, blockId, idToOverwrite);
+				fill(x, y - 1, blockId, idToOverwrite);
+				fill(x - 1, y, blockId, idToOverwrite);
+				fill(x + 1, y, blockId, idToOverwrite);
+			
+				}
+			}
+		}
 	}
 	
-	private void drawRect( int x1, int y1, int x2, int y2, int radius, int type, boolean filled) {	
-		
+	private void pipBlockId (int x,int y)
+	{
+		blockId=drawableMap.getBlock(x, y).getBid();
 	}
 	
-	private void drawLine( int x0, int x1, int y0, int y1, int radius, int blockId) {
-		 boolean steep = Math.abs(y1 - y0) > Math.abs(x1 - x0);
-		    if(steep)
-		    {//swap variable
-					x0=x0+y0; 
-					y0=x0-y0; 
-					x0=x0-y0; 			
-		        
-					x1=x1+y1; 
-					y1=x1-y1; 
-					x1=x1-y1;
-		    }
-		    if(x0 > x1)
-		    {//swap variable
-		        x0=x0+x1; 
-				x1=x0-x1; 
-				x0=x0-x1;
-		        
-		        y1=y1+y0; 
-				y0=y1-y0; 
-				y1=y1-y0;        
-		    }    
-		    int deltax = x1 - x0;
-		    int deltay = Math.abs(y1 - y0);
-		    int error = -deltax / 2;
-		    int ystep;
-		    int y = y0;
-		    
-		    if(y0 < y1)
-		    {
-		        ystep = 1;
-		    }
-		    else
-		    {
-		        ystep = -1;
-		    }
-		    for( ; x0<=x1; x0++)
-		    {
-		        if(steep)
-		        {
+	
 
-		    		drawableMap.updateBlock(y, x0, blockId);
-
-		        }
-		        else
-		        {
-		    		drawableMap.updateBlock(x0, y, blockId);
-
-		        }
-		        error = error + deltay;
-		        if(error > 0)
-		        {
-		            y = y + ystep;
-		            error = error - deltax;
-		        }
-		    }
+	
+	private void drawLine( int x0, int y0, int x1, int y1, int blockId) {
+		boolean steep = Math.abs(y1 - y0) > Math.abs(x1 - x0);
+	    if(steep)
+	    {//swap variable
+				x0=x0+y0; 
+				y0=x0-y0; 
+				x0=x0-y0; 			
+	        
+				x1=x1+y1; 
+				y1=x1-y1; 
+				x1=x1-y1;
+	    }
+	    if(x0 > x1)
+	    {//swap variable
+	        x0=x0+x1; 
+			x1=x0-x1; 
+			x0=x0-x1;
+	        
+	        y1=y1+y0; 
+			y0=y1-y0; 
+			y1=y1-y0;        
+	    }    
+	    int deltax = x1 - x0;
+	    int deltay = Math.abs(y1 - y0);
+	    int error = -deltax / 2;
+	    int ystep;
+	    int y = y0;
+	    
+	    if(y0 < y1)
+	    {
+	        ystep = 1;
+	    }
+	    else
+	    {
+	        ystep = -1;
+	    }
+	    for( ; x0<=x1; x0++)
+	    {
+	        if(steep)
+	        {
+	        	drawableMap.updateBlock(y , x0, blockId);
+	        }
+	        else
+	        {
+	        	drawableMap.updateBlock(x0, y , blockId);
+	        }
+	        error = error + deltay;
+	        if(error > 0)
+	        {
+	            y = y + ystep;
+	            error = error - deltax;
+	        }
+	    }
 	}
 
 	private void drawCircle(int xPos, int yPos, int radius,int id) {
@@ -306,8 +327,6 @@ public class EditorState extends BasicGameState{
 			int dSE = 2 - radius - radius;
 			if (xPos+radius >0 && xPos+radius < drawableMap.getWidth() &&yPos+radius >0 && yPos+radius < drawableMap.getHeight())
 			{
-
-		
 				 drawableMap.updateBlock(0+xPos , radius+yPos , id);
 				 drawableMap.updateBlock(radius+xPos , 0+yPos , id);
 				 drawableMap.updateBlock(0+xPos , -radius+yPos , id);
@@ -329,7 +348,6 @@ public class EditorState extends BasicGameState{
 				 x=x+1;
 				 dE=dE+2;
 				 
-				 
 			drawableMap.updateBlock(x + xPos, y + yPos, id);
 			drawableMap.updateBlock(-x + xPos, y + yPos, id); //
 			drawableMap.updateBlock(-y + xPos, x + yPos, id);//
@@ -340,7 +358,6 @@ public class EditorState extends BasicGameState{
 			drawableMap.updateBlock(-x + xPos, -y + yPos, id);
 			 }
 			}
-		
 	}
 	
 }
