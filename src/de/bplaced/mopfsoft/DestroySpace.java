@@ -25,6 +25,7 @@ public class DestroySpace {
 	private FileHandler fileHandler;
 	
 	private MultiplayerGameManager multiplayerGameManager;
+	private PreGameManager preGameManager;
 
 	/**
 	 * starts the Game 
@@ -44,6 +45,8 @@ public class DestroySpace {
 		//new Filehandler
 		System.out.println("Setting up FileHandler...");
 		fileHandler = new FileHandler(this);
+		
+		
 		
 		//new Screen
 		try {
@@ -121,27 +124,39 @@ public class DestroySpace {
 			clientFileTransferThread.prepareForNewFileTransfer(new File(args.get("path")), Long.parseLong(args.get("filelength")));
 		} else
 			
+		if (action.equals("allplayersready")) {
+			if (args.get("type").equals("load")) {
+				preGameManager.setAllPlayersReadyToLoad(Boolean.parseBoolean(args.get("areready")));
+			} else
+			if (args.get("type").equals("start")) {
+				preGameManager.setAllPlayersReadyToStart(Boolean.parseBoolean(args.get("areready")));
+			}
+		} else
+			
 		if (action.equals("givelobbyinfo")) {
-			((GameLobbyState)gameStateArray[3]).setLobbyInformation(args.get("mapname"), args.get("mapdescription"), Integer.parseInt(args.get("amountofplayers")), Integer.parseInt(args.get("maxamountofplayers")), args.get("players").split(","), args.get("ishost").equals("true"));
+			preGameManager.setLobbyInformation(args.get("mapname"), args.get("mapdescription"), Integer.parseInt(args.get("amountofplayers")), Integer.parseInt(args.get("maxamountofplayers")), args.get("players").split(","), args.get("ishost").equals("true"));
 		} else 
 			
 		if (action.equals("loadupgame")) {
-			((GameLobbyState)gameStateArray[3]).loadUpGame();
+			preGameManager.loadUpGame();
 		} else  
+		if (action.equals("startgame")) {
+			preGameManager.startGame();
+		} else
 		
 		if (action.equals("givemapstring")) {
 			if (args.get("finished").equals("false"))
-			((GameLobbyState)gameStateArray[3]).addToMapString(args.get("partofstring"));
+				preGameManager.addToMapString(args.get("partofstring"));
 			else
-			((GameLobbyState)gameStateArray[3]).setMapStringIsFinished(true);
+				preGameManager.setMapStringIsFinished(true);
 		} else 
 			
 		if (action.equals("mapchange")) {
-			((GameLobbyState)gameStateArray[3]).reloadLobby();
+			preGameManager.reloadLobby();
 		} else
 
 		if (action.equals("playerchange")) {
-			((GameLobbyState) gameStateArray[3]).updateLobby(args);
+			preGameManager.updateLobby(args);
 		}
 	}
 	
@@ -217,5 +232,13 @@ public class DestroySpace {
 	 */
 	public void setMultiplayerGameManager(MultiplayerGameManager multiplayerGameManager) {
 		this.multiplayerGameManager = multiplayerGameManager;
+	}
+
+	public PreGameManager getPreGameManager() {
+		return this.preGameManager;
+	}
+	
+	public void setPreGameManager(PreGameManager pgm) {
+		this.preGameManager = pgm;
 	}
 }

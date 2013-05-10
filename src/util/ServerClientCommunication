@@ -9,6 +9,11 @@ This is a list of all strings mapped to by "action" that are currently in use:
 
 Server to Client(s):
 
+allplayersready:
+	type:
+		-load
+		-start
+	areready: true/false
 playerchange: tells the client that a player joined or quit the game
 	-amountofplayers: amountofplayers currently connected
 	-maxamountofplayers: amount of allowed players
@@ -53,8 +58,13 @@ gamechange: broadcast of changes to the gamefield or entities
                 
 Client to Server:
 
+readyto: tells the server that this client is ready
+	-type:
+		-start
+		-load
+	-isready: true/false
 clientdisconnect: tells the server that the client tries to leave the lobby
-startgame: tells the server to start the game
+@deprecated startgame: tells the server to start the game
 closeserver: asks the server to shut down
 clientupdate: gets send whenever a keystroke or similiar action by the client has been taken
 	-type: type of update 

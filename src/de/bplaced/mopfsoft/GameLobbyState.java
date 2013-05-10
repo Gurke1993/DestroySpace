@@ -2,7 +2,6 @@ package de.bplaced.mopfsoft;
 
 
 
-import java.util.Map;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -17,23 +16,18 @@ public class GameLobbyState extends BasicGameState{
 	public static final int ID = 3;
 	private Image backGround, hud;
 	private MainScreen mainScreen;
-	private String mapName = "";
-	private int playerAmount = -1;
-	private int maxPlayerAmount = -1;
-	private String[] players = new String[0];
-	private String mapDescription = "";
-	private String mapString = "";
-	@SuppressWarnings("unused")
-	private boolean mapStringIsReady = false;
+
 	private Image startButton;
-	private boolean isHost = false;
 	private Image startButtonOff;
 	private ChatBox chatBox = null;
+	private PreGameManager pgm;
 	
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
 			throws SlickException {
 		mainScreen = (MainScreen)stateBasedGame;
+		
+		
 		backGround = new Image("resources/images/general/Background.jpg");
 		hud = new Image("resources/images/gameLobby/Hud.png");
 		startButton = new Image("resources/images/gameLobby/StartButton.png");
@@ -45,21 +39,21 @@ public class GameLobbyState extends BasicGameState{
 			throws SlickException {
 		graphics.drawImage(backGround, 0, 0);
 		graphics.drawImage(hud, 0, 0);
-		graphics.drawString(mapName, 812, 144);
-		graphics.drawString(mapDescription, 812, 156);
+		graphics.drawString(pgm.getMapName(), 812, 144);
+		graphics.drawString(pgm.getMapDescription(), 812, 156);
 		
-		graphics.drawString("Currently connected: "+playerAmount+"/"+maxPlayerAmount, 115, 119);
+		graphics.drawString("Currently connected: "+pgm.getPlayerAmount()+"/"+pgm.getMaxPlayerAmount(), 115, 119);
 		
 		graphics.drawString("Players:", 115, 200);
 		int i = 0;
-		for (String player: players) {
+		for (String player: pgm.getPlayers()) {
 			graphics.drawString(player, 115, 215+i);
 			i = i+15;
 		}
 		
 
-		if (isHost) {
-			if (playerAmount == maxPlayerAmount && mainScreen.getDestroySpace().getFileHandler().isFileLoaded(mapName+".gif")) {
+		if (pgm.isHost()) {
+			if (pgm.allPlayersReadyToLoad()) {
 				graphics.drawImage(startButton, 801,463);
 			} else {
 				graphics.drawImage(startButtonOff, 801,463);
@@ -70,14 +64,18 @@ public class GameLobbyState extends BasicGameState{
 			chatBox.draw(gameContainer, graphics);
 		}
 		
-		mainScreen.getDestroySpace().getFileHandler().drawImageIfLoaded(801, 197, graphics, mapName+".gif");
+		mainScreen.getDestroySpace().getFileHandler().drawImageIfLoaded(801, 197, graphics, pgm.getMapName()+".gif");
 	}
 
 	@Override
 	public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int timePassed)
 			throws SlickException {
-		if (!mainScreen.getDestroySpace().getFileHandler().isFileLoaded(mapName+".gif")) {
-			mainScreen.getDestroySpace().getFileHandler().tryToLoadFile(mapName+".gif");
+		if (!mainScreen.getDestroySpace().getFileHandler().isFileLoaded(pgm.getMapName()+".gif")) {
+			mainScreen.getDestroySpace().getFileHandler().tryToLoadFile(pgm.getMapName()+".gif");
+			
+			if (mainScreen.getDestroySpace().getFileHandler().isFileLoaded(pgm.getMapName()+".gif")) {
+				mainScreen.getDestroySpace().getPreGameManager().setClientIsReadyToLoad(true);
+			}
 		}
 		
 	}
@@ -98,8 +96,7 @@ public class GameLobbyState extends BasicGameState{
 	}
 	
 	private void close() {
-		send("action=clientdisconnect");
-		mainScreen.getDestroySpace().getClientThread().close();
+		pgm.disconnect();
   		mainScreen.enterState(4);
 	}
 	
@@ -107,7 +104,10 @@ public class GameLobbyState extends BasicGameState{
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		//Request Lobbyinformation
-		reloadLobby();
+		mainScreen.getDestroySpace().setPreGameManager(new PreGameManager(mainScreen));
+		
+		pgm = mainScreen.getDestroySpace().getPreGameManager();
+		pgm.reloadLobby();
 		
 		TrueTypeFont font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF,java.awt.Font.BOLD , 26), false);
 		
@@ -120,65 +120,19 @@ public class GameLobbyState extends BasicGameState{
 	}
 
 	
-	public void send(String message) {
-		mainScreen.getDestroySpace().getClientThread().send(message);
-	}
 
-	public void setLobbyInformation(String mapName, String mapDescription, int playerAmount, int maxPlayerAmount, String[] players, boolean host) {
-		System.out.println("Setting Lobbyinformation...");
-		this.mapName = mapName;
-		this.mapDescription = mapDescription;
-		this.playerAmount = playerAmount;
-		this.maxPlayerAmount = maxPlayerAmount;
-		this.players = players;
-		this.isHost = host;
 
-		
-		System.out.println("Ask for mapstring...");
-		send("action=getMapString:filename="+mapName+".map:path=maps"+System.getProperty("file.separator")+mapName+".map");
-		
-		System.out.println("Ask for mappreviewinfo...");
-		send("action=getfiletransferinfo:filename="+mapName+".gif:path=maps"+System.getProperty("file.separator")+mapName+".gif");
-	}
-	
-	public void loadUpGame() {
-		mainScreen.enterState(7);
-	}
 
-	public String getMapString() {
-		return this.mapString;
-	}
-	
-	public void setMapString(String mapString) {
-		this.mapString = mapString;
-	}
 
-	public void addToMapString(String string) {
-		this.mapString += string;
-	}
-
-	public void setMapStringIsFinished(boolean b) {
-		this.mapStringIsReady  = b;
-	}
-
-	public String getPreviewImagePath() {
-		return "maps"+System.getProperty("file.separator")+mapName+".gif";
-	}
-
-	public void reloadLobby() {
-		this.setMapStringIsFinished(false);
-		this.setMapString("");
-		send("action=getlobbyinfo:playername="+mainScreen.getDestroySpace().getFileHandler().getSettings().get("playername"));
-	}
 	
 	@Override
 	public void mousePressed(int button, int x, int y) {
 		if (button == 0) {
 		if( x >= 800 && x <= 1000) {
-      	if (y >= 463 && y <= 525 && playerAmount == maxPlayerAmount && isHost) {
+      	if (y >= 463 && y <= 525 && pgm.allPlayersReadyToLoad()) {
       		//Start game
-      		System.out.println("Telling the server to start the game...");
-      		send("action=startgame");
+      		mainScreen.getDestroySpace().getClientThread().send("action=loadupgame");
+
       		
       	} else
       	if (y >= 526 && y <= 588) {
@@ -194,10 +148,5 @@ public class GameLobbyState extends BasicGameState{
 	}
 	}
 
-	public void updateLobby(Map<String, String> args) {
-		this.isHost = args.get("ishost").equals("true");
-		this.playerAmount = Integer.parseInt(args.get("amountofplayers"));
-		this.maxPlayerAmount = Integer.parseInt(args.get("maxamountofplayers"));
-		this.players = args.get("players").split(":");
-	}
+
 }

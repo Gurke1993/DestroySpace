@@ -14,11 +14,14 @@ public class LoadingState extends BasicGameState{
 	private MainScreen mainScreen;
 	private Image loadingScreen;
 	private double loaded;
+	private PreGameManager pgm;
+	private String loadingMessage ="";
 
 	@Override
 	public void init(GameContainer arg0, StateBasedGame stateBasedGame)
 			throws SlickException {
 		mainScreen = (MainScreen)stateBasedGame;
+		
 		loadingScreen = new Image("resources/images/multiplayerGame/LoadingScreen.jpg");
 		
 	}
@@ -30,15 +33,39 @@ public class LoadingState extends BasicGameState{
 		//LoadingScreen
 			graphics.drawImage(loadingScreen, 0, 0);
 			graphics.setColor(Color.green);
+			for (int i = 0; i<59; i++) {
+				graphics.drawLine(274, 313+i, 274+(int)(503*loaded), 313+i);
+			}
 			graphics.drawRect(274, 313, (int)(503*loaded), 59);
+			graphics.drawString(loadingMessage, 274, 380);
 	}
 
 	@Override
 	public void update(GameContainer arg0, StateBasedGame arg1, int arg2)
 			throws SlickException {
-		if (loaded >= 1) {
-			mainScreen.enterState(6);
+		if (pgm.isMapLoaded() && loaded < 1) {
+			//Initialise GameManager
+			loadingMessage = "Setting up GameManager...";
+			mainScreen.getDestroySpace().setMultiplayerGameManager(new MultiplayerGameManager(mainScreen.getDestroySpace().getClientThread()));
+			loaded = 0.7;
+			
+			
+			//Initialise Map
+			loadingMessage = "Initialising map";
+			mainScreen.getDestroySpace().getMultiplayerGameManager().setMap(mainScreen.getDestroySpace().getPreGameManager().getMapString(),mainScreen.getDestroySpace().getPreGameManager().getPreviewImagePath());
+			loaded = 0.9;
+			
+			loadingMessage = "Waiting for other players...";
+			loaded = 1;
+			
+			pgm.setClientIsReadyToStart(true);
+			
 		}
+//		if (loaded == 1 && pgm.allPlayersReadyToStart()) {
+//			System.out.println("Going to MultiplayerGameScreen...");
+//			loaded = 1.1;
+//			mainScreen.enterState(6);
+//		}
 		
 	}
 
@@ -51,30 +78,18 @@ public class LoadingState extends BasicGameState{
 		this.loaded = d;
 	}
 	
-	public void setupGame() {
-		//Setup game
-		
-		
-		//Initialise GameManager
-		mainScreen.getDestroySpace().setMultiplayerGameManager(new MultiplayerGameManager(mainScreen.getDestroySpace().getClientThread()));
-		loaded = 0.3;
-		
-		//Initialise Map
-		mainScreen.getDestroySpace().getMultiplayerGameManager().setMap(((GameLobbyState)mainScreen.getDestroySpace().getGameState(3)).getMapString(),((GameLobbyState)mainScreen.getDestroySpace().getGameState(3)).getPreviewImagePath());
-		loaded = 0.9;
-	}
-	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
+		System.out.println("Entering LoadingState...");
+		pgm = mainScreen.getDestroySpace().getPreGameManager();
+		
 		//Enable Load mode
 		loaded = 0;
 		
-		//TODO update method für preload progressbar siehe inet defferedloading
-		
-		
-		//Setup game
-		setupGame();
-		loaded = 1;
+		//Download map
+		loadingMessage = "Downloading map...";
+		pgm.downloadMap();
+		loaded = 0.1;
 	}
 
 	public double getLoaded() {
