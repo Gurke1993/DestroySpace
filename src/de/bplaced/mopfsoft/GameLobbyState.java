@@ -129,7 +129,7 @@ public class GameLobbyState extends BasicGameState{
 	public void mousePressed(int button, int x, int y) {
 		if (button == 0) {
 		if( x >= 800 && x <= 1000) {
-      	if (y >= 463 && y <= 525 && pgm.allPlayersReadyToLoad()) {
+      	if (y >= 463 && y <= 525 && pgm.allPlayersReadyToLoad() && pgm.getPlayerAmount() == pgm.getMaxPlayerAmount()) {
       		//Start game
       		mainScreen.getDestroySpace().getClientThread().send("action=loadupgame");
 
