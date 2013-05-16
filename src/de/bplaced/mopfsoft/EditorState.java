@@ -5,11 +5,13 @@ package de.bplaced.mopfsoft;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import de.bplaced.mopfsoft.map.Map;
@@ -26,17 +28,22 @@ public class EditorState extends BasicGameState{
 	private int tool;//O Pencil //1 Rubber //2 Fill //3 Line //4 Circle
 	private int blockId;
 	private boolean info;
-	private int x1,y1,x2,y2;
+	private int x1,y1;
+	private int appNum;//Number of application //0 MapOpener //1 MapCreate //2 MapSaver
 	//gamefield for editing
 	private DrawableMap drawableMap;
 	//map position
 	int imgPosX,imgPosY;
     //BackgroundImages
 	Image bgImage;
-	
+	EditorPaintFunction paintFunction;//Implement paintfunctions
+	EditorStateMapOpener mapOpener;//open application
+	EditorStateNewMap mapCreater; //create application
+	EditorStateSaver mapSaver; //save application
+	TrueTypeFont font;
 	
 	@Override
-	public void enter(GameContainer container, StateBasedGame game) 
+	public void enter(GameContainer container, StateBasedGame game) throws SlickException 
 	{
 		Map.copyDefaultMap();
 		try {
@@ -44,6 +51,11 @@ public class EditorState extends BasicGameState{
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		paintFunction = new EditorPaintFunction(drawableMap);
+		
+		mapOpener = new EditorStateMapOpener( container, font, Color.green, 800, 64, 150, 200,drawableMap);
+		mapSaver = new EditorStateSaver( container, font, Color.green, 800, 64, 150, 200,drawableMap);
+		mapCreater = new EditorStateNewMap( container, font, Color.green, 800, 64, 150, 200,drawableMap);
 	}
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
@@ -54,6 +66,7 @@ public class EditorState extends BasicGameState{
 		bgImage = new Image("resources/images/editor/bg.png");
 		imgPosX=0;
 		imgPosY=0;
+		font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF,java.awt.Font.BOLD , 26), false);
 	}
 
 	@Override
@@ -77,6 +90,13 @@ public class EditorState extends BasicGameState{
         graphics.drawString("radius: "+ radius,250,10);
         graphics.drawString("x1: "+x1+" y1: "+y1,400,10);
         if (tool==3 ){graphics.drawString("QuickLine: "+ quickLine,550,10);}
+        mapOpener.draw(gameContainer, graphics);
+        
+      //0 MapOpener //1 MapCreate //2 MapSaver
+        if (appNum==0){mapOpener.draw( gameContainer ,graphics);}
+        else if(appNum==1){mapCreater.draw(gameContainer, graphics);}
+        else if(appNum==2){mapSaver.draw(gameContainer, graphics);}
+       
 	}
 
 	@Override
@@ -108,11 +128,11 @@ public class EditorState extends BasicGameState{
         {
         	if (tool ==0)
         	{
-        	paint(input.getAbsoluteMouseX(), input.getAbsoluteMouseY(), radius, blockId);
+        		paintFunction.paint(input.getAbsoluteMouseX(), input.getAbsoluteMouseY(), radius, blockId);
         	}
         	if (tool ==1)
         	{
-        	delete(input.getAbsoluteMouseX(), input.getAbsoluteMouseY(), radius);
+        		paintFunction.delete(input.getAbsoluteMouseX(), input.getAbsoluteMouseY(), radius);
         	}
         }
        
@@ -165,11 +185,25 @@ public class EditorState extends BasicGameState{
 				break;
 			}
 			case  23:{
+				System.out.print("works!");
 				info = !info;
 				break;
 			}
 			case 16:{
 				quickLine= !quickLine;
+				break;
+			}
+			//0 MapOpener //1 MapCreate //2 MapSaver
+			case 31:{
+				appNum=2;
+				break;
+			}
+			case 49:{
+				appNum=1;
+				break;
+			}
+			case 24:{
+				appNum=0;
 				break;
 			}
 		}
@@ -189,7 +223,7 @@ public class EditorState extends BasicGameState{
 			else if (tool ==2)
 			{
 				int idOverwrite=drawableMap.getBlock(x, y).getBid();
-				fill( x, y, blockId,idOverwrite);
+				paintFunction.fill( x, y, blockId,idOverwrite);
 			}
 			else if (tool ==3)//Line
 			{
@@ -198,7 +232,7 @@ public class EditorState extends BasicGameState{
 						x1=x;y1=y;
 					}
 					else {
-						drawLine(x, y, x1, y1, blockId);
+						paintFunction.drawLine(x, y, x1, y1, blockId);
 						x1 = x;
 						y1 = y;
 					}
@@ -208,7 +242,7 @@ public class EditorState extends BasicGameState{
 						x1 = x;
 						y1 = y;
 					} else {
-						drawLine(x, y, x1, y1, blockId);
+						paintFunction.drawLine(x, y, x1, y1, blockId);
 						x1 = 0;
 						y1 = 0;
 					}
@@ -216,148 +250,11 @@ public class EditorState extends BasicGameState{
 			}
 			else if (tool ==4)
 			{
-			drawCircle( x, y, radius,blockId);
+			paintFunction.drawCircle( x, y, radius,blockId);
 			}
 		}
 	}	
-	
-	
-	private void paint(  int x, int y, int radius, int blockId) {	
-		for (int i=radius; i >= 0 ; i--)
-		{
-			drawCircle( x, y, i , blockId);
-		}
-	}
-	
-	
-	private void delete( int x, int y, int radius) {	
-
-			for (int i=radius; i >= 0 ; i--)
-			{
-				 drawCircle(x, y, i , 0);
-			}
-	}
-	
-	//TODO
-	private void fill( int x, int y, int blockId,int idToOverwrite) {
-		if(idToOverwrite != blockId)
-		{
-		if (x < drawableMap.getWidth() - 10 && y < drawableMap.getHeight() - 10&& y > 10 && x > 10) {
-			if (drawableMap.getBlock(x, y).getBid() == idToOverwrite) {
-
-				drawableMap.updateBlock(x, y, blockId);
-
-				fill(x, y + 1, blockId, idToOverwrite);
-				fill(x, y - 1, blockId, idToOverwrite);
-				fill(x - 1, y, blockId, idToOverwrite);
-				fill(x + 1, y, blockId, idToOverwrite);
 			
-				}
-			}
-		}
-	}
 	
-	private void pipBlockId (int x,int y)
-	{
-		blockId=drawableMap.getBlock(x, y).getBid();
-	}
-	
-	
-
-	
-	private void drawLine( int x0, int y0, int x1, int y1, int blockId) {
-		boolean steep = Math.abs(y1 - y0) > Math.abs(x1 - x0);
-	    if(steep)
-	    {//swap variable
-				x0=x0+y0; 
-				y0=x0-y0; 
-				x0=x0-y0; 			
-	        
-				x1=x1+y1; 
-				y1=x1-y1; 
-				x1=x1-y1;
-	    }
-	    if(x0 > x1)
-	    {//swap variable
-	        x0=x0+x1; 
-			x1=x0-x1; 
-			x0=x0-x1;
-	        
-	        y1=y1+y0; 
-			y0=y1-y0; 
-			y1=y1-y0;        
-	    }    
-	    int deltax = x1 - x0;
-	    int deltay = Math.abs(y1 - y0);
-	    int error = -deltax / 2;
-	    int ystep;
-	    int y = y0;
-	    
-	    if(y0 < y1)
-	    {
-	        ystep = 1;
-	    }
-	    else
-	    {
-	        ystep = -1;
-	    }
-	    for( ; x0<=x1; x0++)
-	    {
-	        if(steep)
-	        {
-	        	drawableMap.updateBlock(y , x0, blockId);
-	        }
-	        else
-	        {
-	        	drawableMap.updateBlock(x0, y , blockId);
-	        }
-	        error = error + deltay;
-	        if(error > 0)
-	        {
-	            y = y + ystep;
-	            error = error - deltax;
-	        }
-	    }
-	}
-
-	private void drawCircle(int xPos, int yPos, int radius,int id) {
-			int x = 0;
-			int y = radius;
-			int dE =1;
-			int dSE = 2 - radius - radius;
-			if (xPos+radius >0 && xPos+radius < drawableMap.getWidth() &&yPos+radius >0 && yPos+radius < drawableMap.getHeight())
-			{
-				 drawableMap.updateBlock(0+xPos , radius+yPos , id);
-				 drawableMap.updateBlock(radius+xPos , 0+yPos , id);
-				 drawableMap.updateBlock(0+xPos , -radius+yPos , id);
-				 drawableMap.updateBlock(-radius+xPos ,0+yPos, id);
-			
-			 int F=1-radius;
-			 while (x < y)
-			 {
-				 if (F < 0)
-				 {
-					F = F + dE;
-				 }
-				 else
-				 {
-					 F = F+dSE;
-					 y = y-1;
-					 dSE = dSE+4;
-				 }
-				 x=x+1;
-				 dE=dE+2;
-				 
-			drawableMap.updateBlock(x + xPos, y + yPos, id);
-			drawableMap.updateBlock(-x + xPos, y + yPos, id); //
-			drawableMap.updateBlock(-y + xPos, x + yPos, id);//
-			drawableMap.updateBlock(-y + xPos, -x + yPos, id);//
-			drawableMap.updateBlock(y + xPos, x + yPos, id);
-			drawableMap.updateBlock(y + xPos, -x + yPos, id);
-			drawableMap.updateBlock(x + xPos, -y + yPos, id);
-			drawableMap.updateBlock(-x + xPos, -y + yPos, id);
-			 }
-			}
-	}
-	
+		
 }
