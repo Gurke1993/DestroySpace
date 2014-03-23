@@ -1,17 +1,20 @@
+
 package de.bplaced.mopfsoft;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
-
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+
+import de.bplaced.mopfsoft.drawableobjects.DrawableObject;
+import de.bplaced.mopfsoft.drawableobjects.DrawableSetting;
+import de.bplaced.mopfsoft.drawableobjects.KeySettingDrawable;
+import de.bplaced.mopfsoft.drawableobjects.Setting;
+import de.bplaced.mopfsoft.drawableobjects.StringSettingDrawable;
 
 public class SettingsState extends BasicGameState{
 	public static final int ID = 5;
@@ -20,7 +23,7 @@ public class SettingsState extends BasicGameState{
 	private Image hud;
 	
 	private FileHandler fileHandler;
-	private List<Setting> settings = new ArrayList<Setting>();
+	private List<DrawableSetting> drawSettings = new ArrayList<DrawableSetting>();
 	
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
@@ -32,14 +35,30 @@ public class SettingsState extends BasicGameState{
 		
 		this.fileHandler = ((MainScreen)stateBasedGame).getDestroySpace().getFileHandler();
 		
-		TrueTypeFont font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF,java.awt.Font.BOLD , 26), false);
+		//TrueTypeFont font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF,java.awt.Font.BOLD , 26), false);
 		
+		System.out.println("Generating Settings");
+		System.out.println(fileHandler.getSettings());
+		
+		//Generate Drawable Settings
 		int i=0;
-		for (Entry<String,String> entry: fileHandler.getSettings().entrySet()) {
-			settings.add(new Setting(gameContainer,entry, font, Color.green, 200, 200+i*40));
+		SettingGen:
+		for (Setting setting: fileHandler.getSettings()) {
+			if (setting.getKind().equals("system")) continue SettingGen;
+			
+			if (setting.getKind().equalsIgnoreCase("key")) {
+				drawSettings.add(new KeySettingDrawable(200, 200+i*40, 128, 40, null, null, setting));
+			} else 
+			if (setting.getKind().equalsIgnoreCase("string")) {
+				drawSettings.add(new StringSettingDrawable(200, 200+i*40, 128, 40, null, null, setting));
+			}
 			i++;
 		}
-
+		
+		//Register keylistener
+		for (DrawableSetting drawableSetting: drawSettings) {
+			stateBasedGame.getContainer().getInput().addListener(drawableSetting);
+		}
 		
 		
 	}
@@ -50,8 +69,8 @@ public class SettingsState extends BasicGameState{
 		graphics.drawImage(backGround,0,0);
 		graphics.drawImage(hud,0,0);
 		
-		for (Setting setting: settings) {
-			setting.draw(gameContainer, graphics);
+		for (DrawableObject dobj: drawSettings) {
+			dobj.draw(gameContainer, graphics);
 		}
 	}
 
@@ -81,14 +100,17 @@ public class SettingsState extends BasicGameState{
 	public void mousePressed(int button, int x, int y) {
 		System.out.println("Button pressed: "+button+" at "+x+" "+y);
 		if (button == 0) {
+			
 		if( x >= 800 && x <= 1000) {
       	
       	if (y >= 526 && y <= 588) {
       		//Save and quit
-    		for (Setting setting: settings) {
-    			fileHandler.getSettings().put(setting.getName(), setting.getValue());
-    			fileHandler.saveSettings();
+    		for (DrawableSetting drawableSetting: drawSettings) {
+    			fileHandler.getSettings().remove(drawableSetting.getSetting());
+    			fileHandler.getSettings().add(drawableSetting.getSetting());
+    			
     		}
+    		fileHandler.saveSettings();
 			stateBasedGame.enterState(1);
     
 	} else {

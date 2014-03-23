@@ -1,4 +1,4 @@
-package de.bplaced.mopfsoft;
+package de.bplaced.mopfsoft.drawableobjects;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -8,20 +8,17 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.gui.GUIContext;
 import org.newdawn.slick.gui.TextField;
 
-public class ChatBox {
+import de.bplaced.mopfsoft.ChatManager;
 
-	private int x;
-	private int y;
+public class ChatBox extends DrawableObject{
+
 	private Color color;
 	private TextField textField;
-	private int height;
 	private final ChatManager cm;
 
 	public ChatBox(ChatManager cm, GUIContext c, Font font, Color color, int x, int y, int height, int width) {
+		super(x, y, width, height, null);
 		this.cm = cm;
-		this.x = x;
-		this.y = y;
-		this.height = height;
 		this.color = color;
 		this.textField = new TextField(c, font, x, y+height-32, width, 32) {
 			@Override

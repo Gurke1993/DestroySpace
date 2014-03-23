@@ -12,6 +12,8 @@ import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import de.bplaced.mopfsoft.drawableobjects.ChatBox;
+
 public class GameLobbyState extends BasicGameState{
 	public static final int ID = 3;
 	private Image backGround, hud;
@@ -26,7 +28,6 @@ public class GameLobbyState extends BasicGameState{
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
 			throws SlickException {
 		mainScreen = (MainScreen)stateBasedGame;
-		
 		
 		backGround = new Image("resources/images/general/Background.jpg");
 		hud = new Image("resources/images/gameLobby/Hud.png");

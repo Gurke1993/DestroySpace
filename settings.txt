@@ -1,1 +1,2 @@
-playername=Gurke1993
+playername=Gurke1993=string
+testkey=12=key
