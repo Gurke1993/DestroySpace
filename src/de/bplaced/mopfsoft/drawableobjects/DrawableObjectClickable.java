@@ -8,6 +8,7 @@ import org.newdawn.slick.Sound;
 public abstract class DrawableObjectClickable extends DrawableObject implements InputListener{
 	
 	private final Sound sound;
+	protected boolean active = false;
 	
 	public DrawableObjectClickable(int x, int y, int width, int height, Image image, Sound sound) {
 		super(x, y, width, height, image);
@@ -16,9 +17,12 @@ public abstract class DrawableObjectClickable extends DrawableObject implements 
 
 	public void mousePressed(int button, int x, int y) {
 		if (contains(x,y)) {
+			active = true;
 			onClick(button,x,y);
 			if (sound != null)
 				sound.play();
+		} else {
+			active = false;
 		}
 	}
 	

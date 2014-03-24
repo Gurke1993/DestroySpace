@@ -7,15 +7,13 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
-import de.bplaced.mopfsoft.drawableobjects.Setting;
 
 public class FileHandler {
 
@@ -24,7 +22,7 @@ public class FileHandler {
 	private HashMap<String, Image> imageMap = new HashMap<String, Image>();
 	private HashMap<String, String> stringMap = new HashMap<String, String>();
 	private HashMap<String, Boolean> readyMap = new HashMap<String, Boolean>();
-	private List<Setting> settings;
+	private Map<String,String> settings;
 
 	public FileHandler(DestroySpace destroySpace) {
 		this.destroySpace = destroySpace;
@@ -113,7 +111,7 @@ public class FileHandler {
 		}
 	}
 
-	public List <Setting> getSettings() {
+	public Map <String,String> getSettings() {
 		return this.settings;
 	}
 
@@ -121,8 +119,8 @@ public class FileHandler {
 		try {
 		FileWriter writer = new FileWriter(new File("settings.txt"));
 		
-		for (Setting setting: this.settings) {
-			writer.write(setting.getName()+"="+setting.getValue()+"="+setting.getKind()+System.getProperty("line.separator"));
+		for (Entry <String,String> setting: this.settings.entrySet()) {
+			writer.write(setting.getKey()+"="+setting.getValue()+System.getProperty("line.separator"));
 		}
 		
 		writer.close();
@@ -156,7 +154,7 @@ public class FileHandler {
 			}
 		}
 		
-		this.settings = new ArrayList<Setting>();
+		this.settings = new HashMap<String,String>();
 		
 		try {
 		FileReader fr = new FileReader(settingFile);
@@ -164,9 +162,12 @@ public class FileHandler {
 		
 		String line;
 		String[] args;
+		String[] key;
 		while ((line = reader.readLine()) != null) {
 			args = line.split("=");
-			settings.add(new Setting(args[0], args[1],args[2]));
+			key = args[0].split("\\.");
+			System.out.println(key[1]+""+args[1]+""+key[0]);
+			settings.put(key[0]+"."+key[1], args[1]);
 		}
 		
 		reader.close();
@@ -177,13 +178,12 @@ public class FileHandler {
 			e.printStackTrace();
 		}
 		
-		int ind;
-		if ((ind = settings.indexOf(new Setting("build", "", "system"))) != -1 && Integer.parseInt(settings.get(ind).getValue()) != DestroySpace.BUILD) {
+		if (settings.containsKey("system.build") && Integer.parseInt(settings.get("system.build")) != DestroySpace.BUILD) {
 			System.out.println("Settings are to old... Removing...");
 			settingFile.delete();
 			loadSettings();
 		}
-		settings.remove("build");
+		settings.remove("system.build");
 	}
 
 }

@@ -3,6 +3,8 @@ package de.bplaced.mopfsoft;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -13,7 +15,6 @@ import org.newdawn.slick.state.StateBasedGame;
 import de.bplaced.mopfsoft.drawableobjects.DrawableObject;
 import de.bplaced.mopfsoft.drawableobjects.DrawableSetting;
 import de.bplaced.mopfsoft.drawableobjects.KeySettingDrawable;
-import de.bplaced.mopfsoft.drawableobjects.Setting;
 import de.bplaced.mopfsoft.drawableobjects.StringSettingDrawable;
 
 public class SettingsState extends BasicGameState{
@@ -43,14 +44,15 @@ public class SettingsState extends BasicGameState{
 		//Generate Drawable Settings
 		int i=0;
 		SettingGen:
-		for (Setting setting: fileHandler.getSettings()) {
-			if (setting.getKind().equals("system")) continue SettingGen;
+		for (Entry<String,String> entry: fileHandler.getSettings().entrySet()) {
 			
-			if (setting.getKind().equalsIgnoreCase("key")) {
-				drawSettings.add(new KeySettingDrawable(200, 200+i*40, 128, 40, null, null, setting));
-			} else 
-			if (setting.getKind().equalsIgnoreCase("string")) {
-				drawSettings.add(new StringSettingDrawable(200, 200+i*40, 128, 40, null, null, setting));
+			
+			if (entry.getKey().startsWith("system")) continue SettingGen;
+			
+			if (entry.getKey().startsWith("key")) {
+				drawSettings.add(new KeySettingDrawable(200, 200+i*40, 128, 40, null, null, entry));
+			} else {
+				drawSettings.add(new StringSettingDrawable(200, 200+i*40, 128, 40, null, null, entry));
 			}
 			i++;
 		}
@@ -106,10 +108,9 @@ public class SettingsState extends BasicGameState{
       	if (y >= 526 && y <= 588) {
       		//Save and quit
     		for (DrawableSetting drawableSetting: drawSettings) {
-    			fileHandler.getSettings().remove(drawableSetting.getSetting());
-    			fileHandler.getSettings().add(drawableSetting.getSetting());
-    			
+    			fileHandler.getSettings().put(drawableSetting.getSetting().getKey(), drawableSetting.getSetting().getValue());
     		}
+    		
     		fileHandler.saveSettings();
 			stateBasedGame.enterState(1);
     

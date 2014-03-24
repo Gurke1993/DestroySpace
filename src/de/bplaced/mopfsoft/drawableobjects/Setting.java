@@ -1,35 +1,35 @@
 package de.bplaced.mopfsoft.drawableobjects;
 
-public class Setting{
+import java.util.Map.Entry;
+
+@Deprecated
+public class Setting implements Entry<String,String>{
 	
-	public Setting(String name, String value, String kind) {
-		this.name = name;
+	public Setting(String kind, String name, String value) {
+		this.key = kind+"."+name;
 		this.value = value;
-		this.kind = kind;
 	}
 	
-	private String name;
+	private String key;
 	private String value;
-	private String kind;
 	
-	public void setValue(String value) {
+	public String setValue(String value) {
+		String vOld = this.value;
 		this.value = value;
-	}
-	
-	public String getName() {
-		return name;
+		return vOld;
 	}
 	public String getValue() {
 		return value;
 	}
 	public String getKind() {
-		return kind;
+		return key.split("\\.")[0];
 	}
+	public String getName() {
+		return key.split(".")[1];
+	}
+
 @Override
-public boolean equals(Object obj) {
-	if (obj instanceof Setting && ((Setting) obj).getKind().equals(this.kind) && ((Setting) obj).getName().equals(this.name))
-	return true;
-	return false;
-	
+public String getKey() {
+	return key;
 }
 }
