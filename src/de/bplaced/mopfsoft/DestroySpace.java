@@ -1,244 +1,77 @@
 package de.bplaced.mopfsoft;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
+import javax.swing.JOptionPane;
 import org.lwjgl.LWJGLUtil;
-import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.state.GameState;
 
 //Main Gameclass
 public class DestroySpace {
 	
 	public static final int BUILD = 1;
-	private ClientThread clientThread = null;
-	private ConfigurationHandler configurationHandler;
-	private AppGameContainer app;
+	public static final GameState [] GAME_STATE_ARRAY = {new MenuState(), new EditorState(), new ServerSelectState(), new GameLobbyState(), new SettingsState(), new MultiplayerGameState(), new LoadingState()};
+	public static final String GAME_NAME = "DestroySpace Beta";
 	
 	
-	// Add new States here (ONLY AS LAST ENTRY!!!):
-	//TODO
-	private GameState [] gameStateArray = {new MenuState(), new EditorState(), new ServerSelectState(), new GameLobbyState(), new SettingsState(), new MultiplayerGameState(), new LoadingState()};
-	private ClientFileTransferThread clientFileTransferThread;
-	private FileHandler fileHandler;
 	
-	private MultiplayerGameManager multiplayerGameManager;
-	private PreGameManager preGameManager;
+	
+	//private ClientThread clientThread = null;
+	
+	
+	//private ClientFileTransferThread clientFileTransferThread;
+	
+	
 
 	/**
 	 * starts the Game 
 	 */
 	public DestroySpace(String[] args) {
+		
+		try {
 
 		System.out.println("Setting up Game...");		
 		System.out.println("Loading Config...");
 		
-		//get configurations
-		this.configurationHandler = new ConfigurationHandler("config.txt");
-		
-		//Setting up Maps
+		//Create folder structure
 		System.out.println("Creating all needed folders...");
 		(new File("maps")).mkdir();
 		
-		//new Filehandler
-		System.out.println("Setting up FileHandler...");
-		fileHandler = new FileHandler(this);
 		
+		//init Different Handlerclasses
+		System.out.println("Init ConfigHandler...");
+		ConfigurationHandler.init("config.txt");
 		
+		System.out.println("Init FileHandler...");
+		FileHandler.init(this);
 		
-		//new Screen
-		try {
-		System.out.println("Setting up Screen...");
-		app = new AppGameContainer(new MainScreen("DestroySpace",this, gameStateArray));
-	    app.setDisplayMode(1024, 768, true);
-	    app.start();
+		System.out.println("Init GameHandler...");
+		GameHandler.init();
+		
+		System.out.println("Init PreGameManager...");
+		PreGameManager.init();
+		
+		System.out.println("Init MultiplayerGameManager...");
+		MultiplayerGameManager.init();
+		
+		System.out.println("Init AppGameContainer...");
+		AppGameContainerExtended.init();
+		
+		AppGameContainerExtended.getInstance().setDisplayMode(1024, 768, true);
+		AppGameContainerExtended.getInstance().start();
+		
 		} catch (Exception e) {
-			System.out.println("Could not set up screens!!");
+			JOptionPane.showMessageDialog(null, "Error: "+e.getMessage(), "Could not launch game!", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
-		
-	}
-	
-	public GameState getGameState(int id) {
-		return gameStateArray[id];
 	}
 
 	//MAIN//
 	public static void main(String[] args) {
-		//set libarypaths
+		
 		System.setProperty("org.lwjgl.librarypath", new File(new File(System.getProperty("user.dir"), "native"), LWJGLUtil.getPlatformName()).getAbsolutePath());
 		System.setProperty("net.java.games.input.librarypath", System.getProperty("org.lwjgl.librarypath"));
 		
-		//"lets start the program!"
 		new DestroySpace(args);
 	}
 
-	
-	/**
-	 * processes messages from the server
-	 * @param message : message to analyze
-	 */
-	public synchronized void analyseServerMessage(String message) {
-		if (!message.contains("givemapstring:partofstring"))
-		System.out.println("ServerSays:"+message);
-		
-		//Structure message
-		Map<String,String> args= new HashMap<String,String>();
-		
-		String[] argArray;
-		for (String split: message.split(":")) {
-			argArray = split.split("=");
-			if (argArray.length<2)
-				args.put(argArray[0], "");
-			else
-				args.put(argArray[0], argArray[1]);
-		}
-		
-		analyseServerMessage(args);
-	}
-	
-	/** processes messages from the server
-	 * @param args
-	 */
-	private void analyseServerMessage(Map<String,String> args) {
-		
-		String action = args.get("action");
-		
-		if (action.equals("gamechange")) {
-			while(multiplayerGameManager == null) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-			}
-			}
-			multiplayerGameManager.queueServerUpdate(args);
-		} else
-		
-		if (action.equals("playerchat")) {
-			this.getClientThread().getChatManager().addNewMessage(args.get("message"),args.get("player"));
-		} else
-				
-		if (action.equals("givefiletransferinfo")) {
-			clientFileTransferThread.prepareForNewFileTransfer(new File(args.get("path")), Long.parseLong(args.get("filelength")));
-		} else
-			
-		if (action.equals("allplayersready")) {
-			if (args.get("type").equals("load")) {
-				preGameManager.setAllPlayersReadyToLoad(Boolean.parseBoolean(args.get("areready")));
-			} else
-			if (args.get("type").equals("start")) {
-				preGameManager.setAllPlayersReadyToStart(Boolean.parseBoolean(args.get("areready")));
-			}
-		} else
-			
-		if (action.equals("givelobbyinfo")) {
-			preGameManager.setLobbyInformation(args.get("mapname"), args.get("mapdescription"), Integer.parseInt(args.get("amountofplayers")), Integer.parseInt(args.get("maxamountofplayers")), args.get("players").split(","), args.get("ishost").equals("true"));
-		} else 
-			
-		if (action.equals("loadupgame")) {
-			preGameManager.loadUpGame();
-		} else  
-		if (action.equals("startgame")) {
-			preGameManager.startGame();
-		} else
-		
-		if (action.equals("givemapstring")) {
-			if (args.get("finished").equals("false"))
-				preGameManager.addToMapString(args.get("partofstring"));
-			else
-				preGameManager.setMapStringIsFinished(true);
-		} else 
-			
-		if (action.equals("mapchange")) {
-			preGameManager.reloadLobby();
-		} else
-
-		if (action.equals("playerchange")) {
-			preGameManager.updateLobby(args);
-		}
-	}
-	
-	/** 
-	 * @return
-	 * Client ist connected? true/false
-	 */
-	public Boolean isConnected() {
-		return clientThread != null && clientFileTransferThread != null;
-	}
-	
-	/**
-	 * connects the client to the server
-	 * @param ip: server IP
-	 * @param port: server ort
-	 * @return if succsesfully true/false
-	 */
-	public Boolean connectToServer(String ip, Integer port) {
-		System.out.println("Trying to connect...");
-		try {
-			clientThread = new ClientThread(ip, port, this);
-			clientFileTransferThread = new ClientFileTransferThread(ip, 27016, this);
-			return true;
-		} catch (IOException e) {
-			return false;
-			//e.printStackTrace();
-		}
-	}
-	
-	/** 
-	 * @return
-	 * ConigurationHandler
-	 */
-	public ConfigurationHandler getConfigurationHandler() {
-		return this.configurationHandler;
-	}
-	
-	/** 
-	 * @return
-	 * ClientThread
-	 */
-	public ClientThread getClientThread() {
-		return this.clientThread;
-	}
-	
-	/** 
-	 * @return
-	 * clientFileTransferThread
-	 */	
-	public ClientFileTransferThread getClientFileTransferThread() {
-		return this.clientFileTransferThread;
-	}
-
-	/** 
-	 * @return
-	 * fileHandler
-	 */
-	public FileHandler getFileHandler() {
-		return this.fileHandler;
-	}
-	
-	/** 
-	 * @return
-	 * multiplayerGameManager
-	 */
-	public MultiplayerGameManager getMultiplayerGameManager() {
-		return multiplayerGameManager;
-	}
-	
-	/**
-	 * sets to current multiplayerGameManager
-	 * @param multiplayerGameManager 
-	 */
-	public void setMultiplayerGameManager(MultiplayerGameManager multiplayerGameManager) {
-		this.multiplayerGameManager = multiplayerGameManager;
-	}
-
-	public PreGameManager getPreGameManager() {
-		return this.preGameManager;
-	}
-	
-	public void setPreGameManager(PreGameManager pgm) {
-		this.preGameManager = pgm;
-	}
 }

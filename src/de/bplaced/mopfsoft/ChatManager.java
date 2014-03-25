@@ -4,13 +4,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ChatManager {
 
-	private ClientThread sender;
+	private static ChatManager instance = null;
 	public ChatManager(ClientThread sender) {
-		this.sender = sender;
 	}
 	
 	public void send(String message) {
-		sender.send("action=playerchat:message="+message);
+		ClientThread.getInstance().send("action=playerchat:message="+message);
 	}
 	
 	public void addNewMessage(String message, String sender) {
@@ -21,6 +20,19 @@ public class ChatManager {
 	
 	public ConcurrentLinkedQueue <String> getChatHistory() {
 		return this.chatHistory;
+	}
+
+	public static ChatManager getInstance() {
+		return instance;
+	}
+	
+	public static void setInstance(ChatManager chatManager) {
+		instance = chatManager;
+	}
+	
+	public static void init(ClientThread clientThread) {
+		if (instance == null)
+		setInstance(new ChatManager(clientThread));
 	}
 
 }

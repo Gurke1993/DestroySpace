@@ -16,18 +16,13 @@ import de.bplaced.mopfsoft.drawableobjects.ChatBox;
 
 public class GameLobbyState extends BasicGameState{
 	public static final int ID = 3;
-	private Image backGround, hud;
-	private MainScreen mainScreen;
+	private Image backGround, hud, startButton, startButtonOff;
 
-	private Image startButton;
-	private Image startButtonOff;
 	private ChatBox chatBox = null;
-	private PreGameManager pgm;
 	
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
 			throws SlickException {
-		mainScreen = (MainScreen)stateBasedGame;
 		
 		backGround = new Image("resources/images/general/Background.jpg");
 		hud = new Image("resources/images/gameLobby/Hud.png");
@@ -40,21 +35,21 @@ public class GameLobbyState extends BasicGameState{
 			throws SlickException {
 		graphics.drawImage(backGround, 0, 0);
 		graphics.drawImage(hud, 0, 0);
-		graphics.drawString(pgm.getMapName(), 812, 144);
-		graphics.drawString(pgm.getMapDescription(), 812, 156);
+		graphics.drawString(PreGameManager.getInstance().getMapName(), 812, 144);
+		graphics.drawString(PreGameManager.getInstance().getMapDescription(), 812, 156);
 		
-		graphics.drawString("Currently connected: "+pgm.getPlayerAmount()+"/"+pgm.getMaxPlayerAmount(), 115, 119);
+		graphics.drawString("Currently connected: "+PreGameManager.getInstance().getPlayerAmount()+"/"+PreGameManager.getInstance().getMaxPlayerAmount(), 115, 119);
 		
 		graphics.drawString("Players:", 115, 200);
 		int i = 0;
-		for (String player: pgm.getPlayers()) {
+		for (String player: PreGameManager.getInstance().getPlayers()) {
 			graphics.drawString(player, 115, 215+i);
 			i = i+15;
 		}
 		
 
-		if (pgm.isHost()) {
-			if (pgm.allPlayersReadyToLoad()) {
+		if (PreGameManager.getInstance().isHost()) {
+			if (PreGameManager.getInstance().allPlayersReadyToLoad()) {
 				graphics.drawImage(startButton, 801,463);
 			} else {
 				graphics.drawImage(startButtonOff, 801,463);
@@ -65,17 +60,17 @@ public class GameLobbyState extends BasicGameState{
 			chatBox.draw(gameContainer, graphics);
 		}
 		
-		mainScreen.getDestroySpace().getFileHandler().drawImageIfLoaded(801, 197, graphics, pgm.getMapName()+".gif");
+		FileHandler.getInstance().drawImageIfLoaded(801, 197, graphics, PreGameManager.getInstance().getMapName()+".gif");
 	}
 
 	@Override
 	public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int timePassed)
 			throws SlickException {
-		if (!mainScreen.getDestroySpace().getFileHandler().isFileLoaded(pgm.getMapName()+".gif")) {
-			mainScreen.getDestroySpace().getFileHandler().tryToLoadFile(pgm.getMapName()+".gif");
+		if (!FileHandler.getInstance().isFileLoaded(PreGameManager.getInstance().getMapName()+".gif")) {
+			FileHandler.getInstance().tryToLoadFile(PreGameManager.getInstance().getMapName()+".gif");
 			
-			if (mainScreen.getDestroySpace().getFileHandler().isFileLoaded(pgm.getMapName()+".gif")) {
-				mainScreen.getDestroySpace().getPreGameManager().setClientIsReadyToLoad(true);
+			if (FileHandler.getInstance().isFileLoaded(PreGameManager.getInstance().getMapName()+".gif")) {
+				PreGameManager.getInstance().setClientIsReadyToLoad(true);
 			}
 		}
 		
@@ -97,42 +92,34 @@ public class GameLobbyState extends BasicGameState{
 	}
 	
 	private void close() {
-		pgm.disconnect();
-  		mainScreen.enterState(4);
+		PreGameManager.getInstance().disconnect();
+  		GameHandler.getInstance().enterState(4);
 	}
 	
 
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
 		//Request Lobbyinformation
-		mainScreen.getDestroySpace().setPreGameManager(new PreGameManager(mainScreen));
 		
-		pgm = mainScreen.getDestroySpace().getPreGameManager();
-		pgm.reloadLobby();
+		PreGameManager.getInstance().reloadLobby();
 		
 		TrueTypeFont font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF,java.awt.Font.BOLD , 26), false);
 		
-		this.chatBox = new ChatBox(mainScreen.getDestroySpace().getClientThread().getChatManager(), container, font, Color.green, 102, 400, 150, 400);
+		this.chatBox = new ChatBox(container, font, Color.green, 102, 400, 150, 400);
 	}
 	
 	@Override
 	public void leave(GameContainer container, StateBasedGame game) {
 		this.chatBox.setFocus(false);
 	}
-
-	
-
-
-
-
 	
 	@Override
 	public void mousePressed(int button, int x, int y) {
 		if (button == 0) {
 		if( x >= 800 && x <= 1000) {
-      	if (y >= 463 && y <= 525 && pgm.allPlayersReadyToLoad() && pgm.getPlayerAmount() == pgm.getMaxPlayerAmount()) {
+      	if (y >= 463 && y <= 525 && PreGameManager.getInstance().allPlayersReadyToLoad() && PreGameManager.getInstance().getPlayerAmount() == PreGameManager.getInstance().getMaxPlayerAmount()) {
       		//Start game
-      		mainScreen.getDestroySpace().getClientThread().send("action=loadupgame");
+      		ClientThread.getInstance().send("action=loadupgame");
 
       		
       	} else

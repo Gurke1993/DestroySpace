@@ -13,7 +13,6 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class MultiplayerGameState extends BasicGameState{
 	public static final int id = 6;
-	private MainScreen mainScreen;
 	@SuppressWarnings("unused")
 	private int currentKey;
 	private ConcurrentLinkedQueue<String> usedKeys = new ConcurrentLinkedQueue<String>();
@@ -23,7 +22,6 @@ public class MultiplayerGameState extends BasicGameState{
 	@Override
 	public void init(GameContainer arg0, StateBasedGame stateBasedGame)
 			throws SlickException {
-		mainScreen = (MainScreen)stateBasedGame;
 		backGround = new Image("resources/images/general/Background.jpg");
 		
 	}
@@ -34,7 +32,7 @@ public class MultiplayerGameState extends BasicGameState{
 		
 		graphics.drawImage(backGround, 0, 0);
 		//Draw gamefield, entities
-		mainScreen.getDestroySpace().getMultiplayerGameManager().getMap().drawAll(graphics,40,40);
+		MultiplayerGameManager.getInstance().getMap().drawAll(graphics,40,40);
 
 	}
 
@@ -44,7 +42,7 @@ public class MultiplayerGameState extends BasicGameState{
 		
 		
 		//MultiplayerGameLoop
-		mainScreen.getDestroySpace().getMultiplayerGameManager().doGameLoop(container, sbg, timePassed, usedKeys);
+		MultiplayerGameManager.getInstance().doGameLoop(container, sbg, timePassed, usedKeys);
 	}
 
 	@Override
@@ -55,9 +53,9 @@ public class MultiplayerGameState extends BasicGameState{
 	
 	public void close() {
 
-		mainScreen.getDestroySpace().getClientThread().send("action=clientdisconnect");
-		mainScreen.getDestroySpace().getClientThread().close();
-  		mainScreen.enterState(4);
+		ClientThread.getInstance().send("action=clientdisconnect");
+		ClientThread.getInstance().close();
+  		GameHandler.getInstance().enterState(4);
 	}
 	
 	@Override

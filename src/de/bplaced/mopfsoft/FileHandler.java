@@ -17,6 +17,8 @@ import org.newdawn.slick.Image;
 
 public class FileHandler {
 
+	private static FileHandler instance = null;
+	
 	@SuppressWarnings("unused")
 	private DestroySpace destroySpace;
 	private HashMap<String, Image> imageMap = new HashMap<String, Image>();
@@ -24,7 +26,7 @@ public class FileHandler {
 	private HashMap<String, Boolean> readyMap = new HashMap<String, Boolean>();
 	private Map<String,String> settings;
 
-	public FileHandler(DestroySpace destroySpace) {
+	private FileHandler(DestroySpace destroySpace) {
 		this.destroySpace = destroySpace;
 		this.loadSettings();
 	}
@@ -184,6 +186,19 @@ public class FileHandler {
 			loadSettings();
 		}
 		settings.remove("system.build");
+	}
+
+	public static void init(DestroySpace destroySpace) {
+		if (instance == null)
+		FileHandler.setInstance(new FileHandler(destroySpace));
+	}
+
+	public static FileHandler getInstance() {
+		return instance;
+	}
+
+	private static void setInstance(FileHandler instance) {
+		FileHandler.instance = instance;
 	}
 
 }

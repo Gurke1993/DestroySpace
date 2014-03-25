@@ -14,11 +14,9 @@ public class ChatBox extends DrawableObject{
 
 	private Color color;
 	private TextField textField;
-	private final ChatManager cm;
 
-	public ChatBox(ChatManager cm, GUIContext c, Font font, Color color, int x, int y, int height, int width) {
+	public ChatBox(GUIContext c, Font font, Color color, int x, int y, int height, int width) {
 		super(x, y, width, height, null);
-		this.cm = cm;
 		this.color = color;
 		this.textField = new TextField(c, font, x, y+height-32, width, 32) {
 			@Override
@@ -28,7 +26,7 @@ public class ChatBox extends DrawableObject{
 					//Enter
 					String message = textField.getText().replaceAll(":", "").replaceAll("=", "");
 					if (!message.equals(""))
-						ChatBox.this.cm.send(message);
+						ChatManager.getInstance().send(message);
 					textField.setText("");
 				} else 
 				if (key == 1) {
@@ -44,7 +42,7 @@ public class ChatBox extends DrawableObject{
 	
 	public void draw(GUIContext c, Graphics g) {
 		g.setColor(color);
-		ConcurrentLinkedQueue<String> ch = cm.getChatHistory();
+		ConcurrentLinkedQueue<String> ch = ChatManager.getInstance().getChatHistory();
 		int amount = ch.size();
 		int maxAmount = (height-40)/15;
 		int i = 0;

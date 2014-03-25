@@ -19,40 +19,33 @@ import de.bplaced.mopfsoft.drawableobjects.StringSettingDrawable;
 
 public class SettingsState extends BasicGameState{
 	public static final int ID = 5;
-	private StateBasedGame stateBasedGame;
 	private Image backGround;
 	private Image hud;
+	private Image settingBackground;
 	
-	private FileHandler fileHandler;
 	private List<DrawableSetting> drawSettings = new ArrayList<DrawableSetting>();
 	
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
 			throws SlickException {
 
-		this.stateBasedGame = stateBasedGame;
 		backGround = new Image("resources/images/general/Background.jpg");
 		hud = new Image("resources/images/settings/Hud.png");
+		settingBackground = new Image("resources/images/settings/SettingBackground.png");
 		
-		this.fileHandler = ((MainScreen)stateBasedGame).getDestroySpace().getFileHandler();
-		
-		//TrueTypeFont font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF,java.awt.Font.BOLD , 26), false);
-		
-		System.out.println("Generating Settings");
-		System.out.println(fileHandler.getSettings());
 		
 		//Generate Drawable Settings
 		int i=0;
 		SettingGen:
-		for (Entry<String,String> entry: fileHandler.getSettings().entrySet()) {
+		for (Entry<String,String> entry: FileHandler.getInstance().getSettings().entrySet()) {
 			
 			
 			if (entry.getKey().startsWith("system")) continue SettingGen;
 			
 			if (entry.getKey().startsWith("key")) {
-				drawSettings.add(new KeySettingDrawable(200, 200+i*40, 128, 40, null, null, entry));
+				drawSettings.add(new KeySettingDrawable(150, 110+i*20, 600, 20, settingBackground, null, entry));
 			} else {
-				drawSettings.add(new StringSettingDrawable(200, 200+i*40, 128, 40, null, null, entry));
+				drawSettings.add(new StringSettingDrawable(150, 110+i*20, 600, 20, settingBackground, null, entry));
 			}
 			i++;
 		}
@@ -108,11 +101,11 @@ public class SettingsState extends BasicGameState{
       	if (y >= 526 && y <= 588) {
       		//Save and quit
     		for (DrawableSetting drawableSetting: drawSettings) {
-    			fileHandler.getSettings().put(drawableSetting.getSetting().getKey(), drawableSetting.getSetting().getValue());
+    			FileHandler.getInstance().getSettings().put(drawableSetting.getSetting().getKey(), drawableSetting.getSetting().getValue());
     		}
     		
-    		fileHandler.saveSettings();
-			stateBasedGame.enterState(1);
+    		FileHandler.getInstance().saveSettings();
+			GameHandler.getInstance().enterState(1);
     
 	} else {
 		if (button == 1) 
@@ -123,7 +116,7 @@ public class SettingsState extends BasicGameState{
 	}
 	
 	private void close() {
-		stateBasedGame.enterState(1);
+		GameHandler.getInstance().enterState(1);
 	}
 
 }

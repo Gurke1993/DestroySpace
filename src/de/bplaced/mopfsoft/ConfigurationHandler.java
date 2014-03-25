@@ -12,11 +12,12 @@ import java.util.HashMap;
 public class ConfigurationHandler {
 	
 
+	private static ConfigurationHandler instance = null;
 	private HashMap<String, String> configurationMap = new HashMap<String, String>();;
 	private File file;
 	
 	
-	public ConfigurationHandler (String string) {
+	private ConfigurationHandler (String string) {
 		this.file = new File(string);
 		if (!file.exists()) {
 			try {
@@ -93,5 +94,15 @@ public class ConfigurationHandler {
 			System.out.println("[ERROR] Could not save config!!");
 			e.printStackTrace();
 		}
+	}
+	public static void init(String path) {
+		if (instance == null)
+		ConfigurationHandler.setInstance(new ConfigurationHandler(path));
+	}
+	public static ConfigurationHandler getInstance() {
+		return instance;
+	}
+	private static void setInstance(ConfigurationHandler instance) {
+		ConfigurationHandler.instance = instance;
 	}
 }

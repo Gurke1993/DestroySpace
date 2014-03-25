@@ -7,19 +7,18 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class ClientFileTransferThread extends Thread{
+	private static ClientFileTransferThread instance;
 	Socket fileS;
 	  ExtendedFileOutputStream out;
 	  DataInputStream in;
-      DestroySpace destroySpace;
 	private long transmittedFileSize;
 	private long completedTransmission = 0;
 	private int step = 15000;
 	private File currentFile;
 	private boolean wait = false;
 
-	  public ClientFileTransferThread(String ip, int port, DestroySpace destroySpace) throws IOException {
+	  private ClientFileTransferThread(String ip, int port) throws IOException {
 	      System.out.println("Starting FileTransferClient!");
-	      this.destroySpace = destroySpace;
 	      fileS = new Socket(ip,port);
 	      in = new DataInputStream(fileS.getInputStream()) ;
 	    this.start();
@@ -46,7 +45,7 @@ public class ClientFileTransferThread extends Thread{
 					wait = false;
 					
 					//Load the file inside of the FileHandler for further use in this session
-					destroySpace.getFileHandler().setFileIsReady(file, true);
+					FileHandler.getInstance().setFileIsReady(file, true);
 					
 	    		}
 		}
@@ -92,7 +91,7 @@ public class ClientFileTransferThread extends Thread{
 			out = new ExtendedFileOutputStream(file);
 			
 			//Send message to server
-			destroySpace.getClientThread().send("action=starttransfer:filename="+file.getName()+":path="+file.getPath());
+			ClientThread.getInstance().send("action=starttransfer:filename="+file.getName()+":path="+file.getPath());
 		} catch (FileNotFoundException e) {
 			System.out.println("[ERROR] Could not prepare for File Transfer of file: "+file.getName());
 			e.printStackTrace();
@@ -100,6 +99,18 @@ public class ClientFileTransferThread extends Thread{
 		
 		wait = true;
 
+	}
+
+	public static void init(String ip, int i) throws IOException {
+		setInstance(new ClientFileTransferThread(ip,i));
+	}
+
+	private static void setInstance(ClientFileTransferThread clientFileTransferThread) {
+		instance = clientFileTransferThread;
+	}
+
+	public static ClientFileTransferThread getInstance() {
+		return instance;
 	}
 	  
 }

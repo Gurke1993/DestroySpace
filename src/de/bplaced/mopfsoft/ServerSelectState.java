@@ -19,7 +19,6 @@ public class ServerSelectState extends BasicGameState{
 	private Image backGround, hud, overlayFade, newServerHud;
 	private String[] favoriteServers;
 	private int selectedServer = 0;
-	private StateBasedGame stateBasedGame;
 	private Boolean addingServer = false;
 	private TextField newServerName, newServerIp, newServerPort;
 	private String screenOutput = "";
@@ -27,11 +26,11 @@ public class ServerSelectState extends BasicGameState{
 	
 	
 	public void loadFavoriteServers() {
-		if (((MainScreen)stateBasedGame).getDestroySpace().getConfigurationHandler().getString("favoriteServers") != "") {
-			if ((favoriteServers = ((MainScreen)stateBasedGame).getDestroySpace().getConfigurationHandler().getString("favoriteServers").split(",")) == null) {
+		if (ConfigurationHandler.getInstance().getString("favoriteServers") != "") {
+			if ((favoriteServers = ConfigurationHandler.getInstance().getString("favoriteServers").split(",")) == null) {
 				//One entry
 				favoriteServers = new String[1];
-				favoriteServers[0] = ((MainScreen)stateBasedGame).getDestroySpace().getConfigurationHandler().getString("favoriteServers");
+				favoriteServers[0] = ConfigurationHandler.getInstance().getString("favoriteServers");
 			}
 		} else {
 			//No entry
@@ -43,9 +42,6 @@ public class ServerSelectState extends BasicGameState{
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
 			throws SlickException {
-		this.stateBasedGame = stateBasedGame;
-
-		
 		
 		loadFavoriteServers();
 		backGround = new Image("resources/images/general/Background.jpg");
@@ -136,8 +132,8 @@ public class ServerSelectState extends BasicGameState{
 					} else {
 						newServerPort.setBackgroundColor(Color.gray);
 						//Save new Server
-			      		String newFavoriteServers = ((MainScreen)stateBasedGame).getDestroySpace().getConfigurationHandler().getString("favoriteServers")+","+ip+";"+port+";"+name;
-			      		((MainScreen)stateBasedGame).getDestroySpace().getConfigurationHandler().setEntry("favoriteServers", newFavoriteServers);
+			      		String newFavoriteServers = ConfigurationHandler.getInstance().getString("favoriteServers")+","+ip+";"+port+";"+name;
+			      		ConfigurationHandler.getInstance().setEntry("favoriteServers", newFavoriteServers);
 			      		loadFavoriteServers();
 						
 						addingServer = false;
@@ -166,22 +162,22 @@ public class ServerSelectState extends BasicGameState{
       	} else
       	if (y >= 197 && y <= 257) {
       		//REMOVE Server
-      		String newFavoriteServers = ((MainScreen)stateBasedGame).getDestroySpace().getConfigurationHandler().getString("favoriteServers").replaceAll(favoriteServers[selectedServer]+",", "");
-      		newFavoriteServers = ((MainScreen)stateBasedGame).getDestroySpace().getConfigurationHandler().getString("favoriteServers").replaceAll(","+favoriteServers[selectedServer], "");
-      		((MainScreen)stateBasedGame).getDestroySpace().getConfigurationHandler().setEntry("favoriteServers", newFavoriteServers);
+      		String newFavoriteServers = ConfigurationHandler.getInstance().getString("favoriteServers").replaceAll(favoriteServers[selectedServer]+",", "");
+      		newFavoriteServers = ConfigurationHandler.getInstance().getString("favoriteServers").replaceAll(","+favoriteServers[selectedServer], "");
+      		ConfigurationHandler.getInstance().setEntry("favoriteServers", newFavoriteServers);
       		loadFavoriteServers();
       		screenOutput = "Removed Server!";
       		
       	} else 	
       	if (y >= 526 && y <= 587) {
       		//Connect to selected Server
-      		if (!((MainScreen)stateBasedGame).getDestroySpace().connectToServer(favoriteServers[selectedServer].split(";")[0], Integer.parseInt(favoriteServers[selectedServer].split(";")[1]))) {
+      		if (!ClientThread.connectToServer(favoriteServers[selectedServer].split(";")[0], Integer.parseInt(favoriteServers[selectedServer].split(";")[1]))) {
       			//Could not connect to Server
       			System.out.println("Failed to connect.");
       			screenOutput = "["+System.currentTimeMillis()+"] Failed to connect to Server!";
       		} else {
       			//Connected sucessfully -> switch to Lobby
-      			stateBasedGame.enterState(3);
+      			GameHandler.getInstance().enterState(3);
       		}
 
       	}
@@ -216,7 +212,7 @@ public class ServerSelectState extends BasicGameState{
 		if (addingServer) {
 			addingServer = false;
 		} else
-  		stateBasedGame.enterState(1);
+  		GameHandler.getInstance().enterState(1);
 	}
 
 }

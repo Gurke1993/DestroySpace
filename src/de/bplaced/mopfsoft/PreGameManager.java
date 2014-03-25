@@ -3,6 +3,8 @@ package de.bplaced.mopfsoft;
 import java.util.Map;
 
 public class PreGameManager {
+	private static PreGameManager instance = null;
+	
 	private String mapName = "";
 	private int playerAmount = -1;
 	private int maxPlayerAmount = -1;
@@ -11,13 +13,11 @@ public class PreGameManager {
 	private String mapString = "";
 	private boolean isHost = false;
 	private boolean mapStringIsReady = false;
-	private final MainScreen ms;
 	private boolean allPlayersReadyToLoad = false;
 	private boolean allPlayersReadyToStart = false;
 	private boolean isReadyToStart;
 	
-	public PreGameManager(MainScreen ms) {
-		this.ms = ms;
+	private PreGameManager() {
 	}
 	
 	
@@ -36,7 +36,7 @@ public class PreGameManager {
 	}
 	
 	public void send(String message) {
-		ms.getDestroySpace().getClientThread().send(message);
+		ClientThread.getInstance().send(message);
 	}
 	
 	public String getMapString() {
@@ -72,12 +72,12 @@ public class PreGameManager {
 
 
 	public void loadUpGame() {
-		ms.enterState(7);
+		GameHandler.getInstance().enterState(7);
 	}
 	
 	public void startGame() {
 		System.out.println("Going to MultiplayerGameScreen...");
-		ms.enterState(6);
+		GameHandler.getInstance().enterState(6);
 	}
 
 	public String getPreviewImagePath() {
@@ -85,7 +85,7 @@ public class PreGameManager {
 	}
 
 	public void reloadLobby() {
-		send("action=getlobbyinfo:playername="+ms.getDestroySpace().getFileHandler().getSettings().get("playername"));
+		send("action=getlobbyinfo:playername="+FileHandler.getInstance().getSettings().get("profile.name"));
 	}
 
 //	public void tellServertoStart() {
@@ -118,7 +118,7 @@ public class PreGameManager {
 
 	public void disconnect() {
 		send("action=clientdisconnect");
-		ms.getDestroySpace().getClientThread().close();
+		ClientThread.getInstance().close();
 	}
 
 	public String getMapName() {
@@ -156,6 +156,20 @@ public class PreGameManager {
 
 	public synchronized boolean isMapLoaded() {
 		return this.mapStringIsReady;
+	}
+
+
+	public static PreGameManager getInstance() {
+		return instance;
+	}
+	
+	public static void init() {
+		if (instance == null)
+		setInstance(new PreGameManager());
+	}
+
+	private static void setInstance(PreGameManager preGameManager) {
+		instance = preGameManager;
 	}
 	
 }

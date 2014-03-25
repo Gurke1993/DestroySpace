@@ -16,12 +16,11 @@ import de.bplaced.mopfsoft.entitys.ItemUser;
 public class MultiplayerGameManager {
 
 	private static final int loopTime = 50;
+	private static MultiplayerGameManager instance = null;
 	private DrawableMap map;
 	private ConcurrentLinkedQueue<ServerUpdate> serverUpdateQueue = new ConcurrentLinkedQueue<ServerUpdate>();
-	private ClientThread sender;
 
-	public MultiplayerGameManager(ClientThread sender) {
-		this.sender = sender;
+	private MultiplayerGameManager() {
 	}
 	
 	
@@ -80,17 +79,17 @@ public class MultiplayerGameManager {
 		}
 
 		if (jump != null) {
-			sender.send("action=clientupdate:"+jump);
+			ClientThread.getInstance().send("action=clientupdate:"+jump);
 		} else
 			
 		if (move != null || use != null) {
 			if (move != null && use == null) {
-				sender.send("action=clientupdate:"+move);
+				ClientThread.getInstance().send("action=clientupdate:"+move);
 			} else
 			if (use != null && move == null) {
-				sender.send("action=clientupdate:"+use);
+				ClientThread.getInstance().send("action=clientupdate:"+use);
 			} else {
-				sender.send("action=clientupdate:type=moveanduse:"+move.split(":",2)[1]+":"+use.split(":",2)[1]);
+				ClientThread.getInstance().send("action=clientupdate:type=moveanduse:"+move.split(":",2)[1]+":"+use.split(":",2)[1]);
 			}
 		}
 		
@@ -103,8 +102,8 @@ public class MultiplayerGameManager {
 		}
 	}
 
-	public void setMap(String mapString, String previewImagePath) {
-		this.map = new DrawableMap(mapString,previewImagePath);
+	public void setMap() {
+		this.map = new DrawableMap(PreGameManager.getInstance().getMapString(),PreGameManager.getInstance().getPreviewImagePath());
 	}
 
 
@@ -115,5 +114,20 @@ public class MultiplayerGameManager {
 	public void queueServerUpdate(Map<String, String> args) {
 		this.serverUpdateQueue.add(new ServerUpdate(args));
 		
+	}
+
+
+	public static MultiplayerGameManager getInstance() {
+		return instance ;
+	}
+	
+	public static void init() {
+		if (instance == null)
+		setInstance(new MultiplayerGameManager());
+	}
+
+
+	private static void setInstance(MultiplayerGameManager multiplayerGameManager) {
+		instance = multiplayerGameManager;
 	}
 }

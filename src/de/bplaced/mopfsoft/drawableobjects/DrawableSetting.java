@@ -3,12 +3,16 @@ package de.bplaced.mopfsoft.drawableobjects;
 
 import java.util.Map.Entry;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.gui.GUIContext;
 
 public abstract class DrawableSetting extends DrawableObjectClickable{
+	
+	private final int offsetX = 3;
+	private final int offsetY = 0;
 
 	private Entry <String,String> entry;
 	protected String displayedValue;
@@ -22,7 +26,9 @@ public abstract class DrawableSetting extends DrawableObjectClickable{
 	
 	public void draw(GUIContext c, Graphics g) {
 		super.draw(c, g);
-		g.drawString(entry.getKey()+": "+displayedValue, x, y);
+		g.setColor(Color.green);
+		g.drawString(entry.getKey()+": "+displayedValue, x+offsetX, y+offsetY);
+		g.setColor(Color.white);
 	}
 
 	@Override
