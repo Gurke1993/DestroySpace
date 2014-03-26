@@ -17,6 +17,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import de.bplaced.mopfsoft.drawableobjects.DrawableMap;
 import de.bplaced.mopfsoft.editor.Button;
 import de.bplaced.mopfsoft.editor.EditorPaintFunction;
+import de.bplaced.mopfsoft.handler.GameHandler;
 
 
 public class EditorState extends BasicGameState{
@@ -76,8 +77,8 @@ public class EditorState extends BasicGameState{
 		imgPosY=0;
 		font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF,java.awt.Font.BOLD , 26), false);
 		
-		b1 = new Button(0, 0, 100, 100, menuImage1, null, stateBasedGame.getContainer().getInput());
-		b2 = new Button(100, 0, 100, 100, menuImage2, null, stateBasedGame.getContainer().getInput());
+		b1 = new Button(0, 0, 100, 100, menuImage1, null, GameHandler.getInstance().getCurrentStateID());
+		b2 = new Button(100, 0, 100, 100, menuImage2, null, GameHandler.getInstance().getCurrentStateID());
 		appNum=0;
 		stateBasedGame.getContainer().getInput().addListener(b1);
 		stateBasedGame.getContainer().getInput().addListener(b2);

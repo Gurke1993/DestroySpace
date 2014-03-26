@@ -49,9 +49,9 @@ public class SettingsState extends BasicGameState{
 			if (ignoredSettings.contains(entry.getKey().split("\\.")[0])) continue SettingGen;
 			
 			if (entry.getKey().startsWith("key")) {
-				drawSettings.add(new KeySettingDrawable(150, 110+i*20, 600, 20, settingBackground, null, stateBasedGame.getContainer().getInput(), entry));
+				drawSettings.add(new KeySettingDrawable(150, 110+i*20, 600, 20, settingBackground, null, GameHandler.getInstance().getCurrentStateID(), entry));
 			} else {
-				drawSettings.add(new StringSettingDrawable(150, 110+i*20, 600, 20, settingBackground, null, stateBasedGame.getContainer().getInput(), entry));
+				drawSettings.add(new StringSettingDrawable(150, 110+i*20, 600, 20, settingBackground, null, GameHandler.getInstance().getCurrentStateID(), entry));
 			}
 			i++;
 		}
