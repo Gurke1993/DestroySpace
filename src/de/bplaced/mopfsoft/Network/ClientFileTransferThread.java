@@ -69,7 +69,6 @@ public class ClientFileTransferThread extends Thread{
 			} catch (InterruptedException e) {
 			}
 		}
-		System.out.println("notified");
 		
 		//Set values
 		currentFile = file;
