@@ -1,11 +1,11 @@
-package de.bplaced.mopfsoft;
+package de.bplaced.mopfsoft.editor;
 
 import de.bplaced.mopfsoft.drawableobjects.DrawableMap;
 
 public class EditorPaintFunction {
 	DrawableMap drawableMap;
 
-	EditorPaintFunction(DrawableMap drawableMap) {
+	public EditorPaintFunction(DrawableMap drawableMap) {
 		this.drawableMap = drawableMap;
 
 	}

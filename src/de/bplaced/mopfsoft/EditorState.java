@@ -16,6 +16,8 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import de.bplaced.mopfsoft.drawableobjects.DrawableMap;
+import de.bplaced.mopfsoft.editor.Button;
+import de.bplaced.mopfsoft.editor.EditorPaintFunction;
 import de.bplaced.mopfsoft.map.Map;
 
 
@@ -38,26 +40,29 @@ public class EditorState extends BasicGameState{
 	int imgPosX,imgPosY;
     //BackgroundImages
 	Image bgImage;
+	Image menuImage1,menuImage2;
 	EditorPaintFunction paintFunction;//Implement paintfunctions
-	EditorStateMapOpener mapOpener;//open application
-	EditorStateNewMap mapCreater; //create application
-	EditorStateSaver mapSaver; //save application
+
 	TrueTypeFont font;
+	
+	//Buttons
+	Button b1;
+	Button b2;
+	Button b3;
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException 
 	{
-		Map.copyDefaultMap();
+
 		try {
+			
 		drawableMap = new DrawableMap(new File("maps"+System.getProperty("file.separator")+"DefaultMap.map"),"");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 		paintFunction = new EditorPaintFunction(drawableMap);
 		
-		mapOpener = new EditorStateMapOpener( container, font, Color.green, 800, 64, 150, 200,drawableMap);
-		mapSaver = new EditorStateSaver( container, font, Color.green, 800, 64, 150, 200,drawableMap);
-		mapCreater = new EditorStateNewMap( container, font, Color.green, 800, 64, 150, 200,drawableMap);
+
 	}
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
@@ -66,39 +71,37 @@ public class EditorState extends BasicGameState{
 
 		blockId=2;
 		bgImage = new Image("resources/images/editor/bg.png");
+	    menuImage1 = new Image("resources/images/editor/menu1.png");
+	    menuImage2 = new Image("resources/images/editor/menu2.png");
 		imgPosX=0;
 		imgPosY=0;
 		font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF,java.awt.Font.BOLD , 26), false);
+		
+		b1 = new Button(0, 0, 100, 100, menuImage1, null);
+		b2 = new Button(100, 0, 100, 100, menuImage2, null);
+		
+		stateBasedGame.getContainer().getInput().addListener(b1);
+		stateBasedGame.getContainer().getInput().addListener(b2);
+		
+		
 	}
 
 	@Override
 	public void render(GameContainer gameContainer, StateBasedGame stateBasedGame, Graphics graphics)
 			throws SlickException {
+		
 		//drawing game background
 		graphics.drawImage(bgImage, 0, 0);
 		//drawing the gamefield
         graphics.drawImage(drawableMap.getGamefieldAsImage(), imgPosX, imgPosY);
-        
-        //drawing infomation
-        if (info)
-        {
-        	graphics.drawString("(P)encil", 10, 30);
-        	graphics.drawString("(E)rase", 10, 60);
-        	graphics.drawString("(F)ill", 10, 90);
-        	graphics.drawString("(L)ine", 10, 120);
-        	graphics.drawString("(C)ircle", 10, 150);
-        }
-        graphics.drawString("current Tool: "+tool, 100, 10);
+
+        //drawing Informations //TODO
         graphics.drawString("radius: "+ radius,250,10);
         graphics.drawString("x1: "+x1+" y1: "+y1,400,10);
         if (tool==3 ){graphics.drawString("QuickLine: "+ quickLine,550,10);}
-        mapOpener.draw(gameContainer, graphics);
-        
-      //0 MapOpener //1 MapCreate //2 MapSaver
-        if (appNum==0){mapOpener.draw( gameContainer ,graphics);}
-        else if(appNum==1){mapCreater.draw(gameContainer, graphics);}
-        else if(appNum==2){mapSaver.draw(gameContainer, graphics);}
-       
+
+        b1.draw(gameContainer, graphics);
+        b2.draw(gameContainer, graphics);
 	}
 
 	@Override
@@ -106,6 +109,12 @@ public class EditorState extends BasicGameState{
 			throws SlickException {
 		Input input = gameContainer.getInput();
 		 
+		if (b1.isAcceptingInput())
+		{
+			System.out.println("das geht zumindest");
+		}
+		
+		
 		//picture position
         if(input.isKeyDown(Input.KEY_A))
         {
@@ -147,8 +156,8 @@ public class EditorState extends BasicGameState{
 	}
 	
 	@Override //when a key is clicked
+	
 	public void keyPressed(int key, char c) {
-		System.out.println(key);
 		
 		switch (key) {
 			case 1 : {//Exit / ESC
@@ -211,6 +220,7 @@ public class EditorState extends BasicGameState{
 		}
 	}
 	
+	/*
 	@Override //when mouse is clicked
 	public void mousePressed(int button, int x, int y) {
 		if (button == 0) { //O Pencil //1 Rubber //2 Fill //3 Line //4 Rectangle //5 Circle
@@ -256,7 +266,7 @@ public class EditorState extends BasicGameState{
 			}
 		}
 	}	
-			
+		*/	
 	
 		
 }
