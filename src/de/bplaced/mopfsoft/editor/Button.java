@@ -16,7 +16,7 @@ public class Button extends DrawableObjectClickable {
 	@Override
 	public boolean isAcceptingInput() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
@@ -28,7 +28,6 @@ public class Button extends DrawableObjectClickable {
 	@Override
 	public void onClick(int button, int x, int y) {
 		System.out.println("works");
-		
 	}
 	
 	
