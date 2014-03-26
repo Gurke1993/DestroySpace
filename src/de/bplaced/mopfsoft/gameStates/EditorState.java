@@ -4,13 +4,13 @@ package de.bplaced.mopfsoft.gameStates;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -39,15 +39,12 @@ public class EditorState extends BasicGameState{
 	int imgPosX,imgPosY;
     //BackgroundImages
 	Image bgImage;
-	Image menuImage1,menuImage2;
+	Image menuImage,menuImage2;
 	EditorPaintFunction paintFunction;//Implement paintfunctions
 
-	TrueTypeFont font;
 	
-	//Buttons
-	Button b1;
-	Button b2;
-	Button b3;
+
+	ArrayList<Button> buttonList = new ArrayList<Button>(); 
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) throws SlickException 
@@ -63,6 +60,7 @@ public class EditorState extends BasicGameState{
 		
 
 	}
+	
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
 			throws SlickException {
@@ -70,14 +68,23 @@ public class EditorState extends BasicGameState{
 
 		blockId=2;
 		bgImage = new Image("resources/images/editor/bg.png");
-	    menuImage1 = new Image("resources/images/editor/menu1.png");
+	    menuImage = new Image("resources/images/editor/editormenu.png");
 	    menuImage2 = new Image("resources/images/editor/menu2.png");
 		imgPosX=0;
 		imgPosY=0;
-		font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF,java.awt.Font.BOLD , 26), false);
 		
-		b1 = new Button(0, 0, 100, 100, menuImage1, null, ID);
-		b2 = new Button(100, 0, 100, 100, menuImage2, null, ID);
+			buttonList.add(new Button(0, 0, 100, 100, null,  null, ID));
+			buttonList.add(new Button(0, 0, 100, 100, null,  null, ID));
+			buttonList.add( new Button(100, 0, 100, 100, null,  null,  ID));
+			buttonList.add( new Button(0, 100, 100, 100, null, null,  ID));
+			buttonList.add( new Button(100, 100, 100, 100, null , null,  ID));
+			buttonList.add( new Button(0, 200, 100, 100, null , null,  ID));
+			buttonList.add( new Button(100,200, 100, 100, null , null,  ID));
+			buttonList.add( new Button(0, 300, 100, 100, null , null,  ID));
+			buttonList.add(new Button(100, 300, 100, 100, null, null,  ID));
+		
+		
+
 		appNum=0;
 		
 		
@@ -97,19 +104,25 @@ public class EditorState extends BasicGameState{
         graphics.drawString("x1: "+x1+" y1: "+y1,400,10);
         if (tool==3 ){graphics.drawString("QuickLine: "+ quickLine,550,10);}
 
-        b1.draw(gameContainer, graphics);
-        b2.draw(gameContainer, graphics);
+        graphics.drawImage(menuImage,0,0);
+        
+        
+        for (int i = buttonList.size()-1;i>=0;i--)
+        {
+        	if(buttonList.get(i).getActive()==true)
+        	{
+        		graphics.drawString("activated"+i, 0, 0);
+        		appNum =i;
+        	}
+        }
+        graphics.drawString(""+appNum, 0, 0);
 	}
 
 	@Override
 	public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int timePassed)
 			throws SlickException {
 		Input input = gameContainer.getInput();
-		 
-		if (b1.isAcceptingInput())
-		{
-			System.out.println("das geht zumindest");
-		}
+
 		
 		
 		//picture position
@@ -145,8 +158,24 @@ public class EditorState extends BasicGameState{
         }
        
         
+        for (int i = buttonList.size()-1;i>=0;i--)
+        {
+        	if(buttonList.get(i).getActive()==true)
+        	{
+        		if (i==appNum)
+        		{
+        			buttonList.get(i).setActiveFalse();
+        		}
+        	}
+        }
+        	
+        		
+        	
+        }
         
-	}
+        
+        
+	
 	@Override
 	public int getID() {
 		return ID;
@@ -161,60 +190,6 @@ public class EditorState extends BasicGameState{
 				stateBasedGame.enterState(1);
 				break;
 			}
-			case 78 :{
-				radius++;
-				break;
-			}
-			case 74 :{
-				if(radius >=0){radius--;}
-				
-				break;
-			}
-			//O Pencil //1 Rubber //2 Fill //3 Line //4 Rectangle //5 Circle
-			case  25:{
-				tool=0;
-				break;
-			}
-			case 18 :{
-				tool=1;
-				break;
-			}
-			case 33 :{
-				tool=2;
-				break;
-			}
-			case  38:{
-				tool=3;
-				break;
-			}
-
-			case 46 :{
-				tool=4;
-				break;
-			}
-			case  23:{
-				System.out.print("works!");
-				info = !info;
-				break;
-			}
-			case 16:{
-				quickLine= !quickLine;
-				break;
-			}
-			//0 MapOpener //1 MapCreate //2 MapSaver
-			case 31:{
-				appNum=2;
-				break;
-			}
-			case 49:{
-				appNum=1;
-				break;
-			}
-			case 24:{
-				appNum=0;
-				break;
-			}
-		}
 	}
 	
 	/*
@@ -265,5 +240,5 @@ public class EditorState extends BasicGameState{
 	}	
 		*/	
 	
-		
+	}	
 }

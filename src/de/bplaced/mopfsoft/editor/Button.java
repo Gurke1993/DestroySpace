@@ -7,9 +7,10 @@ import de.bplaced.mopfsoft.drawableobjects.DrawableObjectClickable;
 
 public class Button extends DrawableObjectClickable {
 
+	boolean active;//Paintfunktion
 	public Button(int x, int y, int width, int height, Image image, Sound sound, int stateId) {
 		super(x, y, width, height, image, sound, stateId);
-		// TODO Auto-generated constructor stub
+		active =false;
 	}
 
 	@Override
@@ -20,8 +21,16 @@ public class Button extends DrawableObjectClickable {
 
 	@Override
 	public void onClick(int button, int x, int y) {
-		System.out.println("works");
+		active =true;
 	}
 	
+	public void setActiveFalse ()
+	{
+		active =false;
+	}
 	
+	public boolean getActive ()
+	{
+		return active;
+	}
 }
