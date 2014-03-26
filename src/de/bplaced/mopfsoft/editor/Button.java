@@ -1,14 +1,15 @@
 package de.bplaced.mopfsoft.editor;
 
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.Sound;
 
 import de.bplaced.mopfsoft.drawableobjects.DrawableObjectClickable;
 
 public class Button extends DrawableObjectClickable {
 
-	public Button(int x, int y, int width, int height, Image image, Sound sound) {
-		super(x, y, width, height, image, sound, null);
+	public Button(int x, int y, int width, int height, Image image, Sound sound, Input input) {
+		super(x, y, width, height, image, sound, input);
 		// TODO Auto-generated constructor stub
 	}
 
