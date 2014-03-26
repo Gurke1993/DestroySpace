@@ -34,7 +34,7 @@ public class DestroySpace {
 	/**
 	 * starts the Game 
 	 */
-	public DestroySpace(String[] args) {
+	private DestroySpace(String[] args) {
 		
 		try {
 
