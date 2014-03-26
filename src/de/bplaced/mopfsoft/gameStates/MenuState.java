@@ -42,7 +42,6 @@ public class MenuState extends BasicGameState{
 	
 	@Override
 	public void keyPressed(int key, char c) {
-		System.out.println(key);
 		switch (key) {
 			case 1 : {
 				
