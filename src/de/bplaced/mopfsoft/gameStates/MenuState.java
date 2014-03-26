@@ -8,16 +8,16 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
+import de.bplaced.mopfsoft.handler.GameHandler;
+
 public class MenuState extends BasicGameState{
 	public static final int ID = 1;
 	private Image backGround, hud;
-	private StateBasedGame stateBasedGame;
 
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame)
 			throws SlickException {
 		
-		this.stateBasedGame = stateBasedGame;
 		backGround = new Image("resources/images/general/Background.jpg");
 		hud = new Image("resources/images/menu/Hud.png");
 		//((MainScreen)stateBasedGame).getDestroySpace();
@@ -44,7 +44,6 @@ public class MenuState extends BasicGameState{
 	public void keyPressed(int key, char c) {
 		switch (key) {
 			case 1 : {
-				
 				close();
 			}
 		}
@@ -60,17 +59,17 @@ public class MenuState extends BasicGameState{
       	
       	if (y >= 130 && y <= 190) {
       		//Start Multiplayer
-      		stateBasedGame.enterState(4);
+      		GameHandler.getInstance().enterState(4);
       		
       	} else
       	if (y >= 197 && y <= 257) {
       		//Start Editor
-      		stateBasedGame.enterState(2);
+      		GameHandler.getInstance().enterState(2);
       		
       	} else
       	if (y >= 264 && y <= 324) {
       		//Start Settings
-      		stateBasedGame.enterState(5);
+      		GameHandler.getInstance().enterState(5);
       	
       	} else
       	if (y >= 331 && y <= 391) {

@@ -76,11 +76,9 @@ public class EditorState extends BasicGameState{
 		imgPosY=0;
 		font = new TrueTypeFont(new java.awt.Font(java.awt.Font.SERIF,java.awt.Font.BOLD , 26), false);
 		
-		b1 = new Button(0, 0, 100, 100, menuImage1, null, stateBasedGame.getContainer().getInput());
-		b2 = new Button(100, 0, 100, 100, menuImage2, null, stateBasedGame.getContainer().getInput());
+		b1 = new Button(0, 0, 100, 100, menuImage1, null, ID);
+		b2 = new Button(100, 0, 100, 100, menuImage2, null, ID);
 		appNum=0;
-		stateBasedGame.getContainer().getInput().addListener(b1);
-		stateBasedGame.getContainer().getInput().addListener(b2);
 		
 		
 	}

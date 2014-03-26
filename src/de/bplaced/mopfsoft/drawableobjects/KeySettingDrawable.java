@@ -4,14 +4,13 @@ package de.bplaced.mopfsoft.drawableobjects;
 import java.util.Map.Entry;
 
 import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.Sound;
 
 public class KeySettingDrawable extends DrawableSetting{
 
 	public KeySettingDrawable(int x, int y, int width, int height, Image image,
-			Sound sound, Input input, Entry<String,String> entry) {
-		super(x, y, width, height, image, sound, input, entry);
+			Sound sound, int stateId, Entry<String,String> entry) {
+		super(x, y, width, height, image, sound, stateId, entry);
 	}
 
 

@@ -5,19 +5,23 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.InputListener;
 import org.newdawn.slick.Sound;
 
+import de.bplaced.mopfsoft.handler.GameHandler;
+
 public abstract class DrawableObjectClickable extends DrawableObject implements InputListener{
 	
 	private final Sound sound;
+	private final int stateId;
 	protected boolean active = false;
 	
-	public DrawableObjectClickable(int x, int y, int width, int height, Image image, Sound sound, Input input) {
+	public DrawableObjectClickable(int x, int y, int width, int height, Image image, Sound sound, int stateId) {
 		super(x, y, width, height, image);
 		this.sound = sound;
-		input.addListener(this);
+		this.stateId = stateId;
+		GameHandler.getInstance().getContainer().getInput().addListener(this);
 	}
 
 	public void mousePressed(int button, int x, int y) {
-		if (contains(x,y)) {
+		if (contains(x,y) && stateId == GameHandler.getInstance().getCurrentStateID()) {
 			active = true;
 			onClick(button,x,y);
 			if (sound != null)
@@ -29,6 +33,11 @@ public abstract class DrawableObjectClickable extends DrawableObject implements 
 	
 	private boolean contains(int x, int y) {
 		return (x>=this.x && x<this.x+this.width && y>=this.y && y<this.y+this.height);
+	}
+	
+	@Override
+	public boolean isAcceptingInput() {
+		return stateId == GameHandler.getInstance().getCurrentStateID();
 	}
 
 	public  abstract void onClick(int button, int x, int y);

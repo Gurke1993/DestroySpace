@@ -19,11 +19,12 @@ import de.bplaced.mopfsoft.handler.FileHandler;
 import de.bplaced.mopfsoft.handler.GameHandler;
 import de.bplaced.mopfsoft.handler.MultiplayerGameManager;
 import de.bplaced.mopfsoft.handler.PreGameManager;
+import de.bplaced.mopfsoft.logging.CustomLogSystem;
 
 //Main Gameclass
 public class DestroySpace {
 	
-	public static final boolean DEBUG = true;
+	public static final int LOGGING_LEVEL = CustomLogSystem.HIGH;
 	public static final int BUILD = 1;
 	public static final GameState [] GAME_STATE_ARRAY = {new MenuState(), new EditorState(), new ServerSelectState(), new GameLobbyState(), new SettingsState(), new MultiplayerGameState(), new LoadingState()};
 	public static final String GAME_NAME = "DestroySpace Beta";
@@ -33,9 +34,11 @@ public class DestroySpace {
 	/**
 	 * starts the Game 
 	 */
-	public DestroySpace(String[] args) {
+	private DestroySpace(String[] args) {
 		
 		try {
+
+		Log.setLogSystem(new CustomLogSystem(LOGGING_LEVEL));
 
 		Log.info("Setting up Game...");	
 		
@@ -64,7 +67,6 @@ public class DestroySpace {
 		AppGameContainerExtended.getInstance().setDisplayMode(1024, 768, true);
 		AppGameContainerExtended.getInstance().start();
 		
-		Log.setVerbose(DEBUG);
 		
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Error: "+e.getMessage(), "Could not launch game!", JOptionPane.ERROR_MESSAGE);

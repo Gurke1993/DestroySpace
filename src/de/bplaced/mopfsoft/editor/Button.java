@@ -1,22 +1,15 @@
 package de.bplaced.mopfsoft.editor;
 
 import org.newdawn.slick.Image;
-import org.newdawn.slick.Input;
 import org.newdawn.slick.Sound;
 
 import de.bplaced.mopfsoft.drawableobjects.DrawableObjectClickable;
 
 public class Button extends DrawableObjectClickable {
 
-	public Button(int x, int y, int width, int height, Image image, Sound sound, Input input) {
-		super(x, y, width, height, image, sound, input);
+	public Button(int x, int y, int width, int height, Image image, Sound sound, int stateId) {
+		super(x, y, width, height, image, sound, stateId);
 		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	public boolean isAcceptingInput() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	@Override
@@ -28,7 +21,6 @@ public class Button extends DrawableObjectClickable {
 	@Override
 	public void onClick(int button, int x, int y) {
 		System.out.println("works");
-		
 	}
 	
 	
