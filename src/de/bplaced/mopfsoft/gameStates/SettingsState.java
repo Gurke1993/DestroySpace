@@ -12,6 +12,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.Log;
 
 import de.bplaced.mopfsoft.drawableobjects.DrawableObject;
 import de.bplaced.mopfsoft.drawableobjects.DrawableSetting;
@@ -81,7 +82,6 @@ public class SettingsState extends BasicGameState{
 	
 	@Override
 	public void keyPressed(int key, char c) {
-		System.out.println(key);
 		switch (key) {
 			case 1 : {
 				
@@ -93,7 +93,7 @@ public class SettingsState extends BasicGameState{
 	
 	@Override
 	public void mousePressed(int button, int x, int y) {
-		System.out.println("Button pressed: "+button+" at "+x+" "+y);
+		Log.debug("Button pressed: "+button+" at "+x+" "+y);
 		if (button == 0) {
 			
 		if( x >= 800 && x <= 1000) {

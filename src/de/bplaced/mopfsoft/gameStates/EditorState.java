@@ -1,4 +1,4 @@
-package de.bplaced.mopfsoft;
+package de.bplaced.mopfsoft.gameStates;
 
 //TODO in enter constructor von drawablemap
 
