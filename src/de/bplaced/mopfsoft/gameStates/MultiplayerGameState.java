@@ -9,10 +9,10 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import de.bplaced.mopfsoft.Handler.FileHandler;
-import de.bplaced.mopfsoft.Handler.GameHandler;
-import de.bplaced.mopfsoft.Handler.MultiplayerGameManager;
-import de.bplaced.mopfsoft.Network.ClientThread;
+import de.bplaced.mopfsoft.handler.FileHandler;
+import de.bplaced.mopfsoft.handler.GameHandler;
+import de.bplaced.mopfsoft.handler.MultiplayerGameManager;
+import de.bplaced.mopfsoft.network.ClientThread;
 
 public class MultiplayerGameState extends BasicGameState{
 	public static final int id = 6;

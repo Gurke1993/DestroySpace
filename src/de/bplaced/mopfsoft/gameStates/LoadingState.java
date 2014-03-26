@@ -9,8 +9,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import de.bplaced.mopfsoft.Handler.MultiplayerGameManager;
-import de.bplaced.mopfsoft.Handler.PreGameManager;
+import de.bplaced.mopfsoft.handler.MultiplayerGameManager;
+import de.bplaced.mopfsoft.handler.PreGameManager;
 
 public class LoadingState extends BasicGameState{
 	public static final int id = 7;

@@ -1,4 +1,4 @@
-package de.bplaced.mopfsoft.Handler;
+package de.bplaced.mopfsoft.handler;
 
 
 import org.newdawn.slick.GameContainer;

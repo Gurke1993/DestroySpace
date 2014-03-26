@@ -1,4 +1,4 @@
-package de.bplaced.mopfsoft.Handler;
+package de.bplaced.mopfsoft.handler;
 
 
 
@@ -9,11 +9,11 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
-import de.bplaced.mopfsoft.Network.ClientThread;
-import de.bplaced.mopfsoft.Network.ServerUpdate;
 import de.bplaced.mopfsoft.drawableobjects.DrawableMap;
 import de.bplaced.mopfsoft.entitys.Entity;
 import de.bplaced.mopfsoft.entitys.ItemUser;
+import de.bplaced.mopfsoft.network.ClientThread;
+import de.bplaced.mopfsoft.network.ServerUpdate;
 
 
 

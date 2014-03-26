@@ -14,11 +14,11 @@ import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import de.bplaced.mopfsoft.Handler.FileHandler;
-import de.bplaced.mopfsoft.Handler.GameHandler;
-import de.bplaced.mopfsoft.Handler.PreGameManager;
-import de.bplaced.mopfsoft.Network.ClientThread;
 import de.bplaced.mopfsoft.drawableobjects.ChatBox;
+import de.bplaced.mopfsoft.handler.FileHandler;
+import de.bplaced.mopfsoft.handler.GameHandler;
+import de.bplaced.mopfsoft.handler.PreGameManager;
+import de.bplaced.mopfsoft.network.ClientThread;
 
 public class GameLobbyState extends BasicGameState{
 	public static final int ID = 3;

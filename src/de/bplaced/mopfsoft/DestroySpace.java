@@ -8,16 +8,16 @@ import org.newdawn.slick.util.Log;
 
 import util.AppGameContainerExtended;
 
-import de.bplaced.mopfsoft.Handler.FileHandler;
-import de.bplaced.mopfsoft.Handler.GameHandler;
-import de.bplaced.mopfsoft.Handler.MultiplayerGameManager;
-import de.bplaced.mopfsoft.Handler.PreGameManager;
 import de.bplaced.mopfsoft.gameStates.GameLobbyState;
 import de.bplaced.mopfsoft.gameStates.LoadingState;
 import de.bplaced.mopfsoft.gameStates.MenuState;
 import de.bplaced.mopfsoft.gameStates.MultiplayerGameState;
 import de.bplaced.mopfsoft.gameStates.ServerSelectState;
 import de.bplaced.mopfsoft.gameStates.SettingsState;
+import de.bplaced.mopfsoft.handler.FileHandler;
+import de.bplaced.mopfsoft.handler.GameHandler;
+import de.bplaced.mopfsoft.handler.MultiplayerGameManager;
+import de.bplaced.mopfsoft.handler.PreGameManager;
 
 //Main Gameclass
 public class DestroySpace {

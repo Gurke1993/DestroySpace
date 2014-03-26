@@ -5,7 +5,7 @@ import org.newdawn.slick.Game;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.Log;
 
-import de.bplaced.mopfsoft.Handler.GameHandler;
+import de.bplaced.mopfsoft.handler.GameHandler;
 
 public class AppGameContainerExtended extends AppGameContainer{
 

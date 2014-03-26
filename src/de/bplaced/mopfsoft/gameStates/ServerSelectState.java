@@ -13,9 +13,9 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
-import de.bplaced.mopfsoft.Handler.FileHandler;
-import de.bplaced.mopfsoft.Handler.GameHandler;
-import de.bplaced.mopfsoft.Network.ClientThread;
+import de.bplaced.mopfsoft.handler.FileHandler;
+import de.bplaced.mopfsoft.handler.GameHandler;
+import de.bplaced.mopfsoft.network.ClientThread;
 
 
 

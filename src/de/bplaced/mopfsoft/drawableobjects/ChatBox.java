@@ -8,7 +8,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.gui.GUIContext;
 import org.newdawn.slick.gui.TextField;
 
-import de.bplaced.mopfsoft.Handler.ChatManager;
+import de.bplaced.mopfsoft.handler.ChatManager;
 
 public class ChatBox extends DrawableObject{
 

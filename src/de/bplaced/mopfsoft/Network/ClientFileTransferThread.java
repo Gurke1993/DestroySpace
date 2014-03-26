@@ -1,4 +1,4 @@
-package de.bplaced.mopfsoft.Network;
+package de.bplaced.mopfsoft.network;
 
 import java.io.DataInputStream;
 import java.io.File;

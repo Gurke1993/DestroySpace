@@ -1,10 +1,10 @@
-package de.bplaced.mopfsoft.Handler;
+package de.bplaced.mopfsoft.handler;
 
 import java.util.Map;
 
 import org.newdawn.slick.util.Log;
 
-import de.bplaced.mopfsoft.Network.ClientThread;
+import de.bplaced.mopfsoft.network.ClientThread;
 
 public class PreGameManager {
 	private static PreGameManager instance = null;

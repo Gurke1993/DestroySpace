@@ -1,4 +1,4 @@
-package de.bplaced.mopfsoft.Network;
+package de.bplaced.mopfsoft.network;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -10,9 +10,9 @@ import java.util.Map;
 
 import org.newdawn.slick.util.Log;
 
-import de.bplaced.mopfsoft.Handler.ChatManager;
-import de.bplaced.mopfsoft.Handler.MultiplayerGameManager;
-import de.bplaced.mopfsoft.Handler.PreGameManager;
+import de.bplaced.mopfsoft.handler.ChatManager;
+import de.bplaced.mopfsoft.handler.MultiplayerGameManager;
+import de.bplaced.mopfsoft.handler.PreGameManager;
 
 
 

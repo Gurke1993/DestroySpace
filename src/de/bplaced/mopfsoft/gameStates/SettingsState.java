@@ -13,12 +13,12 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import de.bplaced.mopfsoft.Handler.FileHandler;
-import de.bplaced.mopfsoft.Handler.GameHandler;
 import de.bplaced.mopfsoft.drawableobjects.DrawableObject;
 import de.bplaced.mopfsoft.drawableobjects.DrawableSetting;
 import de.bplaced.mopfsoft.drawableobjects.KeySettingDrawable;
 import de.bplaced.mopfsoft.drawableobjects.StringSettingDrawable;
+import de.bplaced.mopfsoft.handler.FileHandler;
+import de.bplaced.mopfsoft.handler.GameHandler;
 
 public class SettingsState extends BasicGameState{
 	public static final int ID = 5;
