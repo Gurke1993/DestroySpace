@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.gui.GUIContext;
 
@@ -18,8 +19,8 @@ public abstract class DrawableSetting extends DrawableObjectClickable{
 	protected String displayedValue;
 	
 	public DrawableSetting(int x, int y, int width, int height, Image image,
-			Sound sound, Entry <String,String> entry) {
-		super(x, y, width, height, image, sound);
+			Sound sound, Input input, Entry <String,String> entry) {
+		super(x, y, width, height, image, sound, input);
 		this.entry = entry;
 		this.displayedValue = entry.getValue();
 	}

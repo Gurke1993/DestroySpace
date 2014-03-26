@@ -10,9 +10,10 @@ public abstract class DrawableObjectClickable extends DrawableObject implements 
 	private final Sound sound;
 	protected boolean active = false;
 	
-	public DrawableObjectClickable(int x, int y, int width, int height, Image image, Sound sound) {
+	public DrawableObjectClickable(int x, int y, int width, int height, Image image, Sound sound, Input input) {
 		super(x, y, width, height, image);
 		this.sound = sound;
+		input.addListener(this);
 	}
 
 	public void mousePressed(int button, int x, int y) {
