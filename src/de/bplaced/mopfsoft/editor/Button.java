@@ -8,7 +8,7 @@ import de.bplaced.mopfsoft.drawableobjects.DrawableObjectClickable;
 public class Button extends DrawableObjectClickable {
 
 	public Button(int x, int y, int width, int height, Image image, Sound sound) {
-		super(x, y, width, height, image, sound);
+		super(x, y, width, height, image, sound, null);
 		// TODO Auto-generated constructor stub
 	}
 
@@ -29,14 +29,6 @@ public class Button extends DrawableObjectClickable {
 		System.out.println("works");
 		
 	}
-	public void mousePressed(int button, int x, int y) {
-		if (button == 0) 
-		{
-			System.out.println("YEAH");
-		}
-		else 
-		{
-			System.out.println("YEAH!!!");
-		}
-	}
+	
+	
 }

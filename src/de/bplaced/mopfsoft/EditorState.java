@@ -5,7 +5,6 @@ package de.bplaced.mopfsoft;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -18,7 +17,6 @@ import org.newdawn.slick.state.StateBasedGame;
 import de.bplaced.mopfsoft.drawableobjects.DrawableMap;
 import de.bplaced.mopfsoft.editor.Button;
 import de.bplaced.mopfsoft.editor.EditorPaintFunction;
-import de.bplaced.mopfsoft.map.Map;
 
 
 public class EditorState extends BasicGameState{
@@ -79,7 +77,7 @@ public class EditorState extends BasicGameState{
 		
 		b1 = new Button(0, 0, 100, 100, menuImage1, null);
 		b2 = new Button(100, 0, 100, 100, menuImage2, null);
-		
+		appNum=0;
 		stateBasedGame.getContainer().getInput().addListener(b1);
 		stateBasedGame.getContainer().getInput().addListener(b2);
 		
