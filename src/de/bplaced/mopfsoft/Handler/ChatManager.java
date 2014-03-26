@@ -1,6 +1,8 @@
-package de.bplaced.mopfsoft;
+package de.bplaced.mopfsoft.Handler;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
+
+import de.bplaced.mopfsoft.Network.ClientThread;
 
 public class ChatManager {
 

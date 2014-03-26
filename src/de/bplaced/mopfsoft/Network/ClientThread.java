@@ -1,4 +1,4 @@
-package de.bplaced.mopfsoft;
+package de.bplaced.mopfsoft.Network;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -7,6 +7,12 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.newdawn.slick.util.Log;
+
+import de.bplaced.mopfsoft.Handler.ChatManager;
+import de.bplaced.mopfsoft.Handler.MultiplayerGameManager;
+import de.bplaced.mopfsoft.Handler.PreGameManager;
 
 
 
@@ -32,7 +38,7 @@ public class ClientThread extends Thread{
 				analyseServerMessage(text);
 			}
 		} catch (IOException e) {
-			System.out.println("Lost connection to server... terminating");
+			Log.warn("Lost connection to server... terminating Connection...");
 		}
 		try {
 		    mainS.close();
@@ -48,7 +54,7 @@ public class ClientThread extends Thread{
 	      out.writeUTF(message);
 	    }
 	    catch(IOException e) {
-	      e.printStackTrace();
+	    	Log.error(e);
 	    }
 	  }
 	  
@@ -56,7 +62,7 @@ public class ClientThread extends Thread{
 		  try {
 			  mainS.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.error(e);
 		}
 	  }
 
@@ -82,7 +88,7 @@ public class ClientThread extends Thread{
 	 */
 	public synchronized void analyseServerMessage(String message) {
 		if (!message.contains("givemapstring:partofstring"))
-		System.out.println("ServerSays:"+message);
+		Log.debug("ServerSays:"+message);
 		
 		//Structure message
 		Map<String,String> args= new HashMap<String,String>();
@@ -170,13 +176,15 @@ public class ClientThread extends Thread{
 	 * @return if succsesfully true/false
 	 */
 	public static Boolean connectToServer(String ip, Integer port) {
-		System.out.println("Trying to connect...");
+		Log.info("Connecting to server...");
 		try {
 			ClientThread.init(ip, port);
 			ChatManager.init(ClientThread.getInstance());
 			ClientFileTransferThread.init(ip, 27016);
+			Log.info("Connected successfully to "+ip+":"+port+"!");
 			return true;
 		} catch (IOException e) {
+			Log.error("Could not connect...");
 			return false;
 		}
 	}

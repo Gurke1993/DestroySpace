@@ -4,6 +4,20 @@ import java.io.File;
 import javax.swing.JOptionPane;
 import org.lwjgl.LWJGLUtil;
 import org.newdawn.slick.state.GameState;
+import org.newdawn.slick.util.Log;
+
+import util.AppGameContainerExtended;
+
+import de.bplaced.mopfsoft.Handler.FileHandler;
+import de.bplaced.mopfsoft.Handler.GameHandler;
+import de.bplaced.mopfsoft.Handler.MultiplayerGameManager;
+import de.bplaced.mopfsoft.Handler.PreGameManager;
+import de.bplaced.mopfsoft.gameStates.GameLobbyState;
+import de.bplaced.mopfsoft.gameStates.LoadingState;
+import de.bplaced.mopfsoft.gameStates.MenuState;
+import de.bplaced.mopfsoft.gameStates.MultiplayerGameState;
+import de.bplaced.mopfsoft.gameStates.ServerSelectState;
+import de.bplaced.mopfsoft.gameStates.SettingsState;
 
 //Main Gameclass
 public class DestroySpace {
@@ -11,14 +25,6 @@ public class DestroySpace {
 	public static final int BUILD = 1;
 	public static final GameState [] GAME_STATE_ARRAY = {new MenuState(), new EditorState(), new ServerSelectState(), new GameLobbyState(), new SettingsState(), new MultiplayerGameState(), new LoadingState()};
 	public static final String GAME_NAME = "DestroySpace Beta";
-	
-	
-	
-	
-	//private ClientThread clientThread = null;
-	
-	
-	//private ClientFileTransferThread clientFileTransferThread;
 	
 	
 
@@ -29,31 +35,28 @@ public class DestroySpace {
 		
 		try {
 
-		System.out.println("Setting up Game...");		
-		System.out.println("Loading Config...");
+		Log.info("Setting up Game...");	
 		
 		//Create folder structure
-		System.out.println("Creating all needed folders...");
+		Log.info("Creating all needed folders...");
 		(new File("maps")).mkdir();
 		
 		
-		//init Different Handlerclasses
-		System.out.println("Init ConfigHandler...");
-		ConfigurationHandler.init("config.txt");
+		//init Different Handler and Manager Classes
 		
-		System.out.println("Init FileHandler...");
-		FileHandler.init(this);
+		Log.info("Init FileHandler...");
+		FileHandler.init();
 		
-		System.out.println("Init GameHandler...");
+		Log.info("Init GameHandler...");
 		GameHandler.init();
 		
-		System.out.println("Init PreGameManager...");
+		Log.info("Init PreGameManager...");
 		PreGameManager.init();
 		
-		System.out.println("Init MultiplayerGameManager...");
+		Log.info("Init MultiplayerGameManager...");
 		MultiplayerGameManager.init();
 		
-		System.out.println("Init AppGameContainer...");
+		Log.info("Init AppGameContainer...");
 		AppGameContainerExtended.init();
 		
 		AppGameContainerExtended.getInstance().setDisplayMode(1024, 768, true);

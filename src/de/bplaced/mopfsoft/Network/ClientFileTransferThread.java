@@ -1,4 +1,4 @@
-package de.bplaced.mopfsoft;
+package de.bplaced.mopfsoft.Network;
 
 import java.io.DataInputStream;
 import java.io.File;
@@ -6,11 +6,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.Socket;
 
+import org.newdawn.slick.util.Log;
+
+import util.FileOutputStreamExtended;
+
 public class ClientFileTransferThread extends Thread{
 	private static ClientFileTransferThread instance;
-	Socket fileS;
-	  ExtendedFileOutputStream out;
-	  DataInputStream in;
+	private Socket fileS;
+	private FileOutputStreamExtended out;
+	private DataInputStream in;
 	private long transmittedFileSize;
 	private long completedTransmission = 0;
 	private int step = 15000;
@@ -18,10 +22,9 @@ public class ClientFileTransferThread extends Thread{
 	private boolean wait = false;
 
 	  private ClientFileTransferThread(String ip, int port) throws IOException {
-	      System.out.println("Starting FileTransferClient!");
 	      fileS = new Socket(ip,port);
 	      in = new DataInputStream(fileS.getInputStream()) ;
-	    this.start();
+	      this.start();
 	  }
 
 	  public void run() {
@@ -31,27 +34,21 @@ public class ClientFileTransferThread extends Thread{
 	    	while ((readBytes = in.read(buffer)) != -1) {
 	    		if (out != null) {
 	    		out.write(buffer, 0, readBytes-1);
-				//out.write(Arrays.copyOfRange(buffer, 0, readBytes-1));
 				completedTransmission += step;
-				System.out.println("Downloaded "+(int)(((double)completedTransmission/transmittedFileSize)*100)+"%");
+				Log.info("Downloaded "+(int)(((double)completedTransmission/transmittedFileSize)*100)+"%");
 			
 				if (completedTransmission  >= transmittedFileSize) {
-					System.out.println("Finished FileTransfer of "+currentFile.getName());
+					Log.info("Finished FileTransfer of "+currentFile.getName());
 		    		completedTransmission = 0;
-		    		File file = out.getFile();
 		    		out.flush();
 					out.close();
 					out = null;
 					wait = false;
-					
-					//Load the file inside of the FileHandler for further use in this session
-					FileHandler.getInstance().setFileIsReady(file, true);
-					
 	    		}
 		}
 	    	}
 		  } catch (Exception e) {
-			  e.printStackTrace();
+			  Log.error(e);
 		  }
 	  }
 
@@ -64,6 +61,7 @@ public class ClientFileTransferThread extends Thread{
 		}
 	  }
 
+	  //TODO
 	public void prepareForNewFileTransfer(File file, long fileSize) {
 		while(this.wait) {
 			try {
@@ -78,23 +76,22 @@ public class ClientFileTransferThread extends Thread{
 		transmittedFileSize = fileSize;
 		
 		
-		System.out.println("Preparing file download of"+currentFile.getName()+" of size "+transmittedFileSize);
+		Log.debug("Preparing file download of"+currentFile.getName()+" of size "+transmittedFileSize);
 		//Create the file
 		try {
 			file.createNewFile();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.error(e);
 		}
 
 		//Setup Output
 		try {
-			out = new ExtendedFileOutputStream(file);
+			out = new FileOutputStreamExtended(file);
 			
 			//Send message to server
 			ClientThread.getInstance().send("action=starttransfer:filename="+file.getName()+":path="+file.getPath());
 		} catch (FileNotFoundException e) {
-			System.out.println("[ERROR] Could not prepare for File Transfer of file: "+file.getName());
-			e.printStackTrace();
+			Log.error("[ERROR] Could not prepare for File Transfer of file: "+file.getName(),e);
 		}
 		
 		wait = true;

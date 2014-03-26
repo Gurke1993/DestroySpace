@@ -8,6 +8,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.gui.GUIContext;
 import org.newdawn.slick.gui.TextField;
 
+import de.bplaced.mopfsoft.drawableobjects.DrawableMap;
+
 public class EditorStateNewMap {
 
 	public TextField mapName,mapDescription,mapHeight,mapWidth;

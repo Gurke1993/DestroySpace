@@ -14,6 +14,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+
+import de.bplaced.mopfsoft.drawableobjects.DrawableMap;
 import de.bplaced.mopfsoft.map.Map;
 
 

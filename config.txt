@@ -1,1 +1,0 @@
-favoriteServers:0.0.0.0;27015;Local Host,192.169.0.1;500;HEy

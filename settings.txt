@@ -1,3 +1,8 @@
-profile.name=asdadasdsd
-key.fire=30
-key.left=203
+network.serverFavorites=0.0.0.0;27015;Local Host,192.169.0.1;500;HEy
+key.type.move.direction.down=208
+key.type.jump=57
+profile.name=test32
+key.type.move.direction.up=200
+key.type.move.direction.left=203
+key.type.use.iid.0=42
+key.type.move.direction.right=205

@@ -1,5 +1,7 @@
 package de.bplaced.mopfsoft;
 
+import de.bplaced.mopfsoft.drawableobjects.DrawableMap;
+
 public class EditorPaintFunction {
 	DrawableMap drawableMap;
 

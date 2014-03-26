@@ -1,7 +1,8 @@
 
-package de.bplaced.mopfsoft;
+package de.bplaced.mopfsoft.gameStates;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -12,6 +13,8 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import de.bplaced.mopfsoft.Handler.FileHandler;
+import de.bplaced.mopfsoft.Handler.GameHandler;
 import de.bplaced.mopfsoft.drawableobjects.DrawableObject;
 import de.bplaced.mopfsoft.drawableobjects.DrawableSetting;
 import de.bplaced.mopfsoft.drawableobjects.KeySettingDrawable;
@@ -19,6 +22,8 @@ import de.bplaced.mopfsoft.drawableobjects.StringSettingDrawable;
 
 public class SettingsState extends BasicGameState{
 	public static final int ID = 5;
+	private static final List <String> ignoredSettings = Arrays.asList("system","network");
+	
 	private Image backGround;
 	private Image hud;
 	private Image settingBackground;
@@ -40,7 +45,7 @@ public class SettingsState extends BasicGameState{
 		for (Entry<String,String> entry: FileHandler.getInstance().getSettings().entrySet()) {
 			
 			
-			if (entry.getKey().startsWith("system")) continue SettingGen;
+			if (ignoredSettings.contains(entry.getKey().split("\\.")[0])) continue SettingGen;
 			
 			if (entry.getKey().startsWith("key")) {
 				drawSettings.add(new KeySettingDrawable(150, 110+i*20, 600, 20, settingBackground, null, entry));
@@ -105,6 +110,7 @@ public class SettingsState extends BasicGameState{
     		}
     		
     		FileHandler.getInstance().saveSettings();
+    		FileHandler.getInstance().loadSettings();
 			GameHandler.getInstance().enterState(1);
     
 	} else {

@@ -1,4 +1,4 @@
-package de.bplaced.mopfsoft;
+package de.bplaced.mopfsoft.gameStates;
 
 import util.Util;
 import org.newdawn.slick.Color;
@@ -11,6 +11,11 @@ import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.Log;
+
+import de.bplaced.mopfsoft.Handler.FileHandler;
+import de.bplaced.mopfsoft.Handler.GameHandler;
+import de.bplaced.mopfsoft.Network.ClientThread;
 
 
 
@@ -26,17 +31,16 @@ public class ServerSelectState extends BasicGameState{
 	
 	
 	public void loadFavoriteServers() {
-		if (ConfigurationHandler.getInstance().getString("favoriteServers") != "") {
-			if ((favoriteServers = ConfigurationHandler.getInstance().getString("favoriteServers").split(",")) == null) {
+		if (FileHandler.getInstance().getSetting("network.serverFavorites") != "") {
+			if ((favoriteServers = FileHandler.getInstance().getSetting("network.serverFavorites").split(",")) == null) {
 				//One entry
 				favoriteServers = new String[1];
-				favoriteServers[0] = ConfigurationHandler.getInstance().getString("favoriteServers");
+				favoriteServers[0] = FileHandler.getInstance().getSetting("network.serverFavorites");
 			}
 		} else {
 			//No entry
 			favoriteServers = new String[0];
 		}
-		System.out.println("Amount of favServers: "+favoriteServers.length);	
 	}
 	
 	@Override
@@ -104,7 +108,7 @@ public class ServerSelectState extends BasicGameState{
 	
 	@Override
 	public void mousePressed(int button, int x, int y) {
-		System.out.println("Button pressed: "+button+" at "+x+" "+y);
+		Log.debug("Button pressed: "+button+" at "+x+" "+y);
 		if (addingServer) {
 			//Adding a new server
 		
@@ -132,8 +136,8 @@ public class ServerSelectState extends BasicGameState{
 					} else {
 						newServerPort.setBackgroundColor(Color.gray);
 						//Save new Server
-			      		String newFavoriteServers = ConfigurationHandler.getInstance().getString("favoriteServers")+","+ip+";"+port+";"+name;
-			      		ConfigurationHandler.getInstance().setEntry("favoriteServers", newFavoriteServers);
+			      		String newFavoriteServers = FileHandler.getInstance().getSetting("network.serverFavorites")+","+ip+";"+port+";"+name;
+			      		FileHandler.getInstance().setSetting("network.serverFavorites", newFavoriteServers);
 			      		loadFavoriteServers();
 						
 						addingServer = false;
@@ -162,9 +166,9 @@ public class ServerSelectState extends BasicGameState{
       	} else
       	if (y >= 197 && y <= 257) {
       		//REMOVE Server
-      		String newFavoriteServers = ConfigurationHandler.getInstance().getString("favoriteServers").replaceAll(favoriteServers[selectedServer]+",", "");
-      		newFavoriteServers = ConfigurationHandler.getInstance().getString("favoriteServers").replaceAll(","+favoriteServers[selectedServer], "");
-      		ConfigurationHandler.getInstance().setEntry("favoriteServers", newFavoriteServers);
+      		String newFavoriteServers = FileHandler.getInstance().getSetting("network.serverFavorites").replaceAll(favoriteServers[selectedServer]+",", "");
+      		newFavoriteServers = FileHandler.getInstance().getSetting("network.serverFavorites").replaceAll(","+favoriteServers[selectedServer], "");
+      		FileHandler.getInstance().setSetting("network.serverFavorites", newFavoriteServers);
       		loadFavoriteServers();
       		screenOutput = "Removed Server!";
       		

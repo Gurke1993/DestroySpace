@@ -1,2 +1,9 @@
-build=1
-playername=PLAYER
+system.build=1
+network.serverFavorites=0.0.0.0;27015;Local Host,192.169.0.1;500;HEy
+profile.name=test32
+key.type.move.direction.left=1
+key.type.move.direction.right=2
+key.type.move.direction.down=3
+key.type.move.direction.up=4
+key.type.jump=5
+key.type.use.iid.0=1

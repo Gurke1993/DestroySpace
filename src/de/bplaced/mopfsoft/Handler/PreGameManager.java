@@ -1,6 +1,10 @@
-package de.bplaced.mopfsoft;
+package de.bplaced.mopfsoft.Handler;
 
 import java.util.Map;
+
+import org.newdawn.slick.util.Log;
+
+import de.bplaced.mopfsoft.Network.ClientThread;
 
 public class PreGameManager {
 	private static PreGameManager instance = null;
@@ -22,7 +26,6 @@ public class PreGameManager {
 	
 	
 	public void setLobbyInformation(String mapName, String mapDescription, int playerAmount, int maxPlayerAmount, String[] players, boolean host) {
-		System.out.println("Setting Lobbyinformation...");
 		this.mapName = mapName;
 		this.mapDescription = mapDescription;
 		this.playerAmount = playerAmount;
@@ -30,7 +33,7 @@ public class PreGameManager {
 		this.players = players;
 		this.isHost = host;
 		
-		System.out.println("Ask for mappreviewinfo...");
+		Log.info("Requesting lobby information from server...");
 		send("action=getfiletransferinfo:filename="+mapName+".gif:path=maps"+System.getProperty("file.separator")+mapName+".gif");
 	
 	}
@@ -60,13 +63,13 @@ public class PreGameManager {
 	}
 	
 	public void setClientIsReadyToStart(boolean isReady) {
-		System.out.println("Client is ready to start: " + isReady);
+		Log.debug("Client is ready to start: " + isReady);
 		this.isReadyToStart = isReady;
 		send("action=readyto:type=start:isready=" + isReady);
 	}
 	
 	public void setClientIsReadyToLoad(boolean isReady) {
-		System.out.println("Client is ready to load: " + isReady);
+		Log.debug("Client is ready to load: " + isReady);
 		send("action=readyto:type=load:isready=" + isReady);
 	}
 
@@ -76,7 +79,7 @@ public class PreGameManager {
 	}
 	
 	public void startGame() {
-		System.out.println("Going to MultiplayerGameScreen...");
+		Log.info("Going to MultiplayerGameScreen...");
 		GameHandler.getInstance().enterState(6);
 	}
 
@@ -87,11 +90,6 @@ public class PreGameManager {
 	public void reloadLobby() {
 		send("action=getlobbyinfo:playername="+FileHandler.getInstance().getSettings().get("profile.name"));
 	}
-
-//	public void tellServertoStart() {
-//		System.out.println("Telling the server to start the game...");
-//		send("action=startgame");
-//	}
 	
 	public void updateLobby(Map<String, String> args) {
 		this.isHost = args.get("ishost").equals("true");
@@ -147,7 +145,6 @@ public class PreGameManager {
 
 
 	public void downloadMap() {
-		System.out.println("Ask for mapstring...");
 		this.setMapStringIsFinished(false);
 		this.setMapString("");
 		send("action=getMapString:filename="+mapName+".map:path=maps"+System.getProperty("file.separator")+mapName+".map");

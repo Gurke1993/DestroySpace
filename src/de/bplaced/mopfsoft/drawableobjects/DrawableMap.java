@@ -1,4 +1,4 @@
-package de.bplaced.mopfsoft;
+package de.bplaced.mopfsoft.drawableobjects;
 
 
 
@@ -9,6 +9,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.util.Log;
 
 import de.bplaced.mopfsoft.blocks.Air;
 import de.bplaced.mopfsoft.blocks.Block;
@@ -51,12 +52,13 @@ public class DrawableMap extends Map{
 					previewImageTemp = new Image(previewImageFile);
 				} catch (SlickException e1) {
 				} catch (NullPointerException e2) {
-					System.out.println("Leaving previewImage empty....");
+					Log.info("Could not initialise preview. Leaving Image empty....");
 				}
 				previewImage = previewImageTemp;
 				
 				try {
-					System.out.println("Creating gamefieldimage with "+gamefield.length+" "+gamefield[0].length);
+					Log.debug("Creating gamefieldimage with "+gamefield.length+" "+gamefield[0].length);
+					
 					// setup image
 					gamefieldAsImage = Image.createOffscreenImage(gamefield.length,
 							gamefield[0].length);
@@ -79,8 +81,7 @@ public class DrawableMap extends Map{
 					gamefieldAsImageG.flush();
 
 				} catch (SlickException e) {
-					System.out.println("Could not initialise Image!");
-					e.printStackTrace();
+					Log.error("Could not initialise Image!",e);
 				}
 	}
 	

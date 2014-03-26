@@ -1,4 +1,4 @@
-package de.bplaced.mopfsoft;
+package de.bplaced.mopfsoft.gameStates;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -6,6 +6,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.Log;
 
 public class MenuState extends BasicGameState{
 	public static final int ID = 1;
@@ -32,12 +33,10 @@ public class MenuState extends BasicGameState{
 	@Override
 	public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int timePassed)
 			throws SlickException {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public int getID() {
-		// TODO Auto-generated method stub
 		return ID;
 	}
 	
@@ -55,7 +54,8 @@ public class MenuState extends BasicGameState{
 	
 	@Override
 	public void mousePressed(int button, int x, int y) {
-		System.out.println("Button pressed: "+button+" at "+x+" "+y);
+		Log.debug("Button pressed: "+button+" at "+x+" "+y);
+		
 		if (button == 0) {
 		if( x >= 800 && x <= 1000) {
       	

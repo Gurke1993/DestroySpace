@@ -1,4 +1,4 @@
-package de.bplaced.mopfsoft;
+package de.bplaced.mopfsoft.Handler;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -7,85 +7,76 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.util.Log;
+
+import de.bplaced.mopfsoft.DestroySpace;
 
 
 public class FileHandler {
 
 	private static FileHandler instance = null;
+	private static final List <String> textFormats = Arrays.asList("map", "txt");
+	private static final List <String> imageFormats = Arrays.asList("gif", "png");
 	
-	@SuppressWarnings("unused")
-	private DestroySpace destroySpace;
-	private HashMap<String, Image> imageMap = new HashMap<String, Image>();
-	private HashMap<String, String> stringMap = new HashMap<String, String>();
-	private HashMap<String, Boolean> readyMap = new HashMap<String, Boolean>();
+	private HashMap<String, Image> imageFiles = new HashMap<String, Image>();
+	private HashMap<String, String> textFiles = new HashMap<String, String>();
+	
 	private Map<String,String> settings;
+	private Map<Integer,String> inputSettings;
 
-	private FileHandler(DestroySpace destroySpace) {
-		this.destroySpace = destroySpace;
+	private FileHandler() {
 		this.loadSettings();
 	}
 
-	/**
-	 * This method trys to load a file into the game
-	 * @param fileName
-	 */
-	public void tryToLoadFile(String fileName) {
-		readyMap.isEmpty();
-		if (readyMap.get(fileName) != null && readyMap.get(fileName).equals(true)) {
-			System.out.println("Trying to load " + fileName);
-			try {
-				String fileType = fileName.split("\\.")[1];
-				if (fileType.equals("gif")) {
-					System.out.println("Is a .gif");
-					imageMap.put(fileName, new Image("maps/" + fileName));
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
 
-	/**Loads a supported object from file
+	/** Loads a file into the application
 	 * @param file
+	 * @return true if File is now accessible, false otherwise
 	 */
-	public void loadFile(File file) {
-		// 1 = mapPreview <Image>; 2 = map <String>
-		System.out.println("Trying to load " + file.getPath());
+	public boolean addFile(File file) {
+		
+		Log.info("Loading " + file.getPath()+"...");
 		try {
 			String fileType = file.getName().split("\\.")[1];
 
-			if (fileType.equals("map")) {
+			if (textFormats.contains(fileType)) {
 				byte[] buffer = new byte[(int) file.length()];
 				FileInputStream f = new FileInputStream(file);
 				f.read(buffer);
 				f.close();
-				stringMap.put(file.getName(), new String(buffer));
-			} else if (fileType.equals("gif")) {
-				System.out.println("Is a .gif");
-				imageMap.put(file.getName(), new Image(
+				textFiles.put(file.getName(), new String(buffer));
+			} else 
+			
+			if (imageFormats.contains(fileType)) {
+				imageFiles.put(file.getName(), new Image(
 						new FileInputStream(file), file.getPath(), false));
+			} else {
+				return false;
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			return false;
 		}
+		return true;
 	}
 
-	public String getString(String fileName) {
-		return stringMap.get(fileName);
+	public String getTextFile(String fileName) {
+		return textFiles.get(fileName);
 	}
 
 	public Image getImage(String fileName) {
-		return imageMap.get(fileName);
+		return imageFiles.get(fileName);
 	}
 
-	/** Draws the image on the graphics object if it is loaded completly into the game
+	/** Draws the image on the graphics object if it is loaded completely into the game
 	 * @param x 
 	 * @param y
 	 * @param graphics
@@ -94,27 +85,28 @@ public class FileHandler {
 	 */
 	public Boolean drawImageIfLoaded(int x, int y, Graphics graphics,
 			String fileName) {
-		if (isFileLoaded(fileName)) {
-			graphics.drawImage(imageMap.get(fileName), x, y);
+		if (isLoaded(fileName)) {
+			graphics.drawImage(imageFiles.get(fileName), x, y);
 			return true;
 		}
 		return false;
 	}
 
-	public boolean isFileLoaded(String fileName) {
-		return (imageMap.containsKey(fileName) || stringMap
+	public boolean isLoaded(String fileName) {
+		return (imageFiles.containsKey(fileName) || textFiles
 				.containsKey(fileName));
-	}
-
-	public void setFileIsReady(File file, Boolean ready) {
-		this.readyMap.put(file.getName(), ready);
-		synchronized (this) {
-			this.notifyAll();
-		}
 	}
 
 	public Map <String,String> getSettings() {
 		return this.settings;
+	}
+	
+	public String getSetting(String key) {
+		return this.settings.get(key);
+	}
+	
+	public void setSetting(String key, String value) {
+		this.settings.put(key, value);
 	}
 
 	public void saveSettings() {
@@ -128,8 +120,7 @@ public class FileHandler {
 		writer.close();
 		
 		} catch (Exception e) {
-			System.out.println("[ERROR] Could not save settings!");
-			e.printStackTrace();
+			Log.error("[ERROR] Could not save settings!",e);
 		}
 	}
 	
@@ -152,45 +143,61 @@ public class FileHandler {
 			os.flush();
 			os.close();
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.error(e);
 			}
 		}
 		
 		this.settings = new HashMap<String,String>();
+		this.inputSettings = new HashMap<Integer,String>();
 		
 		try {
 		FileReader fr = new FileReader(settingFile);
 		BufferedReader reader = new BufferedReader(fr);
 		
 		String line;
+		String inputString;
 		String[] args;
 		String[] key;
+		String[] inputSplit;
+		int inputLength;
 		while ((line = reader.readLine()) != null) {
 			args = line.split("=");
-			key = args[0].split("\\.");
-			System.out.println(key[1]+""+args[1]+""+key[0]);
+			key = args[0].split("\\.",2);
 			settings.put(key[0]+"."+key[1], args[1]);
+			
+			if (key[0].equals("key")) {
+				inputString = "";
+				inputSplit = key[1].split("\\.");
+				inputLength = inputSplit.length;
+				for (int i = 0; i<inputLength; i= i+2) {
+					inputString = inputString + ":" + inputSplit[i] + "=" + inputSplit [i+1];
+				}
+				inputString = inputString.substring(1);
+				inputSettings.put(Integer.parseInt(args[1]), inputString);
+				
+				Log.debug(Integer.parseInt(args[1])+":"+inputString);
+			}
 		}
+		
 		
 		reader.close();
 		fr.close();
 		
 		} catch (Exception e) {
-			System.out.println("[ERROR] Could not load settings!");
-			e.printStackTrace();
+			Log.error("[ERROR] Could not load settings!",e);
 		}
 		
 		if (settings.containsKey("system.build") && Integer.parseInt(settings.get("system.build")) != DestroySpace.BUILD) {
-			System.out.println("Settings are to old... Removing...");
+			Log.info("Settings are to old... Removing...");
 			settingFile.delete();
 			loadSettings();
 		}
 		settings.remove("system.build");
 	}
 
-	public static void init(DestroySpace destroySpace) {
+	public static void init() {
 		if (instance == null)
-		FileHandler.setInstance(new FileHandler(destroySpace));
+		FileHandler.setInstance(new FileHandler());
 	}
 
 	public static FileHandler getInstance() {
@@ -199,6 +206,11 @@ public class FileHandler {
 
 	private static void setInstance(FileHandler instance) {
 		FileHandler.instance = instance;
+	}
+
+
+	public Map <Integer,String> getInputSettings() {
+		return inputSettings;
 	}
 
 }

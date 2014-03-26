@@ -1,7 +1,9 @@
-package de.bplaced.mopfsoft;
+package de.bplaced.mopfsoft.gameStates;
 
 
 
+
+import java.io.File;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -12,6 +14,10 @@ import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import de.bplaced.mopfsoft.Handler.FileHandler;
+import de.bplaced.mopfsoft.Handler.GameHandler;
+import de.bplaced.mopfsoft.Handler.PreGameManager;
+import de.bplaced.mopfsoft.Network.ClientThread;
 import de.bplaced.mopfsoft.drawableobjects.ChatBox;
 
 public class GameLobbyState extends BasicGameState{
@@ -66,10 +72,10 @@ public class GameLobbyState extends BasicGameState{
 	@Override
 	public void update(GameContainer gameContainer, StateBasedGame stateBasedGame, int timePassed)
 			throws SlickException {
-		if (!FileHandler.getInstance().isFileLoaded(PreGameManager.getInstance().getMapName()+".gif")) {
-			FileHandler.getInstance().tryToLoadFile(PreGameManager.getInstance().getMapName()+".gif");
+		if (!FileHandler.getInstance().isLoaded(PreGameManager.getInstance().getMapName()+".gif")) {
+			FileHandler.getInstance().addFile(new File("maps"+System.getProperty("file.separator")+PreGameManager.getInstance().getMapName()+".gif"));
 			
-			if (FileHandler.getInstance().isFileLoaded(PreGameManager.getInstance().getMapName()+".gif")) {
+			if (FileHandler.getInstance().addFile(new File("maps"+System.getProperty("file.separator")+PreGameManager.getInstance().getMapName()+".gif"))) {
 				PreGameManager.getInstance().setClientIsReadyToLoad(true);
 			}
 		}

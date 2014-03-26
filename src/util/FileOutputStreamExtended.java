@@ -1,14 +1,14 @@
-package de.bplaced.mopfsoft;
+package util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-public class ExtendedFileOutputStream extends FileOutputStream{
+public class FileOutputStreamExtended extends FileOutputStream{
 
 	private File file;
 
-	public ExtendedFileOutputStream(File file) throws FileNotFoundException {
+	public FileOutputStreamExtended(File file) throws FileNotFoundException {
 		super(file);
 		this.file = file;
 	}

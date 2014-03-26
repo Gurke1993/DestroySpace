@@ -26,14 +26,14 @@ public abstract class DrawableSetting extends DrawableObjectClickable{
 	
 	public void draw(GUIContext c, Graphics g) {
 		super.draw(c, g);
+		Color tempC = g.getColor();
 		g.setColor(Color.green);
 		g.drawString(entry.getKey()+": "+displayedValue, x+offsetX, y+offsetY);
-		g.setColor(Color.white);
+		g.setColor(tempC);
 	}
 
 	@Override
 	public void onClick(int button, int x, int y) {
-		System.out.println("Clicked on "+entry.getKey());
 		this.displayedValue = "<>";
 	}
 
@@ -41,7 +41,7 @@ public abstract class DrawableSetting extends DrawableObjectClickable{
 
 	@Override
 	public boolean isAcceptingInput() {
-		return true;//this.waitingForInput;
+		return true;
 	}
 	
 	public Entry <String,String> getSetting() {

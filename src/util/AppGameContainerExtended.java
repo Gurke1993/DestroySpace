@@ -1,8 +1,11 @@
-package de.bplaced.mopfsoft;
+package util;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.Game;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.util.Log;
+
+import de.bplaced.mopfsoft.Handler.GameHandler;
 
 public class AppGameContainerExtended extends AppGameContainer{
 
@@ -20,7 +23,7 @@ public class AppGameContainerExtended extends AppGameContainer{
 		try {
 			AppGameContainerExtended.setInstance(new AppGameContainerExtended(GameHandler.getInstance()));
 		} catch (SlickException e) {
-			e.printStackTrace();
+			Log.error(e);
 		}
 	}
 

@@ -1,4 +1,4 @@
-package de.bplaced.mopfsoft;
+package de.bplaced.mopfsoft.gameStates;
 
 
 import org.newdawn.slick.Color;
@@ -8,6 +8,9 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+
+import de.bplaced.mopfsoft.Handler.MultiplayerGameManager;
+import de.bplaced.mopfsoft.Handler.PreGameManager;
 
 public class LoadingState extends BasicGameState{
 	public static final int id = 7;
@@ -67,7 +70,6 @@ public class LoadingState extends BasicGameState{
 	
 	@Override
 	public void enter(GameContainer container, StateBasedGame game) {
-		System.out.println("Entering LoadingState...");
 		
 		//Enable Load mode
 		loaded = 0;
