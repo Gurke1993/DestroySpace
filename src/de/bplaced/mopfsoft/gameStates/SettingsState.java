@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -50,15 +51,15 @@ public class SettingsState extends BasicGameState{
 			if (ignoredSettings.contains(entry.getKey().split("\\.")[1])) continue SettingGen;
 			
 			if (entry.getKey().split("\\.")[0].equals("key")) {
-				drawSettings.add(new KeySettingDrawable(150, 110+i*20, 600, 20, settingBackground, null, ID, entry));
+				drawSettings.add(new KeySettingDrawable(150, 110+i*20, 600, 20, settingBackground, 3, 1, Color.green, null, ID, entry));
 			} else
 				
 			if (entry.getKey().split("\\.")[0].equals("string")) {
-				drawSettings.add(new StringSettingDrawable(150, 110+i*20, 600, 20, settingBackground, null, ID, entry));
+				drawSettings.add(new StringSettingDrawable(150, 110+i*20, 600, 20, settingBackground, 3, 1, Color.green, null, ID, entry));
 			} else
 			
 			if (entry.getKey().split("\\.")[0].equals("boolean")) {
-				drawSettings.add(new BooleanSettingDrawable(150, 110+i*20, 600, 20, settingBackground, null, ID, entry));
+				drawSettings.add(new BooleanSettingDrawable(150, 110+i*20, 600, 20, settingBackground, 3, 1, Color.green, null, ID, entry));
 			} else {
 				Log.error("Found unknown setting kind: "+entry.getKey().split("\\.")[1]+"... ignoring...");
 			}

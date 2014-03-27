@@ -1,5 +1,6 @@
 package de.bplaced.mopfsoft.drawableobjects;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.InputListener;
@@ -13,11 +14,15 @@ public abstract class DrawableObjectClickable extends DrawableObject implements 
 	private final int stateId;
 	protected boolean active = false;
 	
-	public DrawableObjectClickable(int x, int y, int width, int height, Image image, Sound sound, int stateId) {
-		super(x, y, width, height, image);
+	public DrawableObjectClickable(int x, int y, int width, int height, Image image, int offsetX, int offsetY, Color color, String displayedText, Sound sound, int stateId) {
+		super(x, y, width, height, image, offsetX, offsetY, color, displayedText);
 		this.sound = sound;
 		this.stateId = stateId;
 		GameHandler.getInstance().getContainer().getInput().addListener(this);
+	}
+	
+	public DrawableObjectClickable(int x, int y, int width, int height, Image image, Sound sound, int stateId) {
+		this(x, y, width, height, image, 0, 0, null, null, sound, stateId);
 	}
 
 	public void mousePressed(int button, int x, int y) {
