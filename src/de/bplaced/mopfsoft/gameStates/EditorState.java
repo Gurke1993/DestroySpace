@@ -227,11 +227,23 @@ public class EditorState extends BasicGameState{
 					}
 				}
 			}
-			else if (tool ==4)
+			else if (tool ==4)//Kreis
 			{
 			paintFunction.drawCircle( x, y, radius,blockId);
 			}
-			
+			else if (tool ==5)
+			{
+				
+			}
+			else if (tool ==6)
+			{
+				
+			}
+			else if (tool ==7)
+			{
+				
+			}
+		
 		}	
    }
 }
