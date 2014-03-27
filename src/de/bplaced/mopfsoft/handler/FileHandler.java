@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -147,8 +148,8 @@ public class FileHandler {
 			}
 		}
 		
-		this.settings = new HashMap<String,String>();
-		this.inputSettings = new HashMap<Integer,String>();
+		this.settings = new LinkedHashMap<String,String>();
+		this.inputSettings = new LinkedHashMap<Integer,String>();
 		
 		try {
 		FileReader fr = new FileReader(settingFile);
@@ -192,7 +193,7 @@ public class FileHandler {
 			settingFile.delete();
 			loadSettings();
 		}
-		settings.remove("system.build");
+		//settings.remove("system.build");
 	}
 
 	public static void init() {

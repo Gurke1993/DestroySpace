@@ -31,11 +31,11 @@ public class ServerSelectState extends BasicGameState{
 	
 	
 	public void loadFavoriteServers() {
-		if (FileHandler.getInstance().getSetting("network.serverFavorites") != "") {
-			if ((favoriteServers = FileHandler.getInstance().getSetting("network.serverFavorites").split(",")) == null) {
+		if (FileHandler.getInstance().getSetting("string.network.serverFavorites") != "") {
+			if ((favoriteServers = FileHandler.getInstance().getSetting("string.network.serverFavorites").split(",")) == null) {
 				//One entry
 				favoriteServers = new String[1];
-				favoriteServers[0] = FileHandler.getInstance().getSetting("network.serverFavorites");
+				favoriteServers[0] = FileHandler.getInstance().getSetting("string.network.serverFavorites");
 			}
 		} else {
 			//No entry
@@ -136,8 +136,8 @@ public class ServerSelectState extends BasicGameState{
 					} else {
 						newServerPort.setBackgroundColor(Color.gray);
 						//Save new Server
-			      		String newFavoriteServers = FileHandler.getInstance().getSetting("network.serverFavorites")+","+ip+";"+port+";"+name;
-			      		FileHandler.getInstance().setSetting("network.serverFavorites", newFavoriteServers);
+			      		String newFavoriteServers = FileHandler.getInstance().getSetting("string.network.serverFavorites")+","+ip+";"+port+";"+name;
+			      		FileHandler.getInstance().setSetting("string.network.serverFavorites", newFavoriteServers);
 			      		loadFavoriteServers();
 						
 						addingServer = false;
@@ -166,9 +166,9 @@ public class ServerSelectState extends BasicGameState{
       	} else
       	if (y >= 197 && y <= 257) {
       		//REMOVE Server
-      		String newFavoriteServers = FileHandler.getInstance().getSetting("network.serverFavorites").replaceAll(favoriteServers[selectedServer]+",", "");
-      		newFavoriteServers = FileHandler.getInstance().getSetting("network.serverFavorites").replaceAll(","+favoriteServers[selectedServer], "");
-      		FileHandler.getInstance().setSetting("network.serverFavorites", newFavoriteServers);
+      		String newFavoriteServers = FileHandler.getInstance().getSetting("string.network.serverFavorites").replaceAll(favoriteServers[selectedServer]+",", "");
+      		newFavoriteServers = FileHandler.getInstance().getSetting("string.network.serverFavorites").replaceAll(","+favoriteServers[selectedServer], "");
+      		FileHandler.getInstance().setSetting("string.network.serverFavorites", newFavoriteServers);
       		loadFavoriteServers();
       		screenOutput = "Removed Server!";
       		
@@ -177,7 +177,7 @@ public class ServerSelectState extends BasicGameState{
       		//Connect to selected Server
       		if (!ClientThread.connectToServer(favoriteServers[selectedServer].split(";")[0], Integer.parseInt(favoriteServers[selectedServer].split(";")[1]))) {
       			//Could not connect to Server
-      			System.out.println("Failed to connect.");
+      			Log.error("Failed to connect.");
       			screenOutput = "["+System.currentTimeMillis()+"] Failed to connect to Server!";
       		} else {
       			//Connected sucessfully -> switch to Lobby

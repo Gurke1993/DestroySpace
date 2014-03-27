@@ -14,6 +14,7 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.Log;
 
+import de.bplaced.mopfsoft.drawableobjects.BooleanSettingDrawable;
 import de.bplaced.mopfsoft.drawableobjects.DrawableObject;
 import de.bplaced.mopfsoft.drawableobjects.DrawableSetting;
 import de.bplaced.mopfsoft.drawableobjects.KeySettingDrawable;
@@ -46,13 +47,22 @@ public class SettingsState extends BasicGameState{
 		for (Entry<String,String> entry: FileHandler.getInstance().getSettings().entrySet()) {
 			
 			
-			if (ignoredSettings.contains(entry.getKey().split("\\.")[0])) continue SettingGen;
+			if (ignoredSettings.contains(entry.getKey().split("\\.")[1])) continue SettingGen;
 			
-			if (entry.getKey().startsWith("key")) {
+			if (entry.getKey().split("\\.")[0].equals("key")) {
 				drawSettings.add(new KeySettingDrawable(150, 110+i*20, 600, 20, settingBackground, null, ID, entry));
-			} else {
+			} else
+				
+			if (entry.getKey().split("\\.")[0].equals("string")) {
 				drawSettings.add(new StringSettingDrawable(150, 110+i*20, 600, 20, settingBackground, null, ID, entry));
+			} else
+			
+			if (entry.getKey().split("\\.")[0].equals("boolean")) {
+				drawSettings.add(new BooleanSettingDrawable(150, 110+i*20, 600, 20, settingBackground, null, ID, entry));
+			} else {
+				Log.error("Found unknown setting kind: "+entry.getKey().split("\\.")[1]+"... ignoring...");
 			}
+				
 			i++;
 		}
 		
