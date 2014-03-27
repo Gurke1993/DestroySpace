@@ -29,10 +29,10 @@ public class EditorState extends BasicGameState{
 	private int radius;
 	private int tool;//O Pencil //1 Rubber //2 Fill //3 Line //4 Circle
 	private int blockId;
-	private boolean info;
+
 	private int x1,y1;
-	@SuppressWarnings("unused")
-	private int appNum;//Number of application //0 MapOpener //1 MapCreate //2 MapSaver
+
+
 	//gamefield for editing
 	private DrawableMap drawableMap;
 	//map position
@@ -69,7 +69,6 @@ public class EditorState extends BasicGameState{
 		blockId=2;
 		bgImage = new Image("resources/images/editor/bg.png");
 	    menuImage = new Image("resources/images/editor/editormenu.png");
-	    menuImage2 = new Image("resources/images/editor/menu2.png");
 		imgPosX=0;
 		imgPosY=0;
 		
@@ -77,15 +76,13 @@ public class EditorState extends BasicGameState{
 			buttonList.add(new Button(0, 0, 100, 100, null,  null, ID));
 			buttonList.add( new Button(100, 0, 100, 100, null,  null,  ID));
 			buttonList.add( new Button(0, 100, 100, 100, null, null,  ID));
-			buttonList.add( new Button(100, 100, 100, 100, null , null,  ID));
+			buttonList.add( new Button(100, 100, 100,100, null , null,  ID));
 			buttonList.add( new Button(0, 200, 100, 100, null , null,  ID));
 			buttonList.add( new Button(100,200, 100, 100, null , null,  ID));
 			buttonList.add( new Button(0, 300, 100, 100, null , null,  ID));
 			buttonList.add(new Button(100, 300, 100, 100, null, null,  ID));
 		
-		
-
-		appNum=0;
+		//tool=0;
 		
 		
 	}
@@ -106,16 +103,14 @@ public class EditorState extends BasicGameState{
 
         graphics.drawImage(menuImage,0,0);
         
-        
+        graphics.drawString(""+tool, 0, 0);
+       
+      //Button Selection -> AppNum
         for (int i = buttonList.size()-1;i>=0;i--)
         {
-        	if(buttonList.get(i).getActive()==true)
-        	{
-        		graphics.drawString("activated"+i, 0, 0);
-        		appNum =i;
-        	}
-        }
-        graphics.drawString(""+appNum, 0, 0);
+        	buttonList.get(i).draw(gameContainer, graphics);
+        }        		       	
+        
 	}
 
 	@Override
@@ -149,28 +144,28 @@ public class EditorState extends BasicGameState{
         {
         	if (tool ==0)
         	{
-        		paintFunction.paint(input.getAbsoluteMouseX(), input.getAbsoluteMouseY(), radius, blockId);
         	}
         	if (tool ==1)
         	{
-        		paintFunction.delete(input.getAbsoluteMouseX(), input.getAbsoluteMouseY(), radius);
+        		
         	}
         }
        
         
+        
+        //Button Selection -> AppNum
         for (int i = buttonList.size()-1;i>=0;i--)
         {
         	if(buttonList.get(i).getActive()==true)
         	{
-        		if (i==appNum)
+
+        		 if (i !=tool)
         		{
-        			buttonList.get(i).setActiveFalse();
+        			 buttonList.get(tool).setActiveFalse();
+        			tool =i;
         		}
         	}
-        }
-        	
-        		
-        	
+        }        		       	
         }
         
         
@@ -192,17 +187,18 @@ public class EditorState extends BasicGameState{
 			}
 	}
 	
-	/*
+	}
 	@Override //when mouse is clicked
 	public void mousePressed(int button, int x, int y) {
 		if (button == 0) { //O Pencil //1 Rubber //2 Fill //3 Line //4 Rectangle //5 Circle
 			if (tool==0)
 			{
-				
+        		paintFunction.paint(x, y, radius, blockId);
+
 			}
 			else if (tool ==1)
 			{
-				
+				paintFunction.delete(x, y, radius);
 			}
 			else if (tool ==2)
 			{
@@ -238,7 +234,7 @@ public class EditorState extends BasicGameState{
 			}
 		}
 	}	
-		*/	
+		
 	
-	}	
+	
 }
