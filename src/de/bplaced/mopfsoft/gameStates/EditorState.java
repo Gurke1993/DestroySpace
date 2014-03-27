@@ -2,6 +2,7 @@ package de.bplaced.mopfsoft.gameStates;
 
 //TODO in enter constructor von drawablemap
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.util.Log;
 
 import de.bplaced.mopfsoft.drawableobjects.DrawableMap;
 import de.bplaced.mopfsoft.editor.Button;
@@ -72,8 +74,7 @@ public class EditorState extends BasicGameState{
 		imgPosX=0;
 		imgPosY=0;
 		
-			buttonList.add(new Button(0, 0, 100, 100, null,  null, ID));
-			buttonList.add(new Button(0, 0, 100, 100, null,  null, ID));
+			buttonList.add(new Button(0, 0, 100, 100, null,  null, ID));			
 			buttonList.add( new Button(100, 0, 100, 100, null,  null,  ID));
 			buttonList.add( new Button(0, 100, 100, 100, null, null,  ID));
 			buttonList.add( new Button(100, 100, 100,100, null , null,  ID));
@@ -82,7 +83,7 @@ public class EditorState extends BasicGameState{
 			buttonList.add( new Button(0, 300, 100, 100, null , null,  ID));
 			buttonList.add(new Button(100, 300, 100, 100, null, null,  ID));
 		
-		//tool=0;
+		tool=0;
 		
 		
 	}
@@ -95,17 +96,19 @@ public class EditorState extends BasicGameState{
 		graphics.drawImage(bgImage, 0, 0);
 		//drawing the gamefield
         graphics.drawImage(drawableMap.getGamefieldAsImage(), imgPosX, imgPosY);
-
-        //drawing Informations //TODO
-        graphics.drawString("radius: "+ radius,250,10);
-        graphics.drawString("x1: "+x1+" y1: "+y1,400,10);
-        if (tool==3 ){graphics.drawString("QuickLine: "+ quickLine,550,10);}
-
+        //drawing game menu
         graphics.drawImage(menuImage,0,0);
         
-        graphics.drawString(""+tool, 0, 0);
+        //drawing Informations //TODO
+        graphics.drawString("radius: "+ radius,10,400);
+        graphics.drawString("x1: "+x1+" y1: "+y1,10,420);
+        if (tool==3 ){graphics.drawString("QuickLine: "+ quickLine,10,440);}
+        graphics.drawString(""+tool, 10, 460);
+        
+        
+        
        
-      //Button Selection -> AppNum
+      //Button Selection -draw
         for (int i = buttonList.size()-1;i>=0;i--)
         {
         	buttonList.get(i).draw(gameContainer, graphics);
@@ -140,36 +143,38 @@ public class EditorState extends BasicGameState{
         	imgPosY += 1;
         }
        
+        //DRAW UND ERASE
         if(input.isMouseButtonDown(Input.MOUSE_LEFT_BUTTON))
         {
-        	if (tool ==0)
-        	{
-        	}
-        	if (tool ==1)
-        	{
-        		
-        	}
+        	if (tool==0)
+			{
+        		paintFunction.paint(input.getAbsoluteMouseX()-imgPosX, input.getAbsoluteMouseY()-imgPosY ,radius, blockId);
+
+			}
+			else if (tool ==1)
+			{
+				paintFunction.delete(input.getAbsoluteMouseX()-imgPosX, input.getAbsoluteMouseY()-imgPosY, radius);
+			}
         }
        
-        
-        
+                
         //Button Selection -> AppNum
         for (int i = buttonList.size()-1;i>=0;i--)
         {
+        	
         	if(buttonList.get(i).getActive()==true)
         	{
-
+        		
         		 if (i !=tool)
         		{
+        			 
         			 buttonList.get(tool).setActiveFalse();
         			tool =i;
         		}
         	}
         }        		       	
         }
-        
-        
-        
+                
 	
 	@Override
 	public int getID() {
@@ -185,25 +190,19 @@ public class EditorState extends BasicGameState{
 				stateBasedGame.enterState(1);
 				break;
 			}
+	}	
 	}
 	
-	}
 	@Override //when mouse is clicked
 	public void mousePressed(int button, int x, int y) {
-		if (button == 0) { //O Pencil //1 Rubber //2 Fill //3 Line //4 Rectangle //5 Circle
-			if (tool==0)
+		if (button == 0) //O Pencil //1 Rubber //2 Fill //3 Line //4 Rectangle //5 Circle
+		{ 
+		
+			if (tool ==2)//Fill
 			{
-        		paintFunction.paint(x, y, radius, blockId);
-
-			}
-			else if (tool ==1)
-			{
-				paintFunction.delete(x, y, radius);
-			}
-			else if (tool ==2)
-			{
+				@SuppressWarnings("unused")
 				int idOverwrite=drawableMap.getBlock(x, y).getBid();
-				paintFunction.fill( x, y, blockId,idOverwrite);
+				//paintFunction.fill( x, y, blockId,idOverwrite);
 			}
 			else if (tool ==3)//Line
 			{
@@ -232,9 +231,7 @@ public class EditorState extends BasicGameState{
 			{
 			paintFunction.drawCircle( x, y, radius,blockId);
 			}
-		}
-	}	
-		
-	
-	
+			
+		}	
+   }
 }
