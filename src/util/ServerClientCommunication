@@ -34,26 +34,34 @@ givelobbyinfo: answers on getlobbyinfo
 	-ishost: true/false if the player is the host of the game
 gamechange: broadcast of changes to the gamefield or entities
     -type: type of update
-        -gamefieldchange
-            -x
-            -y
+        +gamefieldchange
+        	-shape
+        		+rectangle
+        			-x1
+        			-y1
+        			-x2
+        			-y2
+        		+circle
+        			-x
+        			-y
+        			-r
             -bid
             -issuer
-                -x
-                -y
-                -id
-                -eid
-        -entitychange
+                x
+                ,y
+                ,id
+                ,eid
+        +entitychange
             -entity
-                -x
-                -y
-                -id
-                -eid
+                x
+                ,y
+                ,id
+                ,eid
             -issuer
-                -x
-                -y
-                -id
-                -eid
+                x
+                ,y
+                ,id
+                ,eid
                 
                 
 Client to Server:

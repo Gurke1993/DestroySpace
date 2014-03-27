@@ -64,7 +64,7 @@ public class DestroySpace {
 		Log.info("Init AppGameContainer...");
 		AppGameContainerExtended.init();
 		
-		AppGameContainerExtended.getInstance().setDisplayMode(1024, 768, true);
+		AppGameContainerExtended.getInstance().setDisplayMode(1024, 768, Boolean.parseBoolean(FileHandler.getInstance().getSetting("boolean.graphics.fullscreen")));
 		AppGameContainerExtended.getInstance().start();
 		
 		
