@@ -12,13 +12,21 @@ public abstract class DrawableObjectClickable extends DrawableObject implements 
 	
 	private final Sound sound;
 	private final int stateId;
+	private final int filterR, filterG, filterB;
 	protected boolean active = false;
 	
-	public DrawableObjectClickable(int x, int y, int width, int height, Image image, int offsetX, int offsetY, Color color, String displayedText, Sound sound, int stateId) {
+	public DrawableObjectClickable(int x, int y, int width, int height, Image image, int offsetX, int offsetY, Color color, String displayedText, Sound sound, int stateId, int filterR, int filterG, int filterB) {
 		super(x, y, width, height, image, offsetX, offsetY, color, displayedText);
 		this.sound = sound;
 		this.stateId = stateId;
+		this.filterR = filterR;
+		this.filterG = filterG;
+		this.filterB = filterB;
 		GameHandler.getInstance().getContainer().getInput().addListener(this);
+	}
+	
+	public DrawableObjectClickable(int x, int y, int width, int height, Image image, int offsetX, int offsetY, Color color, String displayedText, Sound sound, int stateId) {
+		this(x, y, width, height, image, offsetX, offsetY, color, displayedText, sound, stateId, 255, 255, 255);
 	}
 	
 	public DrawableObjectClickable(int x, int y, int width, int height, Image image, Sound sound, int stateId) {
@@ -43,6 +51,16 @@ public abstract class DrawableObjectClickable extends DrawableObject implements 
 	@Override
 	public boolean isAcceptingInput() {
 		return stateId == GameHandler.getInstance().getCurrentStateID();
+	}
+	
+	@Override
+	public void mouseMoved(int xOld, int yOld, int xNew, int yNew) {
+		if (contains(xOld,yOld) && !contains(xNew, yNew)) {
+			super.image.setImageColor(255, 255, 255);
+		} else
+		if (!contains(xOld,yOld) && contains(xNew, yNew)) {
+			super.image.setImageColor(filterR,filterG,filterB);
+		}
 	}
 
 	public  abstract void onClick(int button, int x, int y);
@@ -109,10 +127,6 @@ public abstract class DrawableObjectClickable extends DrawableObject implements 
 
 	@Override
 	public void mouseDragged(int arg0, int arg1, int arg2, int arg3) {
-	}
-
-	@Override
-	public void mouseMoved(int arg0, int arg1, int arg2, int arg3) {
 	}
 
 	@Override

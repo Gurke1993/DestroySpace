@@ -51,15 +51,15 @@ public class SettingsState extends BasicGameState{
 			if (ignoredSettings.contains(entry.getKey().split("\\.")[1])) continue SettingGen;
 			
 			if (entry.getKey().split("\\.")[0].equals("key")) {
-				drawSettings.add(new KeySettingDrawable(150, 110+i*20, 600, 20, settingBackground, 3, 1, Color.green, null, ID, entry));
+				drawSettings.add(new KeySettingDrawable(150, 110+i*20, 600, 20, settingBackground, 3, 1, Color.green, null, ID, 0, 30, 30, entry));
 			} else
 				
 			if (entry.getKey().split("\\.")[0].equals("string")) {
-				drawSettings.add(new StringSettingDrawable(150, 110+i*20, 600, 20, settingBackground, 3, 1, Color.green, null, ID, entry));
+				drawSettings.add(new StringSettingDrawable(150, 110+i*20, 600, 20, settingBackground, 3, 1, Color.green, null, ID, 0, 30, 30, entry));
 			} else
 			
 			if (entry.getKey().split("\\.")[0].equals("boolean")) {
-				drawSettings.add(new BooleanSettingDrawable(150, 110+i*20, 600, 20, settingBackground, 3, 1, Color.green, null, ID, entry));
+				drawSettings.add(new BooleanSettingDrawable(150, 110+i*20, 600, 20, settingBackground, 3, 1, Color.green, null, ID, 0, 30, 30, entry));
 			} else {
 				Log.error("Found unknown setting kind: "+entry.getKey().split("\\.")[1]+"... ignoring...");
 			}

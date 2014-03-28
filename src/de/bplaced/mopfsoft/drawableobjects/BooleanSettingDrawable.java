@@ -9,8 +9,8 @@ import org.newdawn.slick.Sound;
 public class BooleanSettingDrawable  extends DrawableSetting{
 
 	public BooleanSettingDrawable(int x, int y, int width, int height,
-			Image image, int offsetX, int offsetY, Color color, Sound sound, int stateId, Entry<String, String> entry) {
-		super(x, y, width, height, image, offsetX, offsetY, color, sound, stateId, entry);
+			Image image, int offsetX, int offsetY, Color color, Sound sound, int stateId, int filterR, int filterG, int filterB, Entry<String, String> entry) {
+		super(x, y, width, height, image, offsetX, offsetY, color, sound, stateId, filterR, filterG, filterB, entry);
 	}
 	
 	@Override

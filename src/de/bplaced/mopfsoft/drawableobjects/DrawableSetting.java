@@ -14,8 +14,8 @@ public abstract class DrawableSetting extends DrawableObjectClickable{
 	protected Entry <String,String> entry;
 	
 	public DrawableSetting(int x, int y, int width, int height, Image image, int offsetX, int offsetY, Color color,
-			Sound sound, int stateId, Entry <String,String> entry) {
-		super(x, y, width, height, image, offsetX, offsetY, color, entry.getKey()+": "+entry.getValue(), sound, stateId);
+			Sound sound, int stateId, int filterR, int filterG, int filterB, Entry <String,String> entry) {
+		super(x, y, width, height, image, offsetX, offsetY, color, entry.getKey()+": "+entry.getValue(), sound, stateId, filterR, filterG, filterB);
 		this.entry = entry;
 	}
 	

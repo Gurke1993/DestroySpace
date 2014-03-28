@@ -13,7 +13,7 @@ public abstract class DrawableObject {
 	protected final int height;
 	protected final int offsetX = 3;
 	protected final int offsetY = 0;
-	private final Image image;
+	protected final Image image;
 	protected String displayedText;
 	protected Color color;
 
@@ -27,9 +27,13 @@ public abstract class DrawableObject {
 		this.y = y;
 		this.height = height;
 		this.width = width;
-		this.image = image;
 		this.color = color;
 		this.displayedText = displayedText;
+		if (image != null) {
+		this.image = image.getScaledCopy(1);
+		} else {
+		this.image = null;
+		}
 	}
 
 	public void draw(GUIContext c, Graphics g) {
