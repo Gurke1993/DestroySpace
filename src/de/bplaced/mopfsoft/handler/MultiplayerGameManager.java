@@ -48,7 +48,7 @@ public class MultiplayerGameManager {
 		Message message;
 		while ((message = serverMessageQueue.poll()) != null) {
 			if (message instanceof GameEnvironmentChange) {
-				map.updateBlocks(message.getArguments().get("Shape"), Integer.parseInt(message.getArguments().get("Bid")));
+				map.updateBlocks(message.getArguments().get("Polygon"), Integer.parseInt(message.getArguments().get("Mid")));
 			} else
 			if (message instanceof GameEntityChange) {
 				
