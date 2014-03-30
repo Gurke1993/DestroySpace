@@ -1,6 +1,7 @@
 package de.bplaced.mopfsoft;
 
 import java.io.File;
+
 import javax.swing.JOptionPane;
 import org.lwjgl.LWJGLUtil;
 import org.newdawn.slick.state.GameState;
@@ -8,6 +9,7 @@ import org.newdawn.slick.util.Log;
 
 import util.AppGameContainerExtended;
 
+import de.bplaced.mopfsoft.gameStates.DebugState;
 import de.bplaced.mopfsoft.gameStates.EditorState;
 import de.bplaced.mopfsoft.gameStates.GameLobbyState;
 import de.bplaced.mopfsoft.gameStates.LoadingState;
@@ -26,7 +28,8 @@ public class DestroySpace {
 	
 	public static final int LOGGING_LEVEL = CustomLogSystem.HIGH;
 	public static final int BUILD = 1;
-	public static final GameState [] GAME_STATE_ARRAY = {new MenuState(), new EditorState(), new ServerSelectState(), new GameLobbyState(), new SettingsState(), new MultiplayerGameState(), new LoadingState()};
+	//TODO EditorState
+	public static final GameState [] GAME_STATE_ARRAY = {new MenuState(), new DebugState(), new ServerSelectState(), new GameLobbyState(), new SettingsState(), new MultiplayerGameState(), new LoadingState()};
 	public static final String GAME_NAME = "DestroySpace Beta";
 	
 	
@@ -66,6 +69,7 @@ public class DestroySpace {
 		
 		AppGameContainerExtended.getInstance().setDisplayMode(1024, 768, Boolean.parseBoolean(FileHandler.getInstance().getSetting("boolean.graphics.fullscreen")));
 		AppGameContainerExtended.getInstance().start();
+
 		
 		
 		} catch (Exception e) {

@@ -9,85 +9,81 @@ This is a list of all strings mapped to by "action" that are currently in use:
 
 Server to Client(s):
 
-allplayersready:
-	type:
-		-load
-		-start
-	areready: true/false
-playerchange: tells the client that a player joined or quit the game
-	-amountofplayers: amountofplayers currently connected
-	-maxamountofplayers: amount of allowed players
-	-players: a list of the connected players' names (seperated by ",")
-	-ishost: true/false if the player is the host of the game
-mapchange: tells the clients that the map has been changed and they have to update their info
-loadupgame: tells the clients to load the game up
-givefiletransferinfo: answers on getfileinfo
-	-filename: the name of the file (containing .gif or .map...)
-	-path: path of the file
-	-filelength: the length of the file
-givelobbyinfo: answers on getlobbyinfo
-	-mapname: the maps name
-	-mapdescription: the maps description
-	-amountofplayers: amountofplayers currently connected
-	-maxamountofplayers: amount of allowed players
-	-players: a list of the connected players' names (seperated by ",")
-	-ishost: true/false if the player is the host of the game
-gamechange: broadcast of changes to the gamefield or entities
-    -type: type of update
-        +gamefieldchange
-        	-shape
-        		+rectangle
-        			-x1
-        			-y1
-        			-x2
-        			-y2
-        		+circle
-        			-x
-        			-y
-        			-r
-            -bid
-            -issuer
-                x
-                ,y
-                ,id
-                ,eid
-        +entitychange
-            -entity
-                x
-                ,y
-                ,id
-                ,eid
-            -issuer
-                x
-                ,y
-                ,id
-                ,eid
-                
+PlayerChat:
+	-Message: Message send by a player
+	-Player: Player who issued the message
+LobbyAllReady:
+	ForWhat:
+		+load
+		+start
+	Ready: true/false
+LobbyPlayerChange: tells the client that a player joined or quit the game
+	-Count: amountofplayers currently connected
+	-MaxCount: amount of allowed players
+	-Players: a list of the connected players' names (seperated by ",")
+	-IsHost: true/false if the player is the host of the game
+LobbyMapChange: tells the clients that the map has been changed and they have to update their info
+LobbyLoadGame: tells the clients to load the game up
+GiveFileTransferInfo: answers on getfileinfo
+	-FileName: the name of the file (containing .gif or .map...)
+	-Path: path of the file
+	-Length: the length of the file
+GiveLobbyInfo: answers on getlobbyinfo
+	-MapName: the maps name
+	-MapDescription: the maps description
+	-Count: amountofplayers currently connected
+	-MaxCount: amount of allowed players
+	-Players: a list of the connected players' names (seperated by ",")
+	-IsHost: true/false if the player is the host of the game
+GameEntityChange: broadcast changes of entities
+    -Entity
+    	x
+		,y
+		,id
+		,eid
+    -Entity
+		x
+		,y
+		,id
+		,eid
+GameEnvironmentChange: broadcast changes in the gamefield
+	-Shape
+		+ List of coordinates as float array (,)
+    -Bid
+    -Issuer
+        x
+        ,y
+        ,id
+        ,eid
+
                 
 Client to Server:
 
-readyto: tells the server that this client is ready
-	-type:
+LobbyLoadGame: tells the server to go into loading screen
+LobbyReady: tells the server that this client is ready
+	-ForWhat:
 		-start
 		-load
-	-isready: true/false
-clientdisconnect: tells the server that the client tries to leave the lobby
-@deprecated startgame: tells the server to start the game
-closeserver: asks the server to shut down
-clientupdate: gets send whenever a keystroke or similiar action by the client has been taken
+	-Ready: true/false
+ClientDisconnect: tells the server that the client tries to leave the lobby
+CloseServer: asks the server to shut down
+//TODO!! (spelling)
+GamePlayerInteraction: gets send whenever a keystroke or similiar action by the client has been taken
 	-type: type of update 
-		-move
+		+move
 			-direction
-		-moveanduse
+		+moveanduse
 			-direction
 			-iid
-		-use
+		+use
 			-iid
-		-jump
-getlobbyinfo: asks for information about the servers gamelobby ->givelobbyinfo
-	-playername the name of the player represented by the client
-getfiletransferinfo: asks for information about a file ->givemappreviewinfo
-startTransfer: asks the server to start a filetransfer
-    -filename: name of the file to be transfered
-    -path: path of the file
+		+jump
+GetLobbyInfo: asks for information about the servers gamelobby ->givelobbyinfo
+	-PlayerName the name of the player represented by the client
+GetFileTransferInfo: asks for information about a file ->givemappreviewinfo
+StartTransfer: asks the server to start a filetransfer
+    -FileName: name of the file to be transfered
+    -Path: path of the file
+PlayerChat: 
+	-Message message send by the player
 

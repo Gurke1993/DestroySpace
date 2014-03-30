@@ -8,6 +8,8 @@ import java.net.Socket;
 
 import org.newdawn.slick.util.Log;
 
+import de.bplaced.mopfsoft.message.StartTransfer;
+
 import util.FileOutputStreamExtended;
 
 public class ClientFileTransferThread extends Thread{
@@ -61,7 +63,6 @@ public class ClientFileTransferThread extends Thread{
 		}
 	  }
 
-	  //TODO
 	public void prepareForNewFileTransfer(File file, long fileSize) {
 		while(this.wait) {
 			try {
@@ -88,9 +89,9 @@ public class ClientFileTransferThread extends Thread{
 			out = new FileOutputStreamExtended(file);
 			
 			//Send message to server
-			ClientThread.getInstance().send("action=starttransfer:filename="+file.getName()+":path="+file.getPath());
+			ClientThread.getInstance().send(new StartTransfer(file)+"");
 		} catch (FileNotFoundException e) {
-			Log.error("[ERROR] Could not prepare for File Transfer of file: "+file.getName(),e);
+			Log.error("Could not prepare for File Transfer of file: "+file.getName(),e);
 		}
 		
 		wait = true;

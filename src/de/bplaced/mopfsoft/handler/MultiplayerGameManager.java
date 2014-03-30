@@ -1,8 +1,5 @@
 package de.bplaced.mopfsoft.handler;
 
-
-
-import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.newdawn.slick.GameContainer;
@@ -12,8 +9,11 @@ import org.newdawn.slick.util.Log;
 import de.bplaced.mopfsoft.drawableobjects.DrawableMap;
 import de.bplaced.mopfsoft.entitys.Entity;
 import de.bplaced.mopfsoft.entitys.ItemUser;
+import de.bplaced.mopfsoft.message.GamePlayerInteraction;
+import de.bplaced.mopfsoft.message.Message;
+import de.bplaced.mopfsoft.message.GameEntityChange;
+import de.bplaced.mopfsoft.message.GameEnvironmentChange;
 import de.bplaced.mopfsoft.network.ClientThread;
-import de.bplaced.mopfsoft.network.ServerUpdate;
 
 
 
@@ -22,7 +22,7 @@ public class MultiplayerGameManager {
 	private static final int loopTime = 50;
 	private static MultiplayerGameManager instance = null;
 	private DrawableMap map;
-	private ConcurrentLinkedQueue<ServerUpdate> serverUpdateQueue = new ConcurrentLinkedQueue<ServerUpdate>();
+	private ConcurrentLinkedQueue<Message> serverMessageQueue = new ConcurrentLinkedQueue<Message>();
 
 	private MultiplayerGameManager() {
 	}
@@ -45,16 +45,14 @@ public class MultiplayerGameManager {
 		long startTime = System.currentTimeMillis();
 		
 		//Update map according to server messages
-		ServerUpdate serverUpdate;
-		Map <String,String> args;
-		while ((serverUpdate = serverUpdateQueue.poll()) != null) {
-			args = serverUpdate.getArgs();
-			if (args.get("type").equals("gamefieldchange")) {
-				map.updateBlock(Integer.parseInt(args.get("x")), Integer.parseInt(args.get("y")), Integer.parseInt(args.get("bid")));
+		Message message;
+		while ((message = serverMessageQueue.poll()) != null) {
+			if (message instanceof GameEnvironmentChange) {
+				map.updateBlocks(message.getArguments().get("Shape"), Integer.parseInt(message.getArguments().get("Bid")));
 			} else
-			if (args.get("type").equals("entitychange")) {
+			if (message instanceof GameEntityChange) {
 				
-				String[] entitySplit = args.get("entity").split(";")[0].split(",");
+				String[] entitySplit = message.getArguments().get("Entity").split(";")[0].split(",");
 				Entity entity = map.getEntitys().get(Integer.parseInt(entitySplit[0]));
 				
 				//General Entitys
@@ -62,7 +60,7 @@ public class MultiplayerGameManager {
 				
 				//ItemUsers
 				if (entity instanceof ItemUser) {
-					((ItemUser)entity).setItems(args.get("entity").split(";")[1].split(","));
+					((ItemUser)entity).setItems(message.getArguments().get("Entity").split(";")[1].split(","));
 				}
 				
 			}
@@ -84,17 +82,17 @@ public class MultiplayerGameManager {
 		}
 
 		if (jump != null) {
-			ClientThread.getInstance().send("action=clientupdate:"+jump);
+			ClientThread.getInstance().send(new GamePlayerInteraction(jump)+"");
 		} else
 			
 		if (move != null || use != null) {
 			if (move != null && use == null) {
-				ClientThread.getInstance().send("action=clientupdate:"+move);
+				ClientThread.getInstance().send(new GamePlayerInteraction(move)+"");
 			} else
 			if (use != null && move == null) {
-				ClientThread.getInstance().send("action=clientupdate:"+use);
+				ClientThread.getInstance().send(new GamePlayerInteraction(use)+"");
 			} else {
-				ClientThread.getInstance().send("action=clientupdate:type=moveanduse:"+move.split(":",2)[1]+":"+use.split(":",2)[1]);
+				ClientThread.getInstance().send(new GamePlayerInteraction("type=moveanduse:"+move.split(":",2)[1]+":"+use.split(":",2)[1])+"");
 			}
 		}
 		
@@ -116,8 +114,8 @@ public class MultiplayerGameManager {
 		return this.map;
 	}
 	
-	public void queueServerUpdate(Map<String, String> args) {
-		this.serverUpdateQueue.add(new ServerUpdate(args));
+	public void queueServerUpdate(Message message) {
+		this.serverMessageQueue.add(message);
 		
 	}
 

@@ -2,6 +2,7 @@ package de.bplaced.mopfsoft.handler;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import de.bplaced.mopfsoft.message.PlayerChat;
 import de.bplaced.mopfsoft.network.ClientThread;
 
 public class ChatManager {
@@ -11,7 +12,7 @@ public class ChatManager {
 	}
 	
 	public void send(String message) {
-		ClientThread.getInstance().send("action=playerchat:message="+message);
+		ClientThread.getInstance().send(new PlayerChat(message)+"");
 	}
 	
 	public void addNewMessage(String message, String sender) {

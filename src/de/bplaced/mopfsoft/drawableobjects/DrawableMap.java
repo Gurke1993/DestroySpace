@@ -4,17 +4,19 @@ package de.bplaced.mopfsoft.drawableobjects;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Map.Entry;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.util.Log;
 
-import de.bplaced.mopfsoft.blocks.Air;
-import de.bplaced.mopfsoft.blocks.Block;
 import de.bplaced.mopfsoft.entitys.Entity;
 import de.bplaced.mopfsoft.map.Map;
+import de.bplaced.mopfsoft.material.Air;
+import de.bplaced.mopfsoft.material.Material;
 
 public class DrawableMap extends Map{
 	
@@ -57,11 +59,11 @@ public class DrawableMap extends Map{
 				previewImage = previewImageTemp;
 				
 				try {
-					Log.debug("Creating gamefieldimage with "+gamefield.length+" "+gamefield[0].length);
+					Log.debug("Creating gamefieldimage with "+eMax.getWidth()+" "+eMax.getHeight());
 					
 					// setup image
-					gamefieldAsImage = Image.createOffscreenImage(gamefield.length,
-							gamefield[0].length);
+					gamefieldAsImage = Image.createOffscreenImage((int)eMax.getWidth(),
+							(int)eMax.getHeight());
 					gamefieldAsImageG = gamefieldAsImage.getGraphics();
 
 					// set backgroundcolor
@@ -70,11 +72,9 @@ public class DrawableMap extends Map{
 
 					
 					//Draw gamefield
-					for (int i = 0; i < gamefield.length; i++) {
-						for (int j = 0; j < gamefield[0].length; j++) {
-							gamefieldAsImageG.setColor(gamefield[i][j].getColor());
-							gamefieldAsImageG.fillRect(i, j, 1, 1);
-						}
+					for (Entry <Shape,Material> entry : environment.entrySet()) {
+						gamefieldAsImageG.setColor(entry.getValue().getColor());
+						gamefieldAsImageG.fill(entry.getKey());
 					}
 					
 					//Clear Graphics
@@ -99,30 +99,19 @@ public class DrawableMap extends Map{
 		return gamefieldAsImage;
 	}
 	
-	@Override
-	public void updateBlock(int x, int y, int newId) {
-		updateBlock(x,y,Block.getNewBlock(x, y, newId));
+	public void updateBlocks(Shape shape, int mid) {
+		updateBlocks(shape, Material.getNewMaterial(mid));
 	}
 	
 	@Override
-	public void updateBlock(int x, int y, Block newBlock) {
+	public void updateBlocks(Shape shape, Material material) {
 		
 		//Update image
-		changePixel(x,y,newBlock.getColor());
+		gamefieldAsImageG.setColor(material.getColor());
+		gamefieldAsImageG.fill(shape);
 		
 		//Update array
-		super.updateBlock(x,y,newBlock);
-	}
-	
-	/** Changes a pixel of the image representation of the gamefield
-	 * @param x
-	 * @param y
-	 * @param color
-	 */
-	private void changePixel(int x, int y, Color color) {
-		gamefieldAsImageG.setColor(color);
-		gamefieldAsImageG.fillRect(x, y, 1, 1);
-		gamefieldAsImageG.flush();
+		super.updateBlocks(shape, material);
 	}
 
 	public void drawAll(Graphics graphics, int x, int y) {

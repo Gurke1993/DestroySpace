@@ -12,6 +12,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import de.bplaced.mopfsoft.handler.FileHandler;
 import de.bplaced.mopfsoft.handler.GameHandler;
 import de.bplaced.mopfsoft.handler.MultiplayerGameManager;
+import de.bplaced.mopfsoft.message.ClientDisconnect;
 import de.bplaced.mopfsoft.network.ClientThread;
 
 public class MultiplayerGameState extends BasicGameState{
@@ -54,7 +55,7 @@ public class MultiplayerGameState extends BasicGameState{
 	
 	public void close() {
 
-		ClientThread.getInstance().send("action=clientdisconnect");
+		ClientThread.getInstance().send(""+new ClientDisconnect());
 		ClientThread.getInstance().close();
   		GameHandler.getInstance().enterState(4);
 	}

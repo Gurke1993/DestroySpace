@@ -2,7 +2,6 @@ package de.bplaced.mopfsoft.network;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.HashMap;
@@ -11,8 +10,9 @@ import java.util.Map;
 import org.newdawn.slick.util.Log;
 
 import de.bplaced.mopfsoft.handler.ChatManager;
-import de.bplaced.mopfsoft.handler.MultiplayerGameManager;
-import de.bplaced.mopfsoft.handler.PreGameManager;
+import de.bplaced.mopfsoft.message.CloseServer;
+import de.bplaced.mopfsoft.message.ExecutableClient;
+import de.bplaced.mopfsoft.message.Message;
 
 
 
@@ -56,7 +56,7 @@ public class ClientThread extends Thread{
 	    catch(IOException e) {
 	    	Log.error(e);
 	    }
-	  }
+	  } 
 	  
 	  public void close() {
 		  try {
@@ -67,7 +67,7 @@ public class ClientThread extends Thread{
 	  }
 
 	public void closeByClient() {
-		send("action=closeserver");
+		send(new CloseServer()+"");
 	}
 
 	public static ClientThread getInstance() {
@@ -109,55 +109,7 @@ public class ClientThread extends Thread{
 	 * @param args
 	 */
 	private void analyseServerMessage(Map<String,String> args) {
-		
-		String action = args.get("action");
-		
-		if (action.equals("gamechange")) {
-			MultiplayerGameManager.getInstance().queueServerUpdate(args);
-		} else
-		
-		if (action.equals("playerchat")) {
-			ChatManager.getInstance().addNewMessage(args.get("message"),args.get("player"));
-		} else
-				
-		if (action.equals("givefiletransferinfo")) {
-			ClientFileTransferThread.getInstance().prepareForNewFileTransfer(new File(args.get("path")), Long.parseLong(args.get("filelength")));
-		} else
-			
-		if (action.equals("allplayersready")) {
-			if (args.get("type").equals("load")) {
-				PreGameManager.getInstance().setAllPlayersReadyToLoad(Boolean.parseBoolean(args.get("areready")));
-			} else
-			if (args.get("type").equals("start")) {
-				PreGameManager.getInstance().setAllPlayersReadyToStart(Boolean.parseBoolean(args.get("areready")));
-			}
-		} else
-			
-		if (action.equals("givelobbyinfo")) {
-			PreGameManager.getInstance().setLobbyInformation(args.get("mapname"), args.get("mapdescription"), Integer.parseInt(args.get("amountofplayers")), Integer.parseInt(args.get("maxamountofplayers")), args.get("players").split(","), args.get("ishost").equals("true"));
-		} else 
-			
-		if (action.equals("loadupgame")) {
-			PreGameManager.getInstance().loadUpGame();
-		} else  
-		if (action.equals("startgame")) {
-			PreGameManager.getInstance().startGame();
-		} else
-		
-		if (action.equals("givemapstring")) {
-			if (args.get("finished").equals("false"))
-				PreGameManager.getInstance().addToMapString(args.get("partofstring"));
-			else
-				PreGameManager.getInstance().setMapStringIsFinished(true);
-		} else 
-			
-		if (action.equals("mapchange")) {
-			PreGameManager.getInstance().reloadLobby();
-		} else
-
-		if (action.equals("playerchange")) {
-			PreGameManager.getInstance().updateLobby(args);
-		}
+		((ExecutableClient)Message.getMessage(args)).execute();
 	}
 	
 	

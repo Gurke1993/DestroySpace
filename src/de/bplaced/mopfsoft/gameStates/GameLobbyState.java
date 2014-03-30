@@ -18,6 +18,7 @@ import de.bplaced.mopfsoft.drawableobjects.ChatBox;
 import de.bplaced.mopfsoft.handler.FileHandler;
 import de.bplaced.mopfsoft.handler.GameHandler;
 import de.bplaced.mopfsoft.handler.PreGameManager;
+import de.bplaced.mopfsoft.message.LobbyLoadGame;
 import de.bplaced.mopfsoft.network.ClientThread;
 
 public class GameLobbyState extends BasicGameState{
@@ -125,7 +126,7 @@ public class GameLobbyState extends BasicGameState{
 		if( x >= 800 && x <= 1000) {
       	if (y >= 463 && y <= 525 && PreGameManager.getInstance().allPlayersReadyToLoad() && PreGameManager.getInstance().getPlayerAmount() == PreGameManager.getInstance().getMaxPlayerAmount()) {
       		//Start game
-      		ClientThread.getInstance().send("action=loadupgame");
+      		ClientThread.getInstance().send(new LobbyLoadGame()+"");
 
       		
       	} else
