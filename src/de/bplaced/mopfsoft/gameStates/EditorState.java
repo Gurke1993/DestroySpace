@@ -19,6 +19,7 @@ import org.newdawn.slick.util.Log;
 import de.bplaced.mopfsoft.drawableobjects.DrawableMap;
 import de.bplaced.mopfsoft.editor.Button;
 import de.bplaced.mopfsoft.editor.EditorPaintFunction;
+import de.bplaced.mopfsoft.handler.FileHandler;
 
 
 public class EditorState extends BasicGameState{
@@ -53,7 +54,6 @@ public class EditorState extends BasicGameState{
 	{
 
 		try {
-			
 		drawableMap = new DrawableMap(new File("maps"+System.getProperty("file.separator")+"DefaultMap.map"),"");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -190,7 +190,13 @@ public class EditorState extends BasicGameState{
 				stateBasedGame.enterState(1);
 				break;
 			}
-	}	
+		}
+			if (FileHandler.getInstance().getInputSettings().containsKey(0))
+				{
+				//paintFunction.paint(x, input.getAbsoluteMouseY(y-imgPosY ,radius, blockId);
+				}
+			
+		
 	}
 	
 	@Override //when mouse is clicked
@@ -201,7 +207,7 @@ public class EditorState extends BasicGameState{
 			if (tool ==2)//Fill
 			{
 				@SuppressWarnings("unused")
-				int idOverwrite=drawableMap.getBlock(x, y).getBid();
+				int idOverwrite=drawableMap.getMaterial(x, y).getMid();
 				//paintFunction.fill( x, y, blockId,idOverwrite);
 			}
 			else if (tool ==3)//Line
@@ -246,4 +252,11 @@ public class EditorState extends BasicGameState{
 		
 		}	
    }
+	
+
+		
+		
+		
+	
+	
 }

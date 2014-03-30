@@ -29,7 +29,7 @@ public class DestroySpace {
 	public static final int LOGGING_LEVEL = CustomLogSystem.HIGH;
 	public static final int BUILD = 1;
 	//TODO EditorState
-	public static final GameState [] GAME_STATE_ARRAY = {new MenuState(), new DebugState(), new ServerSelectState(), new GameLobbyState(), new SettingsState(), new MultiplayerGameState(), new LoadingState()};
+	public static final GameState [] GAME_STATE_ARRAY = {new MenuState(), new EditorState(), new ServerSelectState(), new GameLobbyState(), new SettingsState(), new MultiplayerGameState(), new LoadingState()};
 	public static final String GAME_NAME = "DestroySpace Beta";
 	
 	
