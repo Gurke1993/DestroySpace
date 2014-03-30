@@ -109,6 +109,7 @@ public class DrawableMap extends Map{
 		//Update image
 		gamefieldAsImageG.setColor(material.getColor());
 		gamefieldAsImageG.fill(shape);
+		gamefieldAsImageG.flush();
 		
 		//Update array
 		super.updateBlocks(shape, material);
