@@ -55,6 +55,7 @@ public abstract class DrawableObjectClickable extends DrawableObject implements 
 	
 	@Override
 	public void mouseMoved(int xOld, int yOld, int xNew, int yNew) {
+		if (super.image == null) return;
 		if (contains(xOld,yOld) && !contains(xNew, yNew)) {
 			super.image.setImageColor(255, 255, 255);
 		} else
